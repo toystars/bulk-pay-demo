@@ -1,0 +1,44 @@
+
+.login-header {
+    font-size: x-large;
+    font-weight: bold;
+}
+
+.login-small-header {
+    font-size: medium;
+    font-weight: normal;
+}
+
+.error {
+    color: #FF0000;
+}
+
+.font-icons-delete {
+    color: #FF0000;
+    text-shadow: 1px 1px 1px #ccc;
+}
+
+.font-icons-edit {
+    color: #556B2F;
+    text-shadow: 1px 1px 1px #ccc;
+}
+
+.white {
+    color: #FFFFFF;
+}
+
+.compute-value {
+    font-weight: bold;
+}
+
+.item, .placeholder {
+    padding: 2px;
+    width: 50px;
+    height: 20px;
+    /*border: 1px solid #333;*/
+    background: #EEE;
+}
+
+.pointer {
+    cursor: pointer;
+}

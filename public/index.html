@@ -1,0 +1,172 @@
+<!doctype html>
+<html ng-app="bulkPay" class="no-js">
+  <head>
+    <meta charset="utf-8">
+    <title update-title></title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+    <!-- build:css(.) styles/vendor.css -->
+    <!-- bower:css -->
+
+    <link href="bower_components/bootstrap/dist/css/bootstrap.css">
+    <link href="bower_components/bootstrap/dist/css/bootstrap-theme.css">
+    <link rel="stylesheet" type="text/css" href="bower_components/angular-toastr/dist/angular-toastr.css" />
+    <link rel="stylesheet" type="text/css" href="bower_components/angular-loading-bar/build/loading-bar.min.css">
+    <link rel="stylesheet" type="text/css" href="bower_components/fontawesome/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="bower_components/sweetalert/dist/sweetalert.css"
+
+    <link href="css/prettyPhoto.css" rel="stylesheet">
+    <link href="css/pace.css" rel="stylesheet">
+    <link href="css/style.default.css" rel="stylesheet">
+    <link href="css/jquery.tagsinput.css" rel="stylesheet" />
+    <link href="css/toggles.css" rel="stylesheet" />
+    <link href="css/bootstrap-timepicker.min.css" rel="stylesheet" />
+
+    <link href="css/colorpicker.css" rel="stylesheet" />
+    <link href="css/dropzone.css" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css"href="styles/main.css">
+    <link rel="stylesheet" type="text/css"href="styles/custom.css">
+
+    <link href="css/style.default.css" rel="stylesheet">
+    <link href="css/morris.css" rel="stylesheet">
+
+    <!-- endbuild -->
+  </head>
+  <body ng-class="{true: 'signin'}[globals.isLoggedIn === false]">
+    <!--[if lt IE 7]>
+      <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+    <![endif]-->
+
+    <div ui-view></div>
+
+
+    <!-- build:js(.) scripts/oldieshim.js -->
+    <!--[if lt IE 9]>
+    <script src="bower_components/es5-shim/es5-shim.js"></script>
+    <script src="bower_components/json3/lib/json3.js"></script>
+    <![endif]-->
+    <!-- endbuild -->
+
+    <!-- build:js(.) scripts/vendor.js -->
+    <!-- bower:js -->
+
+    <script src="bower_components/jquery/dist/jquery.js"></script>
+    <script src="bower_components/jquery-migrate/jquery-migrate.js"></script>
+    <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
+    <script src="js/modernizr.min.js"></script>
+    <script src="js/pace.min.js"></script>
+    <script src="js/retina.min.js"></script>
+    <script src="js/jquery.cookies.js"></script>
+    <script src="bower_components/underscore/underscore.js"></script>
+    <script src="bower_components/jquery-calx/js/numeral.min.js"></script>
+    <script src="bower_components/jquery-calx/jquery-calx-2.2.5.js"></script>
+    <script src="bower_components/typeahead.js/dist/typeahead.bundle.js"></script>
+
+    <script src="bower_components/jquery-ui/jquery-ui.js"></script>
+    <script src="js/jquery.autogrow-textarea.js"></script>
+    <script src="js/jquery.mousewheel.js"></script>
+    <script src="js/jquery.tagsinput.min.js"></script>
+    <script src="js/toggles.min.js"></script>
+    <script src="js/bootstrap-timepicker.min.js"></script>
+    <script src="js/jquery.maskedinput.min.js"></script>
+    <script src="js/jquery.sparkline.min.js"></script>
+    <script src="js/morris.min.js"></script>
+    <script src="js/raphael-2.1.0.min.js"></script>
+    <script src="js/bootstrap-wizard.min.js"></script>
+    <script src="js/jquery.prettyPhoto.js"></script>
+    <script src="js/holder.js"></script>
+    <script src="js/colorpicker.js"></script>
+    <script src="js/dropzone.min.js"></script>
+
+
+
+
+
+
+    <!-- Angular scripts -->
+    <script src="bower_components/angular/angular.js"></script>
+    <script src="bower_components/angular-resource/angular-resource.js"></script>
+    <script src="js/select2.min.js"></script>
+    <link href="css/select2.css" rel="stylesheet" />
+
+
+    <script src="bower_components/sweetalert/dist/sweetalert.min.js"></script>
+    <script src="js/file.saver.js"></script>
+    <script src="js/js.excel.blob.js"></script>
+    <script src="js/infragistics.loader.js"></script>
+
+
+
+    <script src="js/ui-bootstrap-tpls-1.1.2.js"></script>
+    <script src="js/sortable.js"></script>
+    <script src="js/ng-sortable.js"></script>
+
+    <script src="bower_components/angular-toastr/dist/angular-toastr.tpls.js"></script>
+    <script src="bower_components/angular-loading-bar/build/loading-bar.min.js"></script>
+    <script src="bower_components/angular-resource/angular-resource.js"></script>
+    <script src="bower_components/angular-cookies/angular-cookies.js"></script>
+    <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
+    <script src="bower_components/angular-animate/angular-animate.js"></script>
+    <script src="bower_components/angular-touch/angular-touch.js"></script>
+    <script src="bower_components/angular-route/angular-route.js"></script>
+    <script src="bower_components/angular-ui-router/release/angular-ui-router.js"></script>
+    <script src="bower_components/ngstorage/ngStorage.min.js"></script>
+
+
+    <!-- build:js({.tmp,app}) scripts/scripts.js -->
+    <script src="scripts/app.js"></script>
+    <script src="scripts/routes.js"></script>
+
+    <!-- Services -->
+    <script src="scripts/services/interceptor.service.js"></script>
+    <script src="scripts/services/user/auth.js"></script>
+    <script src="scripts/services/pay.types.js"></script>
+    <script src="scripts/services/org.js"></script>
+    <script src="scripts/services/pay.scales.js"></script>
+    <script src="scripts/services/structures.js"></script>
+    <script src="scripts/services/user/user.service.js"></script>
+    <script src="scripts/services/business/business.service.js"></script>
+    <script src="scripts/services/business/business.data.js"></script>
+
+    <!-- controllers -->
+    <script src="modules/main/home/home.js"></script>
+    <script src="modules/main/overview/overview.js"></script>
+    <script src="modules/main/business/business.js"></script>
+    <script src="modules/business/home/home.js"></script>
+    <script src="modules/business/overview/overview.js"></script>
+    <script src="modules/business/update-business/update.js"></script>
+    <script src="modules/business/units/units.js"></script>
+    <script src="modules/business/divisions/divisions.js"></script>
+    <script src="modules/business/departments/departments.js"></script>
+    <script src="modules/business/positions/positions.js"></script>
+    <script src="modules/business/pay-types/pay-types.js"></script>
+    <script src="modules/business/pay-groups/pay-groups.js"></script>
+
+    <!--<script src="components/payrules/payment/payment.js"></script>
+    <script src="components/payrules/deduction/deduction.js"></script>
+    <script src="components/payrules/payscale/payscale.js"></script>
+    <script src="components/organization/create.js"></script>
+    <script src="components/organization/update.js"></script>
+    <script src="components/employee/new/employee.create.js"></script>
+    <script src="components/organization/departments/overview/department.overview.js"></script>
+-->
+    <!-- auth controllers -->
+    <script src="modules/auth/login/login.js"></script>
+    <script src="modules/auth/signup/signup.js"></script>
+
+
+    <!-- Google Analytics: change UA-XXXXX-X to be your site's ID -->
+    <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-XXXXX-X');
+    ga('send', 'pageview');
+    </script>
+
+</body>
+</html>

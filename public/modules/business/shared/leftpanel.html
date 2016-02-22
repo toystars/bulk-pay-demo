@@ -1,0 +1,41 @@
+<div class="media profile-left">
+    <a class="pull-left profile-thumb" href="profile.html">
+        <img class="img-circle" ng-src="{{user.avatar}}" alt="">
+    </a>
+    <div class="media-body">
+        <h4 class="media-heading">{{user.name}}</h4>
+        <small class="text-muted">{{user.username}}</small>
+    </div>
+</div><!-- media -->
+
+<h5 class="leftpanel-title">Navigation</h5>
+<ul class="nav nav-pills nav-stacked">
+    <li ng-class="{active: inView === 'DashBoard'}" ng-click="toggleActive('DashBoard')"><a ui-sref="business.overview"><i class="fa fa-home"></i> <span>Dashboard</span></a></li>
+    <li ng-class="{active: inView === 'Business'}" class="parent" ng-click="toggleActive('Business')"><a href=""><i class="fa fa-university"></i> <span>Business</span></a>
+        <ul class="children">
+            <li ng-class="{active: inView === 'Update Business Info'}" ng-click="toggleActive('Update Business Info')"><a ui-sref="business.updatebusiness">Update Business Info</a></li>
+            <li ng-class="{active: inView === 'Business Units'}" ng-click="toggleActive('Business Units')"><a ui-sref="business.units">Business Units</a></li>
+            <li ng-class="{active: inView === 'Divisions'}" ng-click="toggleActive('Divisions')"><a ui-sref="business.divisions">Divisions</a></li>
+            <li ng-class="{active: inView === 'Departments'}" ng-click="toggleActive('Departments')"><a ui-sref="business.departments">Departments</a></li>
+            <li ng-class="{active: inView === 'Positions'}" ng-click="toggleActive('Positions')"><a ui-sref="business.positions">Positions</a></li>
+        </ul>
+    </li>
+    <li ng-class="{active: inView === 'Pay Rules'}" class="parent"><a href=""><i class="fa fa-money"></i> <span>Pay Rules</span></a>
+        <ul class="children">
+            <li ng-class="{active: inView === 'Pay Groups'}" ng-click="toggleActive('Pay Groups')"><a ui-sref="business.paygroups">Pay Groups</a></li>
+            <li ng-class="{active: inView === 'Pay Types'}" ng-click="toggleActive('Pay Types')"><a ui-sref="business.payment">Pay Types</a></li>
+            <li ng-class="{active: inView === 'Tax and Pension'}" ng-click="toggleActive('Pay Types')"><a ui-sref="home.deduction">Tax and Pension</a></li>
+            <li ng-class="{active: inView === 'Pay Scale'}" ng-click="toggleActive('Pay Scale')"><a ui-sref="home.payscale">Pay Scale</a></li>
+        </ul>
+    </li>
+    <li ng-class="{active: inView === 'Employees'}" class="parent" ng-click="toggleActive('Employees')"><a href=""><i class="fa fa-users"></i> <span>Employees</span></a>
+        <ul class="children">
+            <li><a ui-sref="home.newemployee">New Employee</a></li>
+        </ul>
+    </li>
+    <li ng-class="{active: inView === 'Leave'}" ng-click="toggleActive('Leave')"><a><i class="fa fa-paper-plane-o"></i> <span>Leave</span></a></li>
+    <li ng-class="{active: inView === 'Payroll'}" ng-click="toggleActive('Payroll')"><a><i class="fa fa-bank"></i> <span>Payroll</span></a></li>
+    <li><a ui-sref="home.overview"><i class="fa fa-angle-double-left"></i> <span>Back to Dash</span></a></li>
+</ul>
+
+<div ng-include="'modules/shared/footerscripts.html'"></div>

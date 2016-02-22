@@ -1,0 +1,32 @@
+{
+  "name": "bulkpay-proto",
+  "version": "1.0.0",
+  "description": "Bulkpay application prototype",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "Bulkpay",
+    "payroll",
+    "payment"
+  ],
+  "author": "Mustapha Babatunde <toystars2008@gmail.com> (http://bmustapha.com)",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt-nodejs": "0.0.3",
+    "body-parser": "^1.14.2",
+    "composable-middleware": "^0.3.0",
+    "express": "^4.13.4",
+    "express-jwt": "^3.3.0",
+    "express-session": "^1.13.0",
+    "gravatar": "^1.4.0",
+    "jsonwebtoken": "^5.5.4",
+    "mongoose": "^4.3.7",
+    "morgan": "^1.6.1",
+    "node-mongoose-validator": "^1.2.0",
+    "passport": "^0.3.2",
+    "passport-local": "^1.0.0",
+    "underscore": "^1.8.3"
+  }
+}

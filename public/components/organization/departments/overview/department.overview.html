@@ -1,0 +1,328 @@
+<div class="pageheader" xmlns:ng="http://www.w3.org/1999/xhtml">
+    <div class="media">
+        <div class="pageicon pull-left">
+            <i class="fa fa-building"></i>
+        </div>
+        <div class="media-body">
+            <ul class="breadcrumb">
+                <li><a href=""><i class="glyphicon glyphicon-home"></i></a></li>
+                <li><a href="">Organization</a></li>
+                <li>Departments</li>
+            </ul>
+            <h4>Departments</h4>
+        </div>
+    </div><!-- media -->
+</div><!-- pageheader -->
+
+<div class="contentpanel">
+
+
+    <div class="row">
+
+        <div class="col-md-12">
+            <ul class="nav nav-tabs">
+                <li ng-class="{active: inView === 'Departments'}"><a ng-click="changeView('Departments')" style="cursor: pointer;">Departments</a></li>
+                <li ng-class="{active: inView === 'Job Levels'}"><a ng-click="changeView('Job Levels')" style="cursor: pointer;">Job Levels</a></li>
+                <li ng-class="{active: inView === 'Positions'}"><a ng-click="changeView('Positions')" style="cursor: pointer;">Positions</a></li>
+            </ul>
+        </div><!-- col-md-12 -->
+
+    </div><!-- row -->
+
+    <br/><br/>
+
+    <div class="row">
+
+
+
+        <div class="col-md-12" ng-if="inView === 'Departments'">
+            <div class="row">
+                <div class="col-md-6" ng-if="departments.length === 0">
+                    <div class="alert alert-danger text-center">No department available.</div>
+                </div>
+                <div class="col-md-6" ng-if="departments.length > 0">
+                    <h5 class="lg-title">Departments List</h5><br/>
+                    <div class="table-responsive">
+                        <table class="table table-hover mb30">
+                            <thead>
+                            <tr>
+                                <th>Code</th>
+                                <th>Title</th>
+                                <th>Status</th>
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr ng-repeat="department in departments">
+                                <td>{{department.code}}</td>
+                                <td>{{department.title}}</td>
+                                <td>
+                                    <span class="label label-success" ng-if="displayActiveStatus(department.status)">Active</span>
+                                    <span class="label label-danger" ng-if="!displayActiveStatus(department.status)">Inactive</span>
+                                </td>
+                                <td class="table-action">
+                                    <a href="" ng-click="triggerDepartmentEdit(department)" data-toggle="tooltip" title="Edit" class="tooltips"><i class="fa fa-pencil"></i></a>
+                                    <a href="" ng-click="deleteDepartment(department)" data-toggle="tooltip" title="Delete" class="delete-row tooltips"><i class="fa fa-trash-o font-icons-delete"></i></a>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div><!-- table-responsive -->
+                </div>
+                <div class="col-md-6">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">{{getDepartmentFormHeader()}}</h4>
+                            <p>All fields must be filled.</p>
+                        </div>
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="col-sm-5">
+                                    <div class="form-group">
+                                        <label for="department-code" class="control-label">Code (alphanumeric)</label>
+                                        <input type="text" id="department-code" class="form-control" placeholder="Unique e.g ENG" ng-model="newDepartment.code" />
+                                    </div><!-- form-group -->
+                                </div><!-- col-sm-3 -->
+
+                                <div class="col-sm-7">
+                                    <div class="form-group">
+                                        <label for="department-title" class="control-label">Title</label>
+                                        <input type="text" id="department-title" class="form-control" placeholder="Engineering" ng-model="newDepartment.title"/>
+                                    </div><!-- form-group -->
+                                </div><!-- col-sm-3 -->
+
+                                <div class="col-sm-12">
+                                    <div class="form-group">
+                                        <label for="department-status" class="control-label">Status</label>
+                                        <select id="department-status" class="form-control width100p" data-placeholder="Choose One" required ng-model="newDepartment.status">
+                                            <option value="">Choose One</option>
+                                            <option value="Active">Active</option>
+                                            <option value="Inactive">Inactive</option>
+                                        </select>
+                                    </div><!-- form-group -->
+                                </div><!-- col-sm-3 -->
+
+                            </div><!-- row -->
+
+                            <div class="alert alert-danger text-center" ng-if="departmentErrorOccur">
+                                {{departmentError}}
+                            </div>
+
+                        </div><!-- panel-body -->
+                        <div class="panel-footer">
+                            <button class="btn btn-primary mr5" ng-click="createDepartment()" ng-disabled="validateDepartmentCreate()" ng-hide="editDepartment">Create</button>
+                            <button type="reset" class="btn btn-default" ng-click="resetDepartmentEdit()" ng-hide="editDepartment">Reset</button>
+                            <button class="btn btn-primary mr5" ng-click="updateDepartment()" ng-disabled="validateDepartmentUpdate()" ng-show="editDepartment">Save</button>
+                            <button type="reset" class="btn btn-default" ng-click="resetDepartmentEdit()" ng-show="editDepartment">Cancel</button>
+                        </div><!-- panel-footer -->
+                    </div><!-- panel -->
+                </div>
+            </div>
+        </div><!-- col-md-12 -->
+
+
+
+
+
+
+
+
+        <div class="col-md-12" ng-if="inView === 'Job Levels'">
+            <div class="row">
+                <div class="col-md-6" ng-if="jobLevels.length === 0">
+                    <div class="alert alert-danger text-center">No job level available.</div>
+                </div>
+                <div class="col-md-6" ng-if="jobLevels.length > 0">
+                    <h5 class="lg-title">Job Levels List</h5><br/>
+                    <div class="table-responsive">
+                        <table class="table table-hover mb30">
+                            <thead>
+                            <tr>
+                                <th>Code</th>
+                                <th>Title</th>
+                                <th>Department</th>
+                                <th>Status</th>
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr ng-repeat="jobLevel in jobLevels">
+                                <td>{{jobLevel.code}}</td>
+                                <td>{{jobLevel.title}}</td>
+                                <td>{{getJobLevelDepartment(jobLevel).title}}</td>
+                                <td>
+                                    <span class="label label-success" ng-if="displayActiveStatus(jobLevel.status)">Active</span>
+                                    <span class="label label-danger" ng-if="!displayActiveStatus(jobLevel.status)">Inactive</span>
+                                </td>
+                                <td class="table-action">
+                                    <a href="" ng-click="triggerJobLevelEdit(jobLevel)" data-toggle="tooltip" title="Edit" class="tooltips"><i class="fa fa-pencil"></i></a>
+                                    <a href="" ng-click="deleteJobLevel(jobLevel)" data-toggle="tooltip" title="Delete" class="delete-row tooltips"><i class="fa fa-trash-o font-icons-delete"></i></a>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div><!-- table-responsive -->
+                </div>
+                <div class="col-md-6">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">{{getJobLevelFormHeader()}}</h4>
+                            <p>All fields must be filled.</p>
+                        </div>
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="col-sm-5">
+                                    <div class="form-group">
+                                        <label for="job-level-code" class="control-label">Code (alphanumeric)</label>
+                                        <input type="text" id="job-level-code" class="form-control" placeholder="Unique e.g G2-L2" ng-model="newJobLevel.code" />
+                                    </div><!-- form-group -->
+                                </div><!-- col-sm-3 -->
+
+                                <div class="col-sm-7">
+                                    <div class="form-group">
+                                        <label for="job-level-title" class="control-label">Title</label>
+                                        <input type="text" id="job-level-title" class="form-control" placeholder="Graduate Trainee L2" ng-model="newJobLevel.title"/>
+                                    </div><!-- form-group -->
+                                </div><!-- col-sm-3 -->
+
+                                <div class="col-sm-5">
+                                    <div class="form-group">
+                                        <label for="job-level-status" class="control-label">Status</label>
+                                        <select id="job-level-status" class="form-control width100p" data-placeholder="Choose One" required ng-model="newJobLevel.status">
+                                            <option value="">-- Choose One --</option>
+                                            <option value="Active">Active</option>
+                                            <option value="Inactive">Inactive</option>
+                                        </select>
+                                    </div><!-- form-group -->
+                                </div><!-- col-sm-6 -->
+
+                                <div class="col-sm-7">
+                                    <div class="form-group">
+                                        <label for="job-level-departmentId" class="control-label">Department</label>
+                                        <select ng-options="department._id as department.title disable when department.status === 'Inactive' for department in departments" id="job-level-departmentId" class="form-control width100p" data-placeholder="Choose One" required ng-model="newJobLevel.departmentId">
+                                            <option value="">-- choose One --</option>
+                                        </select>
+                                    </div><!-- form-group -->
+                                </div><!-- col-sm-6 -->
+
+                            </div><!-- row -->
+
+                            <div class="alert alert-danger text-center" ng-if="jobLevelErrorOccur">
+                                {{jobLevelError}}
+                            </div>
+
+                        </div><!-- panel-body -->
+                        <div class="panel-footer">
+                            <button class="btn btn-primary mr5" ng-click="createJobLevel()" ng-disabled="validateJobLevelCreate()" ng-hide="editJobLevel">Create</button>
+                            <button type="reset" class="btn btn-default" ng-click="resetJobLevelEdit()" ng-hide="editJobLevel">Reset</button>
+                            <button class="btn btn-primary mr5" ng-click="updateJobLevel()" ng-disabled="validateJobLevelUpdate()" ng-show="editJobLevel">Save</button>
+                            <button type="reset" class="btn btn-default" ng-click="resetDepartmentEdit()" ng-show="editJobLevel">Cancel</button>
+                        </div><!-- panel-footer -->
+                    </div><!-- panel -->
+                </div>
+            </div>
+        </div><!-- col-md-12 -->
+
+
+        <div class="col-md-12" ng-if="inView === 'Positions'">
+            <div class="row">
+                <div class="col-md-6" ng-if="positions.length === 0">
+                    <div class="alert alert-danger text-center">No position available.</div>
+                </div>
+                <div class="col-md-6" ng-if="positions.length > 0">
+                    <h5 class="lg-title">Positions List</h5><br/>
+                    <div class="table-responsive">
+                        <table class="table table-hover mb30">
+                            <thead>
+                            <tr>
+                                <th>Title</th>
+                                <th>Department</th>
+                                <th>Job Level</th>
+                                <th>Status</th>
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr ng-repeat="position in positions">
+                                <td>{{position.title}}</td>
+                                <td>{{getJobLevelDepartment(position).title}}</td>
+                                <td>{{getPositionJobLevel(position).title}}</td>
+                                <td>
+                                    <span class="label label-success" ng-if="displayActiveStatus(position.status)">Active</span>
+                                    <span class="label label-danger" ng-if="!displayActiveStatus(position.status)">Inactive</span>
+                                </td>
+                                <td class="table-action">
+                                    <a href="" ng-click="triggerPositionEdit(position)" data-toggle="tooltip" title="Edit" class="tooltips"><i class="fa fa-pencil"></i></a>
+                                    <a href="" ng-click="deletePosition(position)" data-toggle="tooltip" title="Delete" class="delete-row tooltips"><i class="fa fa-trash-o font-icons-delete"></i></a>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div><!-- table-responsive -->
+                </div>
+                <div class="col-md-6">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">{{getPositionFormHeader()}}</h4>
+                            <p>All fields must be filled.</p>
+                        </div>
+                        <div class="panel-body">
+                            <div class="row">
+
+                                <div class="col-sm-12">
+                                    <div class="form-group">
+                                        <label for="position-title" class="control-label">Title</label>
+                                        <input type="text" id="position-title" class="form-control" placeholder="Software Engineer" ng-model="newPosition.title"/>
+                                    </div><!-- form-group -->
+                                </div><!-- col-sm-3 -->
+
+                                <div class="col-sm-4">
+                                    <div class="form-group">
+                                        <label for="position-status" class="control-label">Status</label>
+                                        <select id="position-status" class="form-control width100p" data-placeholder="Choose One" required ng-model="newPosition.status">
+                                            <option value="">-- Choose One --</option>
+                                            <option value="Active">Active</option>
+                                            <option value="Inactive">Inactive</option>
+                                        </select>
+                                    </div><!-- form-group -->
+                                </div><!-- col-sm-6 -->
+
+                                <div class="col-sm-4">
+                                    <div class="form-group">
+                                        <label for="position-departmentId" class="control-label">Department</label>
+                                        <select ng-options="department._id as department.title disable when department.status === 'Inactive' for department in departments" id="position-departmentId" class="form-control width100p" data-placeholder="Choose One" required ng-model="newPosition.departmentId">
+                                            <option value="">-- choose One --</option>
+                                        </select>
+                                    </div><!-- form-group -->
+                                </div><!-- col-sm-6 -->
+
+                                <div class="col-sm-4">
+                                    <div class="form-group">
+                                        <label for="position-jobLevel" class="control-label">Job Level</label>
+                                        <select ng-options="level._id as level.title disable when level.status === 'Inactive' for level in getDepartmentLevels()" id="position-jobLevel" class="form-control width100p" data-placeholder="Choose One" required ng-model="newPosition.jobLevelId">
+                                            <option value="">-- choose One --</option>
+                                        </select>
+                                    </div><!-- form-group -->
+                                </div><!-- col-sm-6 -->
+
+                            </div><!-- row -->
+
+                            <div class="alert alert-danger text-center" ng-if="positionErrorOccur">
+                                {{positionError}}
+                            </div>
+
+                        </div><!-- panel-body -->
+                        <div class="panel-footer">
+                            <button class="btn btn-primary mr5" ng-click="createPosition()" ng-disabled="validatePositionCreate()" ng-hide="editPosition">Create</button>
+                            <button type="reset" class="btn btn-default" ng-click="resetPositionEdit()" ng-hide="editPosition">Reset</button>
+                            <button class="btn btn-primary mr5" ng-click="updatePosition()" ng-disabled="validatePositionUpdate()" ng-show="editPosition">Save</button>
+                            <button type="reset" class="btn btn-default" ng-click="resetPositionEdit()" ng-show="editPosition">Cancel</button>
+                        </div><!-- panel-footer -->
+                    </div><!-- panel -->
+                </div>
+            </div>
+        </div><!-- col-md-12 -->
+
+    </div><!-- row -->
+
+</div><!-- contentpanel -->

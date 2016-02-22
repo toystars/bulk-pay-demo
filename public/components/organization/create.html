@@ -1,0 +1,115 @@
+<div class="pageheader">
+    <div class="media">
+        <div class="pageicon pull-left">
+            <i class="fa fa-university"></i>
+        </div>
+        <div class="media-body">
+            <ul class="breadcrumb">
+                <li><a href=""><i class="glyphicon glyphicon-home"></i></a></li>
+                <li><a href="">Organization</a></li>
+                <li>Create</li>
+            </ul>
+            <h4>Create Org</h4>
+        </div>
+    </div><!-- media -->
+</div><!-- pageheader -->
+
+<div class="contentpanel">
+
+    <div class="row">
+
+        <div class="col-md-3"></div><!-- col-md-6 -->
+
+        <div class="col-md-6">
+
+            <form id="basicForm" ng-submit="createOrg()">
+                <div class="panel panel-default">
+                    <div class="panel-heading text-center">
+                        <div class="panel-btns">
+                            <a href="" class="panel-minimize tooltips" data-toggle="tooltip" title="Minimize Panel"><i class="fa fa-minus"></i></a>
+                            <a href="" class="panel-close tooltips" data-toggle="tooltip" title="Close Panel"><i class="fa fa-times"></i></a>
+                        </div><!-- panel-btns -->
+                        <h4 class="panel-title">Create new Organization</h4>
+                        <p>Fields marked <span class="asterisk">*</span> must be filled</p>
+                    </div><!-- panel-heading -->
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label text-right">Company Name <span class="asterisk">*</span></label>
+                                <div class="col-sm-9">
+                                    <input type="text" name="name" class="form-control" placeholder="Company Name" required ng-model="newCompany.name" />
+                                </div>
+                            </div><!-- form-group -->
+
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label text-right">Address <span class="asterisk">*</span></label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" placeholder="Address" required ng-model="newCompany.address" />
+                                </div>
+                            </div><!-- form-group -->
+
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label text-right">City</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" placeholder="City" ng-model="newCompany.city" />
+                                </div>
+                            </div><!-- form-group -->
+
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label text-right">State</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" placeholder="State" ng-model="newCompany.state" />
+                                </div>
+                            </div><!-- form-group -->
+
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label text-right">Country <span class="asterisk">*</span></label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" placeholder="Country" required ng-model="newCompany.country" />
+                                </div>
+                            </div><!-- form-group -->
+
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label text-right">Phone</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" placeholder="Phone" required ng-model="newCompany.phone" />
+                                </div>
+                            </div><!-- form-group -->
+
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label text-right">Email <span class="asterisk">*</label>
+                                <div class="col-sm-9">
+                                    <input type="email" class="form-control" placeholder="abc@example.com" required ng-model="newCompany.email" />
+                                </div>
+                            </div><!-- form-group -->
+
+
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label text-right">Website</label>
+                                <div class="col-sm-9">
+                                    <input type="url" class="form-control" placeholder="www.example.com" ng-model="newCompany.website" />
+                                </div>
+                            </div><!-- form-group -->
+
+                            <p class="text-center error" ng-show="errorOccur">{{errorMessage}}</p>
+
+                        </div><!-- row -->
+                    </div><!-- panel-body -->
+                    <div class="panel-footer">
+                        <div class="row">
+                            <div class="col-sm-9 col-sm-offset-3">
+                                <button class="btn btn-primary mr5" ng-click="createOrg()" ng-disabled="validate()">Create</button>
+                                <button type="reset" class="btn btn-dark">Clear</button>
+                            </div>
+                        </div>
+                    </div><!-- panel-footer -->
+                </div><!-- panel -->
+            </form>
+
+        </div><!-- col-md-6 -->
+
+        <div class="col-md-3"></div><!-- col-md-6 -->
+
+    </div>
+
+</div><!-- contentpanel -->

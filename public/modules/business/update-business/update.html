@@ -1,0 +1,165 @@
+<div class="pageheader">
+    <div class="media">
+        <div class="pageicon pull-left">
+            <i class="fa fa-briefcase"></i>
+        </div>
+        <div class="media-body">
+            <ul class="breadcrumb">
+                <li><a href=""><i class="glyphicon glyphicon-home"></i></a></li>
+                <li><a ui-sref="business.overview">Business</a ></li>
+                <li>{{business.name}}</li>
+                <li>Update</li>
+            </ul>
+            <h4>Update Business</h4>
+        </div>
+    </div><!-- media -->
+</div><!-- pageheader -->
+
+<div class="contentpanel">
+
+    <div class="row">
+
+
+        <div class="col-md-8">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <div class="panel-btns">
+                        <a href="" class="panel-minimize tooltips" data-toggle="tooltip" title="Minimize Panel"><i class="fa fa-minus"></i></a>
+                        <a href="" class="panel-close tooltips" data-toggle="tooltip" title="Close Panel"><i class="fa fa-times"></i></a>
+                    </div><!-- panel-btns -->
+                    <h4 class="panel-title">Update Business - {{business.name}}</h4>
+                </div>
+                <div class="panel-body">
+                    <div class="row">
+
+                        <div class="col-sm-6">
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="form-group">
+                                        <label for="new-business-name" class="control-label">Name</label>
+                                        <input ng-model="business.name" type="text" id="new-business-name" class="form-control" />
+                                    </div><!-- form-group -->
+                                </div><!-- col-sm-12 -->
+                                <div class="col-sm-12">
+                                    <div class="form-group">
+                                        <label for="new-business-address" class="control-label">Address</label>
+                                        <textarea ng-model="business.address" id="new-business-address" class="form-control" rows="5"></textarea>
+                                    </div><!-- form-group -->
+                                </div><!-- col-sm-12 -->
+                                <div class="col-sm-12">
+                                    <div class="form-group">
+                                        <label for="new-business-country" class="control-label">Country</label>
+                                        <input ng-model="business.country" type="text" id="new-business-country" class="form-control" disabled />
+                                    </div><!-- form-group -->
+                                </div><!-- col-sm-12 -->
+                                <div class="col-sm-12">
+                                    <div class="form-group">
+                                        <label for="new-business-state" class="control-label">State</label>
+                                        <select ng-model="business.state" id="new-business-state" data-placeholder="Choose One" style="width:100%">
+                                            <option value="">Choose One</option>
+                                            <option ng-repeat="state in states" on-finish-render="ngRepeatFinished" value="{{state}}">{{state}}</option>
+                                        </select>
+                                    </div><!-- form-group -->
+                                </div><!-- col-sm-12 -->
+                                <div class="col-sm-12">
+                                    <div class="form-group">
+                                        <label for="new-business-city" class="control-label">City</label>
+                                        <input ng-model="business.city" type="text" id="new-business-city" class="form-control" />
+                                    </div><!-- form-group -->
+                                </div><!-- col-sm-12 -->
+                            </div>
+
+                        </div><!-- col-sm-6 -->
+
+                        <div class="col-sm-6">
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="form-group">
+                                        <label for="new-business-industry" class="control-label">Industry</label>
+                                        <select ng-model="business.industry" id="new-business-industry" data-placeholder="Choose One" style="width:100%">
+                                            <option value="">Choose One</option>
+                                            <option ng-repeat="industry in industries" on-finish-render="ngRepeatFinished" value="{{industry}}">{{industry}}</option>
+                                        </select>
+                                    </div><!-- form-group -->
+                                </div><!-- col-sm-12 -->
+                                <div class="col-sm-12">
+                                    <div class="form-group">
+                                        <label for="new-business-contact-name" class="control-label">Contact Name</label>
+                                        <input ng-model="business.contactName" type="text" id="new-business-contact-name" class="form-control" />
+                                    </div><!-- form-group -->
+                                </div><!-- col-sm-12 -->
+                                <div class="col-sm-12">
+                                    <div class="form-group">
+                                        <label for="new-business-contact-phone" class="control-label">Contact Phone</label>
+                                        <input ng-model="business.contactPhone" type="text" id="new-business-contact-phone" class="form-control" />
+                                    </div><!-- form-group -->
+                                </div><!-- col-sm-12 -->
+                                <div class="col-sm-12">
+                                    <div class="form-group">
+                                        <label for="new-business-contact-email" class="control-label">Contact Email</label>
+                                        <input ng-model="business.contactEmail" type="email" id="new-business-contact-email" class="form-control" />
+                                    </div><!-- form-group -->
+                                </div><!-- col-sm-12 -->
+                                <div class="col-sm-12">
+                                    <div class="form-group">
+                                        <label for="new-business-website" class="control-label">Website</label>
+                                        <input ng-model="business.website" type="text" id="new-business-website" class="form-control" />
+                                    </div><!-- form-group -->
+                                </div><!-- col-sm-12 -->
+                                <div class="col-sm-12">
+                                    <div class="form-group">
+                                        <label for="new-business-status" class="control-label">Status</label>
+                                        <select ng-model="business.status" id="new-business-status" data-placeholder="Choose One" style="width:100%">
+                                            <option value="">Choose One</option>
+                                            <option value="Active">Active</option>
+                                            <option value="Inactive">Inactive</option>
+                                        </select>
+                                    </div><!-- form-group -->
+                                </div><!-- col-sm-12 -->
+                            </div>
+
+                        </div><!-- col-sm-6 -->
+
+                    </div><!-- row -->
+                </div><!-- panel-body -->
+                <div class="panel-footer">
+                    <button class="btn btn-primary mr5" ng-click="updateBusiness()">Save</button>
+                    <button type="reset" class="btn btn-danger" ng-click="cancel()">Cancel</button>
+                </div><!-- panel-footer -->
+            </div><!-- panel -->
+
+        </div><!-- col-md-12 -->
+
+
+        <div class="col-md-4">
+            <h5 class="lg-title mb10">Edit History</h5>
+
+            <div class="panel-group" id="accordion2">
+                <div ng-repeat="history in businessHistory" class="panel panel-primary">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            <a data-toggle="collapse" data-parent="#accordion2" href=".{{history._id}}">
+                                <span>{{history.date | date:"MM/dd/yyyy 'at' h:mma"}}</span>
+                                <span class="pull-right">{{history.user.username}}</span>
+                            </a>
+                        </h4>
+                    </div>
+                    <div class="panel-collapse collapse" ng-class="history._id">
+                        <div class="panel-body">
+                             <div class="row">
+                                 <div class="col-md-12" ng-repeat="activity in history.activities">
+                                     <div class="well well-sm">{{activity | prettifyActivity}}</div>
+                                 </div>
+                             </div>
+                        </div>
+                    </div>
+                </div><!-- panel -->
+
+            </div><!-- panel-group -->
+
+        </div><!-- col-md-4 -->
+
+
+    </div>
+
+</div><!-- contentpanel -->

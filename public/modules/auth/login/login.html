@@ -1,0 +1,50 @@
+<section>
+    <div class="panel panel-signin">
+        <div class="panel-body">
+            <div class="logo text-center">
+                <span class="login-header">Bulk</span><span class="login-small-header">Pay</span>
+            </div>
+            <br />
+            <p class="text-center">Sign in to your account</p>
+
+            <div class="mb30"></div>
+
+            <form ng-submit="signIn()">
+
+                <div class="input-group mb15">
+                    <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                    <input type="text" class="form-control" placeholder="Username" data-ng-model="user.username">
+                </div><!-- input-group -->
+                <div class="input-group mb15">
+                    <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+                    <input type="password" class="form-control" placeholder="Password" ng-model="user.password">
+                </div><!-- input-group -->
+
+                <div class="text-center" ng-show="loginLoader">
+                    <img alt="" ng-src="{{loginLoader}}">
+                </div>
+
+                <div class="alert alert-danger text-center" ng-show="errorOccur">
+                    {{errorMessage}}
+                </div>
+
+                <div class="clearfix">
+                    <div class="pull-left">
+                        <div class="ckbox ckbox-primary mt10">
+                            <input type="checkbox" id="rememberMe" value="1">
+                            <label for="rememberMe">Remember Me</label>
+                        </div>
+                    </div>
+                    <div class="pull-right">
+                        <button type="submit" class="btn btn-success">Sign In <i class="fa fa-angle-right ml5"></i></button>
+                    </div>
+                </div>
+
+            </form>
+
+        </div><!-- panel-body -->
+        <div class="text-center">
+            New Member?<a ui-sref="signup"> Sign Up</a>
+        </div><!-- panel-footer -->
+    </div><!-- panel -->
+</section>
