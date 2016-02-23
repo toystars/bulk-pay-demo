@@ -161,11 +161,15 @@ bulkPay.controller('BusinessPositionsCtrl', ['$scope', '$rootScope', 'AuthSvc', 
   $scope.getValidPositions = function () {
     var positions = [];
     for (var x = 0; x < $scope.positions.length; x++) {
-      if ($scope.singlePosition._id && $scope.positions[x]._id !== $scope.singlePosition._id) {
+      if ($scope.singlePosition._id && $scope.positions[x]._id !== $scope.singlePosition._id && $scope.positions[x].parentPositionId !== $scope.singlePosition._id) {
         positions.push($scope.positions[x]);
       }
     }
     return positions;
+  };
+
+  $scope.getLastHistory = function () {
+    return $scope.histories[$scope.histories.length - 1];
   };
 
   var removeFromCollection = function (id) {
@@ -200,6 +204,7 @@ bulkPay.controller('BusinessPositionsCtrl', ['$scope', '$rootScope', 'AuthSvc', 
   $scope.editActive = false;
   $scope.singlePosition = {};
   $scope.oldPosition = {};
+  $scope.histories = [];
 
   $scope.showPosition = function (position) {
     $scope.singleView = true;
@@ -243,7 +248,6 @@ bulkPay.controller('BusinessPositionsCtrl', ['$scope', '$rootScope', 'AuthSvc', 
   $scope.closePosition = function () {
     $scope.singlePosition = {};
     $scope.singleView = false;
-    $scope.histories = [];
   };
 
   $scope.updatePosition = function () {
@@ -251,6 +255,7 @@ bulkPay.controller('BusinessPositionsCtrl', ['$scope', '$rootScope', 'AuthSvc', 
       getHistories(data._id);
       angular.copy(data, $scope.oldPosition);
       angular.copy(data, $scope.singlePosition);
+      $scope.editActive = false;
       replace(data);
       swal("Success", "Position updated.", "success");
     }).error(function (error) {
@@ -276,22 +281,6 @@ bulkPay.controller('BusinessPositionsCtrl', ['$scope', '$rootScope', 'AuthSvc', 
       minimumResultsForSearch: 0
     });
     jQuery('#new-position-parent-position').select2({
-      minimumResultsForSearch: 0
-    });
-
-    jQuery('#update-position-status').select2({
-      minimumResultsForSearch: 0
-    });
-    jQuery('#update-position-business-unit').select2({
-      minimumResultsForSearch: 0
-    });
-    jQuery('#update-position-division').select2({
-      minimumResultsForSearch: 0
-    });
-    jQuery('#update-position-department').select2({
-      minimumResultsForSearch: 0
-    });
-    jQuery('#update-position-parent-position').select2({
       minimumResultsForSearch: 0
     });
   };

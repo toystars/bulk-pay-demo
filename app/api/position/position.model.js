@@ -11,6 +11,10 @@ var positionSchema = new Schema({
   divisionId: String,
   departmentId: String,
   parentPositionId: String,
+  numberOfAllowedEmployees: {
+    type: Number,
+    default: 1
+  },
   status: {
     type: String,
     default: 'Active'
