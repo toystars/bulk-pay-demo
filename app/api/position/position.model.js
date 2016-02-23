@@ -7,6 +7,10 @@ var positionSchema = new Schema({
   code: String,
   name: String,
   businessId: String,
+  businessUnitId: String,
+  divisionId: String,
+  departmentId: String,
+  parentPositionId: String,
   status: {
     type: String,
     default: 'Active'

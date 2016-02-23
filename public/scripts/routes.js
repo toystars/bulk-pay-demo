@@ -115,6 +115,15 @@ bulkPay.config(['$stateProvider', '$urlRouterProvider', '$locationProvider', 'to
         }
       })
 
+      .state('business.paygrades', {
+        url: '/paygrades',
+        templateUrl: 'modules/business/pay-grades/pay-grades.html',
+        controller: 'BusinessPayGradesCtrl',
+        data: {
+          pageTitle: 'Pay Grades | BulkPay'
+        }
+      })
+
 
 
       /*

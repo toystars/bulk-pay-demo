@@ -31,7 +31,7 @@
     font-weight: bold;
 }
 
-.item, .placeholder {
+.item .placeholder {
     padding: 2px;
     width: 50px;
     height: 20px;
@@ -41,4 +41,12 @@
 
 .pointer {
     cursor: pointer;
+}
+
+.big-font {
+    font-size: 15px;
+}
+
+.delete-margin {
+    margin-left: 10px;
 }

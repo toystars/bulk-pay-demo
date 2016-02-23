@@ -16,6 +16,7 @@ var departmentRoute = require('../api/department/index');
 var positionRoute = require('../api/position/index');
 var payTypeRoute = require('../api/pay-type/index');
 var payGroupRoute = require('../api/pay-group/index');
+var payGradeRoute = require('../api/pay-grade/index');
 
 module.exports = function(app, passport) {
   authRoute(app, passport);
@@ -28,6 +29,7 @@ module.exports = function(app, passport) {
   positionRoute(app);
   payTypeRoute(app);
   payGroupRoute(app);
+  payGradeRoute(app);
   /*userRoute(app, passport);
   typeRoute(app);
   companyRoute(app);

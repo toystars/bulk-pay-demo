@@ -60,50 +60,153 @@
 
     <div class="row" ng-show="singleView">
 
-        <div class="col-md-8">
+        <div class="col-md-8" ng-show="!editActive">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h5 class="panel-title">Position - {{oldPosition.name}} ({{oldPosition.code}})</h5>
+                                </div>
+                                <div class="col-md-6 text-right">
+                                    <button class="btn btn-primary" ng-click="edit()">Edit</button>
+                                    <button type="reset" class="btn btn-danger pull-right delete-margin" ng-click="delete()">Delete</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel-body big-font">
+                            <div class="row">
+                                <div class="col-md-12 text-center">
+                                    <div class="row">
+                                        <div class="col-md-6 text-right">Code:</div><div class="col-md-6 text-left">{{oldPosition.code}}</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-12 text-center">
+                                    <div class="row">
+                                        <div class="col-md-6 text-right">Name:</div><div class="col-md-6 text-left">{{oldPosition.name}}</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-12 text-center">
+                                    <div class="row">
+                                        <div class="col-md-6 text-right">Company:</div><div class="col-md-6 text-left">{{business.name}}</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-12 text-center">
+                                    <div class="row">
+                                        <div class="col-md-6 text-right">Business Unit:</div><div class="col-md-6 text-left">{{getUnitName(oldPosition.businessUnitId)}}</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-12 text-center">
+                                    <div class="row">
+                                        <div class="col-md-6 text-right">Division:</div><div class="col-md-6 text-left">{{getDivisionName(oldPosition.divisionId)}}</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-12 text-center">
+                                    <div class="row">
+                                        <div class="col-md-6 text-right">Department:</div><div class="col-md-6 text-left">{{getDepartmentName(oldPosition.departmentId)}}</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-12 text-center">
+                                    <div class="row">
+                                        <div class="col-md-6 text-right">Status:</div><div class="col-md-6 text-left">{{oldPosition.status}}</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <span class="pull-left">Parent Position: {{getParentPositionName(oldPosition.parentPositionId)}}</span>
+                                </div>
+                                <div class="col-md-12">
+                                    <span class="pull-left"><a class="pointer">View Employee(s)</a></span>
+                                </div>
+                            </div>
+                        </div><!-- panel-body -->
+                        <div class="panel-footer">
+                            <span class="pull-left"><button type="reset" class="btn btn-warning" ng-click="closePosition()">Close</button></span>
+                            <span class="pull-right">Last updated on 01/5/2015, by Admin</span>
+                        </div><!-- panel-footer -->
+                    </div><!-- panel -->
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-8" ng-show="editActive">
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <div class="panel-btns">
                         <a href="" class="panel-minimize tooltips" data-toggle="tooltip" title="Minimize Panel"><i class="fa fa-minus"></i></a>
                         <a href="" class="panel-close tooltips" data-toggle="tooltip" title="Close Panel"><i class="fa fa-times"></i></a>
                     </div><!-- panel-btns -->
-                    <h4 class="panel-title">Update - {{oldPosition.name}} Division</h4>
+                    <h4 class="panel-title">Update - {{oldPosition.name}} Position</h4>
                 </div>
                 <div class="panel-body">
                     <div class="row">
-                        <div class="col-sm-4">
+                        <div class="col-sm-12">
                             <div class="form-group">
                                 <label for="update-position-code" class="control-label">Code</label>
                                 <input ng-model="singlePosition.code" type="text" id="update-position-code" placeholder="Position Code" class="form-control" />
                             </div><!-- form-group -->
-                        </div><!-- col-sm-5 -->
-
-                        <div class="col-sm-8">
+                        </div><!-- col-sm-12 -->
+                        <div class="col-sm-12">
                             <div class="form-group">
                                 <label for="update-position-name" class="control-label">Name</label>
                                 <input ng-model="singlePosition.name" type="text" id="update-position-name" placeholder="Position Name" class="form-control" />
                             </div><!-- form-group -->
-                        </div><!-- col-sm-6 -->
-
-                    </div><!-- row -->
-
-                    <div class="row">
+                        </div><!-- col-sm-12 -->
                         <div class="col-sm-12">
                             <div class="form-group">
                                 <label for="update-position-status" class="control-label">Status</label>
                                 <select ng-model="singlePosition.status" id="update-position-status" data-placeholder="Choose One" style="width:100%">
                                     <option value="">Choose One</option>
-                                    <option ng-repeat="status in statuses" on-finish-render="ngRepeatFinished" value="{{status}}">{{status}}</option>
+                                    <option value="Active">Active</option>
+                                    <option value="Inactive">Inactive</option>
                                 </select>
                             </div><!-- form-group -->
-                        </div><!-- col-sm-10 -->
+                        </div><!-- col-sm-112 -->
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label for="update-position-business-unit" class="control-label">Business Unit</label>
+                                <select ng-model="singlePosition.businessUnitId"  id="update-position-business-unit" style="width:100%" data-placeholder="Choose One">
+                                    <option value="">Choose One</option>
+                                    <option ng-repeat="businessUnit in businessUnits" on-finish-render="ngRepeatFinished" value="{{businessUnit._id}}">{{businessUnit.name}}</option>
+                                </select>
+                            </div><!-- form-group -->
+                        </div><!-- col-sm-12 -->
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label for="update-position-division" class="control-label">Division</label>
+                                <select ng-model="singlePosition.divisionId"  id="update-position-division" style="width:100%" data-placeholder="Choose One">
+                                    <option value="">Choose One</option>
+                                    <option ng-repeat="division in getDivisions()" on-finish-render="ngRepeatFinished" value="{{division._id}}">{{division.name}}</option>
+                                </select>
+                            </div><!-- form-group -->
+                        </div><!-- col-sm-12 -->
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label for="update-position-department" class="control-label">Department</label>
+                                <select ng-model="singlePosition.departmentId"  id="update-position-department" style="width:100%" data-placeholder="Choose One">
+                                    <option value="">Choose One</option>
+                                    <option ng-repeat="department in getDepartments()" on-finish-render="ngRepeatFinished" value="{{department._id}}">{{department.name}}</option>
+                                </select>
+                            </div><!-- form-group -->
+                        </div><!-- col-sm-12 -->
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label for="update-position-parent-position" class="control-label">Parent Position</label>
+                                <select ng-model="singlePosition.parentPositionId"  id="update-position-parent-position" style="width:100%" data-placeholder="Choose One">
+                                    <option value="">Choose One</option>
+                                    <option ng-repeat="position in getValidPositions()" on-finish-render="ngRepeatFinished" value="{{position._id}}">{{position.name}}</option>
+                                </select>
+                            </div><!-- form-group -->
+                        </div><!-- col-sm-12 -->
+
                     </div><!-- row -->
 
                 </div><!-- panel-body -->
                 <div class="panel-footer">
                     <button class="btn btn-primary mr5" ng-click="updatePosition()">Update</button>
-                    <button type="reset" class="btn btn-warning" ng-click="closePosition()">Cancel</button>
-                    <button type="reset" class="btn btn-danger pull-right" ng-click="delete()">Delete</button>
+                    <button type="reset" class="btn btn-warning" ng-click="cancel()">Close</button>
                 </div><!-- panel-footer -->
             </div><!-- panel -->
 
@@ -155,19 +258,64 @@
                 </div>
                 <div class="panel-body">
                     <div class="row">
-                        <div class="col-sm-4">
+                        <div class="col-sm-12">
                             <div class="form-group">
                                 <label for="new-position-code" class="control-label">Code</label>
                                 <input ng-model="position.code" type="text" id="new-position-code" placeholder="Position Code" class="form-control" />
                             </div><!-- form-group -->
-                        </div><!-- col-sm-5 -->
-
-                        <div class="col-sm-8">
+                        </div><!-- col-sm-12 -->
+                        <div class="col-sm-12">
                             <div class="form-group">
                                 <label for="new-position-name" class="control-label">Name</label>
                                 <input ng-model="position.name" type="text" id="new-position-name" placeholder="Position Name" class="form-control" />
                             </div><!-- form-group -->
-                        </div><!-- col-sm-6 -->
+                        </div><!-- col-sm-12 -->
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label for="new-position-status" class="control-label">Status</label>
+                                <select ng-model="position.status"  id="new-position-status" style="width:100%" data-placeholder="Choose One">
+                                    <option value="">Choose One</option>
+                                    <option value="Active">Active</option>
+                                    <option value="Inactive">Inactive</option>
+                                </select>
+                            </div><!-- form-group -->
+                        </div><!-- col-sm-12 -->
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label for="new-position-business-unit" class="control-label">Business Unit</label>
+                                <select ng-model="position.businessUnitId"  id="new-position-business-unit" style="width:100%" data-placeholder="Choose One">
+                                    <option value="">Choose One</option>
+                                    <option ng-repeat="businessUnit in businessUnits" on-finish-render="ngRepeatFinished" value="{{businessUnit._id}}">{{businessUnit.name}}</option>
+                                </select>
+                            </div><!-- form-group -->
+                        </div><!-- col-sm-12 -->
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label for="new-position-division" class="control-label">Division</label>
+                                <select ng-model="position.divisionId"  id="new-position-division" style="width:100%" data-placeholder="Choose One">
+                                    <option value="">Choose One</option>
+                                    <option ng-repeat="division in getDivisions()" on-finish-render="ngRepeatFinished" value="{{division._id}}">{{division.name}}</option>
+                                </select>
+                            </div><!-- form-group -->
+                        </div><!-- col-sm-12 -->
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label for="new-position-department" class="control-label">Department</label>
+                                <select ng-model="position.departmentId"  id="new-position-department" style="width:100%" data-placeholder="Choose One">
+                                    <option value="">Choose One</option>
+                                    <option ng-repeat="department in getDepartments()" on-finish-render="ngRepeatFinished" value="{{department._id}}">{{department.name}}</option>
+                                </select>
+                            </div><!-- form-group -->
+                        </div><!-- col-sm-12 -->
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label for="new-position-parent-position" class="control-label">Parent Position</label>
+                                <select ng-model="position.parentPositionId"  id="new-position-parent-position" style="width:100%" data-placeholder="Choose One">
+                                    <option value="">Choose One</option>
+                                    <option ng-repeat="position in positions" on-finish-render="ngRepeatFinished" value="{{position._id}}">{{position.name}}</option>
+                                </select>
+                            </div><!-- form-group -->
+                        </div><!-- col-sm-12 -->
 
                     </div><!-- row -->
 
