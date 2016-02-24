@@ -1,18 +1,19 @@
 
+var _ = require('underscore');
 
 var diff = function (a, b, objectKey, reference) {
 
   var log = [];
   var logObject = {};
 
-  if (typeof b === 'object' && Object.keys(b).length === 0) {
+  /*if (typeof b === 'object' && Object.keys(b).length === 0) {
     log.push({
       event: 'deleted',
       referenceKey: '',
       referenceId: ''
     });
     return log;
-  }
+  }*/
 
   if (typeof a !== 'object' && typeof b !== 'object') {
     if (a !== b) {

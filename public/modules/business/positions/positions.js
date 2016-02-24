@@ -198,7 +198,7 @@ bulkPay.controller('BusinessPositionsCtrl', ['$scope', '$rootScope', 'AuthSvc', 
 
 
   /*
-   * Single unit display
+   * Single position display
    * */
   $scope.singleView = false;
   $scope.editActive = false;

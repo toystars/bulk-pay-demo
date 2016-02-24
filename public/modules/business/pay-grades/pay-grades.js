@@ -52,7 +52,6 @@ bulkPay.controller('BusinessPayGradesCtrl', ['$scope', '$rootScope', 'AuthSvc', 
       description: '',
       businessId: businessId,
       status: '',
-      level: '',
       payGroupId: '',
       payTypes: []
     };
@@ -81,12 +80,29 @@ bulkPay.controller('BusinessPayGradesCtrl', ['$scope', '$rootScope', 'AuthSvc', 
   $scope.createPayGrade = function () {
     $http.post('/api/paygrades/', $scope.payGrade).success(function (data) {
       $scope.payGrades.push(data);
-      jQuery('#new-pay-grade-close').click();
       resetPayGrade();
+      jQuery('#new-pay-grade-close').click();
       swal('Success', ' Pay Grade created.', 'success');
     }).error(function (error) {
       console.log(error);
     });
+  };
+
+  $scope.resetNewGrade = function () {
+    resetPayGrade();
+  };
+
+
+
+  /*
+   * Helpers
+   * */
+  $scope.getPayGroup = function (id) {
+    for (var x = 0; x < payGroups.length; x++) {
+      if (payGroups[x]._id === id) {
+        return payGroups[x];
+      }
+    }
   };
 
   $scope.getActivePayGroups = function () {
@@ -99,11 +115,35 @@ bulkPay.controller('BusinessPayGradesCtrl', ['$scope', '$rootScope', 'AuthSvc', 
     return activePayGroups;
   };
 
+  $scope.getPayTypes = function (type) {
+    var types = [];
+    for (var x = 0; x < $scope.payTypes.length; x++) {
+      if ($scope.payTypes[x].type === type && $scope.payTypes[x].status === 'Active') {
+        types.push($scope.payTypes[x]);
+      }
+    }
+    return types;
+  };
 
-
-  /*
-   * Helpers
-   * */
+  $scope.check = function (payType, type) {
+    for (var x = 0; x < $scope.payGrade.payTypes.length; x++) {
+      if ($scope.payGrade.payTypes[x].payTypeId === payType._id) {
+        $scope.payGrade.payTypes.splice(x, 1);
+        return;
+      }
+    }
+    $scope.payGrade.payTypes.push({
+      cellId: generateCellId($scope.payGrade.payTypes),
+      code: payType.code,
+      title: payType.title,
+      derived: payType.derivative,
+      payTypeId: payType._id,
+      derivative: '',
+      type: type,
+      value: 0,
+      editablePerEmployee: payType.editablePerEmployee
+    });
+  };
 
   var removeFromCollection = function (id) {
     for (var x = 0; x < $scope.payGrades.length; x++) {
@@ -121,6 +161,19 @@ bulkPay.controller('BusinessPayGradesCtrl', ['$scope', '$rootScope', 'AuthSvc', 
     }
   };
 
+  $scope.getLastHistory = function () {
+    return $scope.histories[$scope.histories.length - 1];
+  };
+
+  $scope.isPresent = function (id) {
+    for (var x = 0; x < $scope.payGrade.payTypes.length; x++) {
+      if ($scope.payGrade.payTypes[x].payTypeId === id) {
+        return true;
+      }
+    }
+    return false;
+  };
+
   var getHistories = function (objectId) {
     $http.get('/api/histories/object/' + objectId).success(function (data) {
       $scope.histories = data;
@@ -134,14 +187,26 @@ bulkPay.controller('BusinessPayGradesCtrl', ['$scope', '$rootScope', 'AuthSvc', 
    * Single unit display
    * */
   $scope.singleView = false;
+  $scope.editActive = false;
+  $scope.histories = [];
 
-  $scope.showPayGroup = function (payGrade) {
+  $scope.showPayGrade = function (payGrade) {
     $scope.singleView = true;
     $scope.singlePayGrade = {};
     $scope.oldPayGrade = {};
-    angular.copy(payGroup, $scope.oldPayGrade);
-    angular.copy(payGroup, $scope.singlePayGrade);
+    angular.copy(payGrade, $scope.oldPayGrade);
+    angular.copy(payGrade, $scope.singlePayGrade);
     getHistories($scope.singlePayGrade._id);
+  };
+
+  $scope.edit = function () {
+    $scope.editActive = true;
+    $scope.payGrade = $scope.singlePayGrade;
+  };
+
+  $scope.cancel = function () {
+    $scope.editActive = false;
+    resetPayGrade();
   };
 
   $scope.delete = function () {
@@ -156,10 +221,10 @@ bulkPay.controller('BusinessPayGradesCtrl', ['$scope', '$rootScope', 'AuthSvc', 
       closeOnConfirm: false,
       showLoaderOnConfirm: true
     }, function () {
-      $http.delete('/api/paygroups/' + $scope.singlePayGrade._id).success(function (data) {
+      $http.delete('/api/paygrades/' + $scope.singlePayGrade._id).success(function (data) {
         swal('Deleted!', $scope.singlePayGrade.title + ' pay grade deleted.', 'success');
         removeFromCollection($scope.singlePayGrade._id);
-        $scope.closePayGroup();
+        $scope.closePayGrade();
       }).error(function (error) {
         swal('Error Occurred', error.message, 'warning');
         console.log(error);
@@ -167,31 +232,95 @@ bulkPay.controller('BusinessPayGradesCtrl', ['$scope', '$rootScope', 'AuthSvc', 
     });
   };
 
-  $scope.closePayGroup = function () {
+  $scope.closePayGrade = function () {
     $scope.singlePayGrade = {};
     $scope.singleView = false;
     $scope.histories = [];
   };
 
-  $scope.updatePayGroup = function () {
-    $http.put('/api/paygroups/' + $scope.singlePayGrade._id, $scope.singlePayGrade).success(function (data) {
+  $scope.updatePayGrade = function () {
+    $http.put('/api/paygrades/' + $scope.singlePayGrade._id, $scope.singlePayGrade).success(function (data) {
       getHistories(data._id);
       replace(data);
+      $scope.editActive = false;
+      resetPayGrade();
       swal("Success", "Pay grade updated.", "success");
     }).error(function (error) {
       console.log(error);
     });
   };
 
+  $scope.calculate = function () {
+    calculate();
+  };
+
+  $scope.payTypeSortConfig = {
+    group: 'foobar',
+    animation: 150,
+    onSort: function (evt) {
+      //compileForm();
+    }
+  };
+
 
   /*
    * jQuery
    * */
+  jQuery.ig.loader({
+    scriptPath: "http://cdn-na.infragistics.com/igniteui/latest/js/",
+    resources: 'modules/infragistics.util.js,' + 'modules/infragistics.documents.core.js,' + 'modules/infragistics.excel.js'
+  });
+
+  var calculate = function () {
+    var workbook = new $.ig.excel.Workbook($.ig.excel.WorkbookFormat.excel2007);
+    var sheet = workbook.worksheets().add('Sheet1');
+    sheet.columns(0).setWidth(180, $.ig.excel.WorksheetColumnWidthUnit.pixel);
+    sheet.columns(1).setWidth(116, $.ig.excel.WorksheetColumnWidthUnit.pixel);
+    sheet.columns(2).setWidth(124, $.ig.excel.WorksheetColumnWidthUnit.pixel);
+    // loop through all payTypes to get the derived ones
+    _.each($scope.payGrade.payTypes, function (element) {
+      if (element.derived === 'Fixed') {
+        if (element.value) {
+          sheet.getCell(element.cellId).value(element.value);
+        }
+      } else {
+        sheet.getCell(element.cellId).applyFormula(mapCellIds(element.derivative));
+        element.value = sheet.getCell(element.cellId).value();
+      }
+    });
+  };
+
+  var mapCellIds = function (formula) {
+    for (var x = 0; x < $scope.payGrade.payTypes.length; x++) {
+      if (formula.indexOf($scope.payGrade.payTypes[x].code) !== -1) {
+        var regex = new RegExp($scope.payGrade.payTypes[x].code, "g");
+        formula = formula.replace(regex, $scope.payGrade.payTypes[x].cellId);
+      }
+    }
+    return formula;
+  };
+
+  var generateCellId = function (collection) {
+    var text = "";
+    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    var randomNumber = Math.floor(Math.random() * (9 - 1)) + 1;
+    for (var i = 0; i < 2; i++) {
+      text += possible.charAt(Math.floor(Math.random() * possible.length));
+    }
+    var randomId = text + randomNumber;
+    for (var x = 0; x < collection.length; x++) {
+      if (collection[x].cellId === randomId) {
+        generateCellId();
+      }
+    }
+    return randomId;
+  };
+
   var triggerSelect = function () {
-    jQuery('#pay-grade-pay-group').select2({
+    jQuery('#new-pay-grade-pay-group').select2({
       minimumResultsForSearch: 0
     });
-    jQuery('#pay-grade-status').select2({
+    jQuery('#new-pay-grade-status').select2({
       minimumResultsForSearch: 0
     });
   };
@@ -216,6 +345,31 @@ bulkPay.controller('BusinessPayGradesCtrl', ['$scope', '$rootScope', 'AuthSvc', 
 
       var $percent = ($current / $total) * 100;
       $('#progressWizard').find('.progress-bar').css('width', $percent + '%');
+    },
+    onTabClick: function (tab, navigation, index) {
+      return false;
+    }
+  });
+
+  jQuery('#progress-wizard-new').bootstrapWizard({
+    onTabShow: function (tab, navigation, index) {
+      tab.prevAll().addClass('done');
+      tab.nextAll().removeClass('done');
+      tab.removeClass('done');
+
+      var $total = navigation.find('li').length;
+      var $current = index + 1;
+
+      if ($current >= $total) {
+        $('#progress-wizard-new').find('.wizard .next').addClass('hide');
+        $('#progress-wizard-new').find('.wizard .finish').removeClass('hide');
+      } else {
+        $('#progress-wizard-new').find('.wizard .next').removeClass('hide');
+        $('#progress-wizard-new').find('.wizard .finish').addClass('hide');
+      }
+
+      var $percent = ($current / $total) * 100;
+      $('#progress-wizard-new').find('.progress-bar').css('width', $percent + '%');
     },
     onTabClick: function (tab, navigation, index) {
       return false;

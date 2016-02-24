@@ -6,8 +6,7 @@ var mongoose = require("mongoose"),
 var payTypesSchema = new Schema({
   code: {
     type: String,
-    required: "Please, enter code",
-    unique: true
+    required: "Please, enter code"
   },
   title: {
     type: String,

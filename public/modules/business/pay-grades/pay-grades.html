@@ -41,21 +41,19 @@
                         <th>Description</th>
                         <th>Pay Group</th>
                         <th>Status</th>
-                        <th>Level</th>
                     </tr>
                     </thead>
                     <tbody>
-                    <tr class="pointer" ng-click="showPayGroup(payGroup)" ng-repeat="payGrade in payGrades">
+                    <tr class="pointer" ng-click="showPayGrade(payGrade)" ng-repeat="payGrade in payGrades">
                         <td>{{$index + 1}}</td>
                         <td>{{payGrade.code}}</td>
                         <td>{{payGrade.name}}</td>
                         <td>{{payGrade.description}}</td>
-                        <td>{{getPayGroupName(payGrade.payGroupId)}}</td>
+                        <td>{{getPayGroup(payGrade.payGroupId).name}}</td>
                         <td>
-                            <span ng-if="payGroup.status === 'Active'" class="label label-success">{{payGroup.status}}</span>
-                            <span ng-if="payGroup.status === 'Inactive'" class="label label-danger">{{payGroup.status}}</span>
+                            <span ng-if="payGrade.status === 'Active'" class="label label-success">{{payGrade.status}}</span>
+                            <span ng-if="payGrade.status === 'Inactive'" class="label label-danger">{{payGrade.status}}</span>
                         </td>
-                        <td>{{payGrade.level}}</td>
                     </tr>
                     </tbody>
                 </table>
@@ -65,53 +63,267 @@
 
     <div class="row" ng-show="singleView">
 
-        <div class="col-md-8">
+        <div class="col-md-8" ng-show="!editActive">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h4 class="panel-title">Pay Grade: {{singlePayGrade.name}} - ({{singlePayGrade.code}})</h4>
+                                </div>
+                                <div class="col-md-6 text-right">
+                                    <button class="btn btn-primary" ng-click="edit()">Edit</button>
+                                    <button type="reset" class="btn btn-danger pull-right delete-margin" ng-click="delete()">Delete</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel-body big-font">
+
+                            <div class="row">
+                                <div class="form-group col-md-12">
+                                    <span class="compute-value">Title:</span> {{singlePayGrade.name}}
+                                </div>
+                                <div class="form-group col-md-12">
+                                    <span class="compute-value">Description:</span> {{singlePayGrade.description}}
+                                </div>
+                                <div class="form-group col-md-12">
+                                    <span class="compute-value">Status:</span> {{singlePayGrade.status}}
+                                </div>
+                            </div><!-- row -->
+                            <div class="row">
+                                <hr />
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-md-12">
+                                    <span class="compute-value">Pay Types: </span>
+                                </div>
+                                <div ng-repeat="type in singlePayGrade.payTypes" class="form-group col-md-4">
+                                    <span class="compute-value">Code:</span> {{type.code}} <br/>
+                                    <span class="compute-value">Title:</span> {{type.title}} <br/>
+                                    <span class="compute-value">Type:</span> {{type.type}} <br/>
+                                    <span class="compute-value">Formula:</span> {{type.derivative}} <br/>
+                                    <span class="compute-value">Value:</span> {{type.value}} <br/>
+                                    <span class="compute-value">Frequency:</span> {{getPaymentFromId(type.id).frequency}} <br/>
+                                    <span class="compute-value">Taxable:</span> {{getPaymentFromId(type.id).taxable}} <br/>
+                                    <span class="compute-value">Derivative:</span> {{type.derived}}
+                                </div>
+                            </div>
+
+                        </div><!-- panel-body -->
+                        <div class="panel-footer">
+                            <span class="pull-left"><button type="reset" class="btn btn-warning" ng-click="closePayGrade()">Close</button></span>
+                            <span ng-show="histories.length > 0" class="pull-right">Last updated on {{getLastHistory().date | date:"MM/dd/yyyy 'at' h:mma"}}, by {{getLastHistory().user.username}}</span>
+                        </div><!-- panel-footer -->
+                    </div><!-- panel -->
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-8" ng-show="editActive">
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <div class="panel-btns">
-                        <a href="" class="panel-minimize tooltips" data-toggle="tooltip" title="Minimize Panel"><i class="fa fa-minus"></i></a>
-                        <a href="" class="panel-close tooltips" data-toggle="tooltip" title="Close Panel"><i class="fa fa-times"></i></a>
+
                     </div><!-- panel-btns -->
-                    <h4 class="panel-title">Update - {{oldPayType.title}} Pay type</h4>
+                    <h4 class="panel-title">Update - {{oldPayGrade.name}}</h4>
                 </div>
                 <div class="panel-body">
-
                     <div class="row">
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <label for="update-pay-group-code" class="control-label">Code (alphanumeric)</label>
-                                <input type="text" id="update-pay-group-code" class="form-control" placeholder="SNR-MAN" ng-model="singlePayGroup.code" />
-                            </div><!-- form-group -->
-                        </div><!-- col-sm-6 -->
 
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <label for="update-pay-group-name" class="control-label">Name</label>
-                                <input type="text" id="update-pay-group-name" class="form-control" placeholder="Senior Managers Pay Group" ng-model="singlePayGroup.name"/>
-                            </div><!-- form-group -->
-                        </div><!-- col-sm-6 -->
+                        <!-- PROGRESS WIZARD -->
+                        <form id="progressWizard" class="panel-wizard form-horizontal form-bordered">
+                            <ul class="nav nav-justified nav-wizard nav-disabled-click">
+                                <li><a href="#tab1-2" data-toggle="tab"><strong>Step 1:</strong> Description</a></li>
+                                <li><a href="#tab2-2" data-toggle="tab"><strong>Step 2:</strong> Pay Types</a></li>
+                                <li><a href="#tab3-2" data-toggle="tab"><strong>Step 3:</strong> Derivatives</a></li>
+                            </ul>
 
-                        <div class="col-sm-12">
-                            <div class="form-group">
-                                <label for="update-pay-group-status" class="control-label">Status</label>
-                                <select id="update-pay-group-status" class="form-control width100p" data-placeholder="Choose One" required ng-model="singlePayGroup.status">
-                                    <option value="">Choose One</option>
-                                    <option value="Active">Active</option>
-                                    <option value="Inactive">Inactive</option>
-                                </select>
-                            </div><!-- form-group -->
-                        </div><!-- col-sm-12 -->
+
+                            <div class="progress progress-xs">
+                                <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100"></div>
+                            </div>
+
+                            <div class="tab-content">
+
+                                <div class="tab-pane" id="tab1-2">
+
+                                    <div class="form-group">
+                                        <label for="pay-grade-code" class="col-sm-4 control-label">Code</label>
+                                        <div class="col-sm-8">
+                                            <input id="pay-grade-code" type="text" placeholder="Code: e.g GR-9" class="form-control" ng-model="payGrade.code" />
+                                        </div>
+                                    </div><!-- form-group -->
+                                    <div class="form-group">
+                                        <label for="pay-grade-name" class="col-sm-4 control-label">Name</label>
+                                        <div class="col-sm-8">
+                                            <input id="pay-grade-name" type="text" placeholder="Name" class="form-control" ng-model="payGrade.name" />
+                                        </div>
+                                    </div><!-- form-group -->
+                                    <div class="form-group">
+                                        <label for="pay-grade-description" class="col-sm-4 control-label">Description</label>
+                                        <div class="col-sm-8">
+                                            <textarea id="pay-grade-description" class="form-control" placeholder="Pay Grade description" ng-model="payGrade.description" rows="5"></textarea>
+                                        </div>
+                                    </div><!-- form-group -->
+                                    <div class="form-group">
+                                        <label for="pay-grade-pay-group" class="col-sm-4 control-label">Pay Group</label>
+                                        <div class="col-sm-8">
+                                            <select ng-model="payGrade.payGroupId"  id="pay-grade-pay-group" class="form-control width100p" data-placeholder="Choose One">
+                                                <option value="">Choose One</option>
+                                                <option ng-repeat="payGroup in getActivePayGroups()" on-finish-render="ngRepeatFinished" value="{{payGroup._id}}">{{payGroup.name}}</option>
+                                            </select>
+                                        </div>
+                                    </div><!-- form-group -->
+                                    <div class="form-group">
+                                        <label for="pay-grade-status" class="col-sm-4 control-label">Status</label>
+                                        <div class="col-sm-8">
+                                            <select ng-model="payGrade.status"  id="pay-grade-status" class="form-control width100p" data-placeholder="Choose One">
+                                                <option value="">Choose One</option>
+                                                <option value="Active">Active</option>
+                                                <option value="Inactive">Inactive</option>
+                                            </select>
+                                        </div>
+                                    </div><!-- form-group -->
+
+                                </div><!-- tab-pane -->
+
+                                <div class="tab-pane" id="tab2-2">
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <div class="col-sm-4">
+                                                <div class="table-responsive">
+                                                    <table class="table table-hover">
+                                                        <thead>
+                                                        <tr>
+                                                            <th>Wages</th>
+                                                        </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                        <tr>
+                                                            <td>
+                                                                <div class="col-sm-8" ng-repeat="wage in getPayTypes('Wage')">
+                                                                    <div class="ckbox ckbox-success">
+                                                                        <input ng-checked="isPresent(wage._id)" type="checkbox" id="{{wage._id}}" ng-click="check(wage, 'Wage')" ng-model="paymentCheck" />
+                                                                        <label for="{{wage._id}}">{{wage.title}}</label>
+                                                                    </div>
+                                                                </div><!-- col-sm-4 -->
+                                                            </td>
+                                                        </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div><!-- table-responsive -->
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <div class="table-responsive">
+                                                    <table class="table table-hover">
+                                                        <thead>
+                                                        <tr>
+                                                            <th>Benefits</th>
+                                                        </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                        <tr>
+                                                            <td>
+                                                                <div class="col-sm-8" ng-repeat="benefit in getPayTypes('Benefit')">
+                                                                    <div class="ckbox ckbox-success">
+                                                                        <input ng-checked="isPresent(benefit._id)" type="checkbox" id="{{benefit._id}}" ng-click="check(benefit, 'Benefit')" ng-model="paymentCheck" />
+                                                                        <label for="{{benefit._id}}">{{benefit.title}}</label>
+                                                                    </div>
+                                                                </div><!-- col-sm-4 -->
+                                                            </td>
+                                                        </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div><!-- table-responsive -->
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <div class="table-responsive">
+                                                    <table class="table table-hover">
+                                                        <thead>
+                                                        <tr>
+                                                            <th>Deductions</th>
+                                                        </tr>
+                                                        </thead>
+                                                        <tbody id="data-body">
+                                                        <tr>
+                                                            <td>
+                                                                <div class="col-sm-8" ng-repeat="deduction in getPayTypes('Deduction')">
+                                                                    <div class="ckbox ckbox-success">
+                                                                        <input ng-checked="isPresent(deduction._id) === true" ng-click="check(deduction, 'Deduction')" type="checkbox" id="{{deduction._id}}" ng-model="deductionCheck" />
+                                                                        <label for="{{deduction._id}}">{{deduction.title}}</label>
+                                                                    </div>
+                                                                </div><!-- col-sm-4 -->
+                                                            </td>
+                                                        </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div><!-- table-responsive -->
+                                            </div>
+                                        </div>
+                                    </div><!-- form-group -->
+                                </div><!-- tab-pane -->
+
+                                <div class="tab-pane" id="tab3-2">
+                                    <div class="form-group">
+                                        <h5 class="lg-title">Define Pay Types Values</h5><br/>
+                                        <div class="table-responsive">
+                                            <table class="table table-hover">
+                                                <thead>
+                                                <tr>
+                                                    <th>S/N</th>
+                                                    <th>Code</th>
+                                                    <th>Title</th>
+                                                    <th>Derivative</th>
+                                                    <th>Formula / Value</th>
+                                                    <th>Value</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody ng-sortable="payTypeSortConfig" id="data-body">
+                                                <tr ng-repeat="payType in payGrade.payTypes" class="item" style="cursor: move;">
+                                                    <td>{{$index + 1}}</td>
+                                                    <td>{{payType.code}}</td>
+                                                    <td>{{payType.title}}</td>
+                                                    <td>{{payType.derived}}</td>
+                                                    <td>
+                                                        <input ng-blur="calculate()" type="number" ng-if="payType.derived === 'Fixed'" placeholder="Fixed e.g 50000" class="form-control calc" ng-model="payType.value" />
+                                                        <input ng-blur="calculate()" ng-if="payType.derived !== 'Fixed'" type="text" placeholder="% or Formula e.g 5 % DC1" class="form-control calc" ng-model="payType.derivative" />
+                                                    </td>
+                                                    <td>
+                                                        <input type="number" class="compute-value calc" ng-if="payType.derived !== 'Fixed'" disabled ng-model="payType.value" />
+                                                    </td>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+                                        </div><!-- table-responsive -->
+                                    </div><!-- form-group -->
+                                </div><!-- tab-pane -->
+
+                            </div><!-- tab-content -->
+
+                            <ul class="list-unstyled wizard">
+                                <li class="pull-left previous">
+                                    <button type="button" class="btn btn-default">Previous</button>
+                                </li>
+                                <li class="pull-right next">
+                                    <button type="button" class="btn btn-primary">Next</button>
+                                </li>
+                                <li class="pull-right finish hide">
+                                    <button type="submit" class="btn btn-primary" ng-click="updatePayGrade()">Update</button>
+                                </li>
+                            </ul>
+
+                        </form><!-- panel-wizard -->
+
                     </div><!-- row -->
-
+                    <p class="text-center error" ng-show="errorOccur">{{errorMessage}}</p>
                 </div><!-- panel-body -->
                 <div class="panel-footer">
-                    <button class="btn btn-primary mr5" ng-click="updatePayGroup()">Update</button>
-                    <button type="reset" class="btn btn-warning" ng-click="closePayGroup()">Cancel</button>
-                    <button type="reset" class="btn btn-danger pull-right" ng-click="delete()">Delete</button>
+                    <button type="reset" class="btn btn-warning" ng-click="cancel()">Close</button>
                 </div><!-- panel-footer -->
             </div><!-- panel -->
 
-        </div><!-- col-md-12 -->
+        </div><!-- col-md-8 -->
 
 
         <div class="col-md-4">
@@ -161,11 +373,11 @@
                     <div class="row">
 
                         <!-- PROGRESS WIZARD -->
-                        <form id="progressWizard" class="panel-wizard form-horizontal form-bordered">
+                        <form id="progress-wizard-new" class="panel-wizard form-horizontal form-bordered">
                             <ul class="nav nav-justified nav-wizard nav-disabled-click">
-                                <li><a href="#tab1-2" data-toggle="tab"><strong>Step 1:</strong> Description</a></li>
-                                <li><a href="#tab2-2" data-toggle="tab"><strong>Step 2:</strong> Pay Types</a></li>
-                                <li><a href="#tab3-2" data-toggle="tab"><strong>Step 3:</strong> Derivatives</a></li>
+                                <li><a href="#new-tab1-2" data-toggle="tab"><strong>Step 1:</strong> Description</a></li>
+                                <li><a href="#new-tab2-2" data-toggle="tab"><strong>Step 2:</strong> Pay Types</a></li>
+                                <li><a href="#new-tab3-2" data-toggle="tab"><strong>Step 3:</strong> Derivatives</a></li>
                             </ul>
 
 
@@ -175,40 +387,40 @@
 
                             <div class="tab-content">
 
-                                <div class="tab-pane" id="tab1-2">
+                                <div class="tab-pane" id="new-tab1-2">
 
                                     <div class="form-group">
-                                        <label for="pay-grade-code" class="col-sm-4 control-label">Code</label>
+                                        <label for="new-pay-grade-code" class="col-sm-4 control-label">Code</label>
                                         <div class="col-sm-8">
-                                            <input id="pay-grade-code" type="text" placeholder="Code: e.g GR-9" class="form-control" ng-model="payGrade.code" />
+                                            <input id="new-pay-grade-code" type="text" placeholder="Code: e.g GR-9" class="form-control" ng-model="payGrade.code" />
                                         </div>
                                     </div><!-- form-group -->
                                     <div class="form-group">
-                                        <label for="pay-grade-name" class="col-sm-4 control-label">Name</label>
+                                        <label for="new-pay-grade-name" class="col-sm-4 control-label">Name</label>
                                         <div class="col-sm-8">
-                                            <input id="pay-grade-name" type="text" placeholder="Name" class="form-control" ng-model="payGrade.name" />
+                                            <input id="new-pay-grade-name" type="text" placeholder="Name" class="form-control" ng-model="payGrade.name" />
                                         </div>
                                     </div><!-- form-group -->
                                     <div class="form-group">
-                                        <label for="pay-grade-description" class="col-sm-4 control-label">Description</label>
+                                        <label for="new-pay-grade-description" class="col-sm-4 control-label">Description</label>
                                         <div class="col-sm-8">
-                                            <textarea id="pay-grade-description" class="form-control" placeholder="Pay Grade description" ng-model="payGrade.description" rows="5"></textarea>
+                                            <textarea id="new-pay-grade-description" class="form-control" placeholder="Pay Grade description" ng-model="payGrade.description" rows="5"></textarea>
                                         </div>
                                     </div><!-- form-group -->
                                     <div class="form-group">
-                                        <label for="pay-grade-pay-group" class="col-sm-4 control-label">Pay Group</label>
+                                        <label for="new-pay-grade-pay-group" class="col-sm-4 control-label">Pay Group</label>
                                         <div class="col-sm-8">
-                                            <select ng-model="payGrade.payGroupId"  id="pay-grade-pay-group" style="width:100%" data-placeholder="Choose One">
-                                                <option value="">-- Choose One --</option>
+                                            <select ng-model="payGrade.payGroupId"  id="new-pay-grade-pay-group" style="width:100%" data-placeholder="Choose One">
+                                                <option value="">Choose One</option>
                                                 <option ng-repeat="payGroup in getActivePayGroups()" on-finish-render="ngRepeatFinished" value="{{payGroup._id}}">{{payGroup.name}}</option>
                                             </select>
                                         </div>
                                     </div><!-- form-group -->
                                     <div class="form-group">
-                                        <label for="pay-grade-status" class="col-sm-4 control-label">Status</label>
+                                        <label for="new-pay-grade-status" class="col-sm-4 control-label">Status</label>
                                         <div class="col-sm-8">
-                                            <select ng-model="payGrade.status"  id="pay-grade-status" style="width:100%" data-placeholder="Choose One">
-                                                <option value="">-- Choose One --</option>
+                                            <select ng-model="payGrade.status"  id="new-pay-grade-status" style="width:100%" data-placeholder="Choose One">
+                                                <option value="">Choose One</option>
                                                 <option value="Active">Active</option>
                                                 <option value="Inactive">Inactive</option>
                                             </select>
@@ -217,7 +429,7 @@
 
                                 </div><!-- tab-pane -->
 
-                                <div class="tab-pane" id="tab2-2">
+                                <div class="tab-pane" id="new-tab2-2">
                                     <div class="form-group">
                                         <div class="row">
                                             <div class="col-sm-4">
@@ -233,8 +445,8 @@
                                                             <td>
                                                                 <div class="col-sm-8" ng-repeat="wage in getPayTypes('Wage')">
                                                                     <div class="ckbox ckbox-success">
-                                                                        <input type="checkbox" id="{{wage._id}}" ng-change="check(wage, 'Wage')" ng-model="paymentCheck" />
-                                                                        <label for="{{wage._id}}">{{wage.title}}</label>
+                                                                        <input type="checkbox" id="{{'n' + wage._id}}" ng-click="check(wage, 'Wage')" ng-model="paymentCheck" />
+                                                                        <label for="{{'n' + wage._id}}">{{wage.title}}</label>
                                                                     </div>
                                                                 </div><!-- col-sm-4 -->
                                                             </td>
@@ -256,8 +468,8 @@
                                                             <td>
                                                                 <div class="col-sm-8" ng-repeat="benefit in getPayTypes('Benefit')">
                                                                     <div class="ckbox ckbox-success">
-                                                                        <input type="checkbox" id="{{benefit._id}}" ng-change="check(benefit, 'Benefit')" ng-model="paymentCheck" />
-                                                                        <label for="{{benefit._id}}">{{benefit.title}}</label>
+                                                                        <input type="checkbox" id="{{'n' + benefit._id}}" ng-click="check(benefit, 'Benefit')" checked="checked" ng-model="paymentCheck" />
+                                                                        <label for="{{'n' + benefit._id}}">{{benefit.title}}</label>
                                                                     </div>
                                                                 </div><!-- col-sm-4 -->
                                                             </td>
@@ -279,8 +491,8 @@
                                                             <td>
                                                                 <div class="col-sm-8" ng-repeat="deduction in getPayTypes('Deduction')">
                                                                     <div class="ckbox ckbox-success">
-                                                                        <input type="checkbox" id="{{deduction._id}}" ng-change="check(deduction, 'Deduction')" ng-model="deductionCheck" />
-                                                                        <label for="{{deduction._id}}">{{deduction.title}}</label>
+                                                                        <input type="checkbox" id="{{'n' + deduction._id}}" ng-click="check(deduction, 'Deduction')" ng-model="deductionCheck" />
+                                                                        <label for="{{'n' + deduction._id}}">{{deduction.title}}</label>
                                                                     </div>
                                                                 </div><!-- col-sm-4 -->
                                                             </td>
@@ -293,7 +505,7 @@
                                     </div><!-- form-group -->
                                 </div><!-- tab-pane -->
 
-                                <div class="tab-pane" id="tab3-2">
+                                <div class="tab-pane" id="new-tab3-2">
                                     <div class="form-group">
                                         <h5 class="lg-title">Define Pay Types Values</h5><br/>
                                         <div class="table-responsive">
@@ -308,18 +520,18 @@
                                                     <th>Value</th>
                                                 </tr>
                                                 </thead>
-                                                <tbody ng-sortable="payTypeSortConfig" id="data-body">
-                                                <tr ng-repeat="payType in newPayScale.payTypes" class="item" style="cursor: move;">
+                                                <tbody ng-sortable="payTypeSortConfig" id="new-data-body">
+                                                <tr ng-repeat="payType in payGrade.payTypes" class="item" style="cursor: move;">
                                                     <td>{{$index + 1}}</td>
-                                                    <td>{{getPaymentFromId(payType.id).code}}</td>
-                                                    <td>{{getPaymentFromId(payType.id).title}}</td>
-                                                    <td>{{getPaymentFromId(payType.id).derivative}}</td>
+                                                    <td>{{payType.code}}</td>
+                                                    <td>{{payType.title}}</td>
+                                                    <td>{{payType.derived}}</td>
                                                     <td>
-                                                        <input ng-blur="calculate()" type="number" ng-if="getPaymentFromId(payType.id).derivative === 'Fixed'" placeholder="Fixed e.g 50000" class="form-control calc" ng-model="payType.value" />
-                                                        <input ng-blur="calculate()" ng-if="getPaymentFromId(payType.id).derivative !== 'Fixed'" type="text" placeholder="% or Formula e.g 5 % DC1" class="form-control calc" ng-model="payType.derivative" />
+                                                        <input ng-blur="calculate()" type="number" ng-if="payType.derived === 'Fixed'" placeholder="Fixed e.g 50000" class="form-control calc" ng-model="payType.value" />
+                                                        <input ng-blur="calculate()" ng-if="payType.derived !== 'Fixed'" type="text" placeholder="% or Formula e.g 5 % DC1" class="form-control calc" ng-model="payType.derivative" />
                                                     </td>
                                                     <td>
-                                                        <input type="number" class="compute-value calc" ng-if="getPaymentFromId(payType.id).derivative !== 'Fixed'" disabled ng-model="payType.value" />
+                                                        <input type="number" class="compute-value calc" ng-if="payType.derived !== 'Fixed'" disabled ng-model="payType.value" />
                                                     </td>
                                                 </tr>
                                                 </tbody>
@@ -338,7 +550,7 @@
                                     <button type="button" class="btn btn-primary">Next</button>
                                 </li>
                                 <li class="pull-right finish hide">
-                                    <button type="submit" class="btn btn-primary" ng-disabled="validate()" ng-click="savePayScale()">Finish</button>
+                                    <button type="submit" class="btn btn-primary" ng-disabled="validate()" ng-click="createPayGrade()">Finish</button>
                                 </li>
                             </ul>
 
@@ -348,8 +560,7 @@
                     <p class="text-center error" ng-show="errorOccur">{{errorMessage}}</p>
                 </div>
                 <div class="panel-footer">
-                    <button class="btn btn-primary mr5" ng-click="createPayGroup()">Save</button>
-                    <button type="reset" class="btn btn-danger" id="new-pay-group-close" data-dismiss="modal">Cancel</button>
+                    <button type="reset" class="btn btn-danger pull-right" id="new-pay-grade-close" data-dismiss="modal" ng-click="resetNewGrade()">Cancel</button>
                 </div><!-- panel-footer -->
             </div>
         </div>

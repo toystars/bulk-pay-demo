@@ -28,10 +28,6 @@ var payGradesSchema = new Schema({
     required: "Please specify type status",
     default: "Active"
   },
-  level: {
-    type: String,
-    required: "Please specify type level"
-  },
   createdAt: {
     type: Date,
     default: Date.now
@@ -47,13 +43,11 @@ var payGradesSchema = new Schema({
     },
     code: {
       type: String,
-      required: "Please specify code",
-      unique: true
+      required: "Please specify code"
     },
     payTypeId: {
       type: String,
-      required: "Please specify id",
-      unique: true
+      required: "Please specify id"
     },
     derivative: {
       type: String

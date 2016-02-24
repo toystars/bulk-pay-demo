@@ -87,6 +87,24 @@ exports.updatePosition = function (req, res) {
   });
 };
 
+/*
+* Get employees belonging to a position
+* */
+exports.getPositionEmployees = function (req, res) {
+  User.find({ positionId: req.params.positionId }, function (error, users) {
+    if (error) {
+      crudHelper.handleError(res, 400, error);
+    }
+    if (users) {
+      crudHelper.respondWithResult(res, null, users);
+    }
+  });
+};
+
+
+/*
+* Remove a position
+* */
 exports.destroy = function (req, res) {
   Position.findOne({_id: req.params.id}, function (error, position) {
     if (error) {
