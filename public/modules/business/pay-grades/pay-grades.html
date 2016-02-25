@@ -191,6 +191,13 @@
                                 <div class="tab-pane" id="tab2-2">
                                     <div class="form-group">
                                         <div class="row">
+                                            <div class="col-sm-12">
+                                                <div class="form-group">
+                                                    <div class="col-sm-12">
+                                                        <input id="filter" type="text" placeholder="Search..." class="form-control" ng-model="searchText" />
+                                                    </div>
+                                                </div><!-- form-group -->
+                                            </div>
                                             <div class="col-sm-4">
                                                 <div class="table-responsive">
                                                     <table class="table table-hover">
@@ -202,7 +209,7 @@
                                                         <tbody>
                                                         <tr>
                                                             <td>
-                                                                <div class="col-sm-8" ng-repeat="wage in getPayTypes('Wage')">
+                                                                <div class="col-sm-8" ng-repeat="wage in getPayTypes('Wage') | filter:searchText">
                                                                     <div class="ckbox ckbox-success">
                                                                         <input ng-checked="isPresent(wage._id)" type="checkbox" id="{{wage._id}}" ng-click="check(wage, 'Wage')" ng-model="paymentCheck" />
                                                                         <label for="{{wage._id}}">{{wage.title}}</label>
@@ -225,7 +232,7 @@
                                                         <tbody>
                                                         <tr>
                                                             <td>
-                                                                <div class="col-sm-8" ng-repeat="benefit in getPayTypes('Benefit')">
+                                                                <div class="col-sm-8" ng-repeat="benefit in getPayTypes('Benefit') | filter:searchText">
                                                                     <div class="ckbox ckbox-success">
                                                                         <input ng-checked="isPresent(benefit._id)" type="checkbox" id="{{benefit._id}}" ng-click="check(benefit, 'Benefit')" ng-model="paymentCheck" />
                                                                         <label for="{{benefit._id}}">{{benefit.title}}</label>
@@ -248,7 +255,7 @@
                                                         <tbody id="data-body">
                                                         <tr>
                                                             <td>
-                                                                <div class="col-sm-8" ng-repeat="deduction in getPayTypes('Deduction')">
+                                                                <div class="col-sm-8" ng-repeat="deduction in getPayTypes('Deduction') | filter:searchText">
                                                                     <div class="ckbox ckbox-success">
                                                                         <input ng-checked="isPresent(deduction._id) === true" ng-click="check(deduction, 'Deduction')" type="checkbox" id="{{deduction._id}}" ng-model="deductionCheck" />
                                                                         <label for="{{deduction._id}}">{{deduction.title}}</label>
@@ -432,6 +439,13 @@
                                 <div class="tab-pane" id="new-tab2-2">
                                     <div class="form-group">
                                         <div class="row">
+                                            <div class="col-sm-12">
+                                                <div class="form-group">
+                                                    <div class="col-sm-12">
+                                                        <input id="filter" type="text" placeholder="Search..." class="form-control" ng-model="searchText" />
+                                                    </div>
+                                                </div><!-- form-group -->
+                                            </div>
                                             <div class="col-sm-4">
                                                 <div class="table-responsive">
                                                     <table class="table table-hover">
@@ -443,9 +457,9 @@
                                                         <tbody>
                                                         <tr>
                                                             <td>
-                                                                <div class="col-sm-8" ng-repeat="wage in getPayTypes('Wage')">
+                                                                <div class="col-sm-8" ng-repeat="wage in getPayTypes('Wage') | filter:searchText">
                                                                     <div class="ckbox ckbox-success">
-                                                                        <input type="checkbox" id="{{'n' + wage._id}}" ng-click="check(wage, 'Wage')" ng-model="paymentCheck" />
+                                                                        <input ng-checked="isPresent(wage._id)" type="checkbox" id="{{'n' + wage._id}}" ng-click="check(wage, 'Wage')" ng-model="paymentCheck" />
                                                                         <label for="{{'n' + wage._id}}">{{wage.title}}</label>
                                                                     </div>
                                                                 </div><!-- col-sm-4 -->
@@ -466,9 +480,9 @@
                                                         <tbody>
                                                         <tr>
                                                             <td>
-                                                                <div class="col-sm-8" ng-repeat="benefit in getPayTypes('Benefit')">
+                                                                <div class="col-sm-8" ng-repeat="benefit in getPayTypes('Benefit') | filter:searchText">
                                                                     <div class="ckbox ckbox-success">
-                                                                        <input type="checkbox" id="{{'n' + benefit._id}}" ng-click="check(benefit, 'Benefit')" checked="checked" ng-model="paymentCheck" />
+                                                                        <input ng-checked="isPresent(benefit._id)" type="checkbox" id="{{'n' + benefit._id}}" ng-click="check(benefit, 'Benefit')" checked="checked" ng-model="paymentCheck" />
                                                                         <label for="{{'n' + benefit._id}}">{{benefit.title}}</label>
                                                                     </div>
                                                                 </div><!-- col-sm-4 -->
@@ -489,9 +503,9 @@
                                                         <tbody id="data-body">
                                                         <tr>
                                                             <td>
-                                                                <div class="col-sm-8" ng-repeat="deduction in getPayTypes('Deduction')">
+                                                                <div class="col-sm-8" ng-repeat="deduction in getPayTypes('Deduction') | filter:searchText">
                                                                     <div class="ckbox ckbox-success">
-                                                                        <input type="checkbox" id="{{'n' + deduction._id}}" ng-click="check(deduction, 'Deduction')" ng-model="deductionCheck" />
+                                                                        <input ng-checked="isPresent(deduction._id)" type="checkbox" id="{{'n' + deduction._id}}" ng-click="check(deduction, 'Deduction')" ng-model="deductionCheck" />
                                                                         <label for="{{'n' + deduction._id}}">{{deduction.title}}</label>
                                                                     </div>
                                                                 </div><!-- col-sm-4 -->
