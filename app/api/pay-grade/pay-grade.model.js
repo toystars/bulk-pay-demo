@@ -32,6 +32,7 @@ var payGradesSchema = new Schema({
     type: Date,
     default: Date.now
   },
+  taxRate: Number,
   payTypes: [{
     cellId: {
       type: String,
@@ -45,10 +46,15 @@ var payGradesSchema = new Schema({
       type: String,
       required: "Please specify code"
     },
+    taxable: {
+      type: String,
+      required: "Please specify tax status"
+    },
     payTypeId: {
       type: String,
       required: "Please specify id"
     },
+    frequency: String,
     derivative: {
       type: String
     },

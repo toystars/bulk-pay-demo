@@ -124,6 +124,24 @@ bulkPay.config(['$stateProvider', '$urlRouterProvider', '$locationProvider', 'to
         }
       })
 
+      .state('business.pensions', {
+        url: '/pensions',
+        templateUrl: 'modules/business/pensions/pensions.html',
+        controller: 'BusinessPensionsCtrl',
+        data: {
+          pageTitle: 'Pensions | BulkPay'
+        }
+      })
+
+      .state('business.newemployee', {
+        url: '/employee/new',
+        templateUrl: 'modules/business/employees/new/employees.html',
+        controller: 'BusinessEmployeeCreateCtrl',
+        data: {
+          pageTitle: 'New Employee | BulkPay'
+        }
+      })
+
 
 
       /*

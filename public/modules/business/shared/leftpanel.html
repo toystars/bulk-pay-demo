@@ -25,13 +25,12 @@
             <li ng-class="{active: inView === 'Pay Groups'}" ng-click="toggleActive('Pay Groups')"><a ui-sref="business.paygroups">Pay Groups</a></li>
             <li ng-class="{active: inView === 'Pay Types'}" ng-click="toggleActive('Pay Types')"><a ui-sref="business.payment">Pay Types</a></li>
             <li ng-class="{active: inView === 'Pay Grades'}" ng-click="toggleActive('Pay Grades')"><a ui-sref="business.paygrades">Pay Grades</a></li>
-            <li ng-class="{active: inView === 'Tax and Pension'}" ng-click="toggleActive('Pay Types')"><a ui-sref="home.deduction">Tax and Pension</a></li>
-            <li ng-class="{active: inView === 'Pay Scale'}" ng-click="toggleActive('Pay Scale')"><a ui-sref="home.payscale">Pay Scale</a></li>
+            <li ng-class="{active: inView === 'Pensions'}" ng-click="toggleActive('Pensions')"><a ui-sref="business.pensions">Pensions</a></li>
         </ul>
     </li>
     <li ng-class="{active: inView === 'Employees'}" class="parent" ng-click="toggleActive('Employees')"><a href=""><i class="fa fa-users"></i> <span>Employees</span></a>
         <ul class="children">
-            <li><a ui-sref="home.newemployee">New Employee</a></li>
+            <li><a ui-sref="business.newemployee">New Employee</a></li>
         </ul>
     </li>
     <li ng-class="{active: inView === 'Leave'}" ng-click="toggleActive('Leave')"><a><i class="fa fa-paper-plane-o"></i> <span>Leave</span></a></li>

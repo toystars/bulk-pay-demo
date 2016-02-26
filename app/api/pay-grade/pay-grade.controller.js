@@ -72,6 +72,23 @@ exports.show = function (req, res) {
   });
 };
 
+
+/*
+ * Fetch by pay group id
+ * */
+exports.getByPayGroup = function (req, res) {
+  PayGrade.find({ payGroupId: req.params.payGroupId }, function (error, payGrades) {
+    if (error) {
+      crudHelper.handleError(res, null, error);
+    } else if (payGrades) {
+      crudHelper.respondWithResult(res, null, payGrades);
+    } else {
+      crudHelper.handleError(res, null, { message: 'No pay grade found!' });
+    }
+  });
+};
+
+
 /*
  * Update single pay grade
  * */

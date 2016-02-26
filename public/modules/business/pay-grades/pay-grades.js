@@ -140,7 +140,9 @@ bulkPay.controller('BusinessPayGradesCtrl', ['$scope', '$rootScope', 'AuthSvc', 
       payTypeId: payType._id,
       derivative: '',
       type: type,
-      value: 0,
+      value: null,
+      frequency: payType.frequency,
+      taxable: payType.taxable,
       editablePerEmployee: payType.editablePerEmployee
     });
   };

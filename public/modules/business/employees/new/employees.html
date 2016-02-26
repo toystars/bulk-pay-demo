@@ -1,0 +1,877 @@
+<div class="pageheader">
+    <div class="media">
+        <div class="pageicon pull-left">
+            <i class="fa fa-users"></i>
+        </div>
+        <div class="media-body">
+            <ul class="breadcrumb">
+                <li><a href=""><i class="glyphicon glyphicon-home"></i></a></li>
+                <li><a href="">Employees</a></li>
+                <li>New</li>
+            </ul>
+            <h4>New Employee</h4>
+        </div>
+    </div><!-- media -->
+</div><!-- pageheader -->
+
+<div class="contentpanel">
+
+
+    <div class="row">
+
+
+        <div class="col-sm-4 col-md-3">
+            <div class="text-center">
+                <img src="images/photos/avatar.jpg" class="img-circle img-offline img-responsive img-profile"
+                     alt=""/>
+                <h4 class="profile-name mb5">{{employee.firstName}} {{employee.lastName}}</h4>
+                <div><i class="fa fa-briefcase"></i> {{employee.department}}</div>
+                <div><i class="fa fa-map-marker"></i> {{employee.position}}</div>
+
+                <div class="mb20"></div>
+
+
+            </div>
+            <!-- text-center -->
+
+            <br/>
+
+            <h5 class="md-title">About</h5>
+            <p class="mb30">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt
+                ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitat... <a href="">Show
+                    More</a></p>
+
+            <h5 class="md-title">Connect</h5>
+            <ul class="list-unstyled social-list">
+                <li><i class="fa fa-twitter"></i> <a href="">twitter.com/eileensideways</a></li>
+                <li><i class="fa fa-facebook"></i> <a href="">facebook.com/eileen</a></li>
+                <li><i class="fa fa-youtube"></i> <a href="">youtube.com/eileen22</a></li>
+                <li><i class="fa fa-linkedin"></i> <a href="">linkedin.com/4ever-eileen</a></li>
+                <li><i class="fa fa-pinterest"></i> <a href="">pinterest.com/eileen</a></li>
+                <li><i class="fa fa-instagram"></i> <a href="">instagram.com/eiside</a></li>
+            </ul>
+
+            <div class="mb30"></div>
+
+            <h5 class="md-title">Address</h5>
+            <address>
+                795 Folsom Ave, Suite 600<br>
+                San Francisco, CA 94107<br>
+                <abbr title="Phone">P:</abbr> (123) 456-7890
+            </address>
+
+        </div>
+        <!-- col-sm-4 col-md-3 -->
+
+        <div class="col-sm-8 col-md-9">
+
+            <div class="row">
+                <!-- Nav tabs -->
+                <div class="col-md-12">
+                    <ul class="nav nav-tabs">
+                        <li ng-class="{active: inView === 'Personal Details'}"><a ng-click="changeView('Personal Details')" style="cursor: pointer;">Personal Details </a>
+                        </li>
+                        <li ng-class="{active: inView === 'Employment Details'}"><a ng-click="changeView('Employment Details')" style="cursor: pointer;">Employment
+                            Details </a></li>
+                        <li ng-class="{active: inView === 'Payment Details'}"><a ng-click="changeView('Payment Details')" style="cursor: pointer;">Payment Details </a>
+                        </li>
+                    </ul>
+                </div><!-- col-md-12 -->
+
+                <div class="col-md-12" ng-show="inView === 'Personal Details'">
+                    <div class="tab-pane active" id="activities">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <div class="panel-btns">
+                                    <a href="" class="panel-minimize tooltips" data-toggle="tooltip"
+                                       title="Minimize Panel"><i class="fa fa-minus"></i></a>
+                                </div>
+                                <!-- panel-btns -->
+                                <p>Please fill the form accordingly</p>
+                            </div>
+                            <!-- panel-heading -->
+                            <div class="panel-body nopadding">
+                                <form class="form-horizontal form-bordered">
+                                    <div class="form-group">
+                                        <label class="col-sm-4 control-label">Employee ID</label>
+                                        <div class="col-sm-4">
+                                            <input ng-model="employee.employeeId" type="text" placeholder="Unique" class="form-control"/>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            Last ID used:
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="col-sm-4 control-label">First Name</label>
+                                        <div class="col-sm-4">
+                                            <input ng-model="employee.firstName" type="text" placeholder="First Name" class="form-control"/>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            &nbsp;
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="col-sm-4 control-label">Last Name</label>
+                                        <div class="col-sm-4">
+                                            <input ng-model="employee.lastName" type="text" placeholder="Last Name" class="form-control"/>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            &nbsp;
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="col-sm-4 control-label">Other Names</label>
+                                        <div class="col-sm-4">
+                                            <input ng-model="employee.otherNames" type="text" placeholder="Other Names" class="form-control"/>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            &nbsp;
+                                        </div>
+                                    </div>
+
+
+                                    <div class="form-group" ng-hide="dataReady()">
+                                        <label class="col-sm-4 control-label">Date of Birth</label>
+                                        <div class="input-group col-sm-4" style="padding-left:10px;padding-right:10px">
+                                            <input ng-model="employee.dateOfBirth" type="text" class="form-control datepicker-multiple" placeholder="mm/dd/yyyy">
+                                            <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            &nbsp;
+                                        </div>
+                                    </div>
+
+
+                                    <div class="form-group" ng-hide="dataReady()">
+                                        <label for="employee-gender" class="col-sm-4 control-label">Gender</label>
+                                        <div class="col-sm-4">
+                                            <select id="employee-gender" data-placeholder="Choose One" style="width:100%">
+                                                <option value="">Choose One</option>
+                                                <option value="Male">Male</option>
+                                                <option value="Female">Female</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            &nbsp;
+                                        </div>
+                                    </div>
+
+
+                                    <div class="form-group" ng-hide="dataReady()">
+                                        <label for="employee-marital-status" class="col-sm-4 control-label">Marital
+                                            Status</label>
+                                        <div class="col-sm-4">
+                                            <select id="employee-marital-status" data-placeholder="Choose One" style="width:100%">
+                                                <option value="">Choose One</option>
+                                                <option value="Single">Single</option>
+                                                <option value="Married">Married</option>
+                                                <option value="Divorced">Divorced</option>
+                                                <option value="Widowed">Widowed</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            &nbsp;
+                                        </div>
+                                    </div>
+
+
+                                    <div class="form-group">
+                                        <label for="employee-email" class="col-sm-4 control-label">Email</label>
+                                        <div class="col-sm-4">
+                                            <input ng-model="employee.email" type="email" id="employee-email" placeholder="Email" class="form-control"/>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            &nbsp;
+                                        </div>
+                                    </div>
+
+
+                                    <div class="form-group">
+                                        <label for="employee-phone" class="col-sm-4 control-label">Phone Number</label>
+                                        <div class="col-sm-4">
+                                            <input ng-model="employee.phone" type="tel" id="employee-phone" placeholder="Phone Number" class="form-control"/>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            &nbsp;
+                                        </div>
+                                    </div>
+
+
+                                    <div class="form-group">
+                                        <label for="employee-address" class="col-sm-4 control-label">Address</label>
+                                        <div class="col-sm-4">
+                                            <textarea ng-model="employee.address" id="employee-address" class="form-control" rows="5"></textarea>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            &nbsp;
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="employee-city" class="col-sm-4 control-label">City</label>
+                                        <div class="col-sm-4">
+                                            <input ng-model="employee.city" id="employee-city" type="text" placeholder="City" class="form-control"/>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            &nbsp;
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group" ng-hide="dataReady()">
+                                        <label for="employee-state" class="col-sm-4 control-label">State</label>
+                                        <div class="col-sm-4">
+                                            <select ng-model="employee.state" id="employee-state" data-placeholder="Choose One" style="width:100%">
+                                                <option value="">Choose One</option>
+                                                <option ng-repeat="state in states" on-finish-render="ngRepeatFinished" value="{{state}}">{{state}}
+                                                </option>
+                                            </select>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            &nbsp;
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class="col-sm-12">
+                                            <h5>Next of Kin/Guarantor</h5></div>
+
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="employee-guarantor-name" class="col-sm-4 control-label">Full
+                                            Name</label>
+                                        <div class="col-sm-4">
+                                            <input ng-model="employee.guarantor.fullName" id="employee-guarantor-name" type="text" placeholder="Guarantor's Full Name" class="form-control"/>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            &nbsp;
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="employee-guarantor-email"
+                                               class="col-sm-4 control-label">Email</label>
+                                        <div class="col-sm-4">
+                                            <input ng-model="employee.guarantor.email" id="employee-guarantor-email" type="email" placeholder="Guarantor's Email" class="form-control"/>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            &nbsp;
+                                        </div>
+                                    </div>
+
+
+                                    <div class="form-group">
+                                        <label for="employee-guarantor-phone" class="col-sm-4 control-label">Phone
+                                            Number</label>
+                                        <div class="col-sm-4">
+                                            <input ng-model="employee.guarantor.phone" id="employee-guarantor-phone" type="tel" placeholder="Guarantor's Phone" class="form-control"/>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            &nbsp;
+                                        </div>
+                                    </div>
+
+
+                                    <div class="form-group">
+                                        <label for="employee-guarantor-address"
+                                               class="col-sm-4 control-label">Address</label>
+                                        <div class="col-sm-4">
+                                            <textarea ng-model="employee.guarantor.address" id="employee-guarantor-address" class="form-control" rows="5"></textarea>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            &nbsp;
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="employee-guarantor-city" class="col-sm-4 control-label">City</label>
+                                        <div class="col-sm-4">
+                                            <input ng-model="employee.guarantor.city" id="employee-guarantor-city" type="text" placeholder="Guarantor's City" class="form-control"/>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            &nbsp;
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group" ng-hide="dataReady()">
+                                        <label for="employee-kin-state" class="col-sm-4 control-label">State</label>
+                                        <div class="col-sm-4">
+                                            <select ng-model="employee.guarantor.state" id="employee-kin-state" data-placeholder="Choose One" style="width:100%">
+                                                <option value="">Choose One</option>
+                                                <option ng-repeat="state in states" on-finish-render="ngRepeatFinished" value="{{state}}">{{state}}</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            &nbsp;
+                                        </div>
+                                    </div>
+                                </form>
+                            </div><!-- panel-body -->
+                        </div><!-- panel -->
+                    </div><!-- tab-pane -->
+                </div>
+
+                <div class="col-md-12" ng-show="inView === 'Employment Details'">
+                    <div class="tab-pane" id="followers">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <div class="panel-btns">
+                                    <!--<a href="" class="panel-minimize tooltips" data-toggle="tooltip" title="Minimize Panel"><i class="fa fa-minus"></i></a>-->
+                                </div>
+                                <!-- panel-btns -->
+                                <p>Please fill the form accordingly</p>
+                            </div>
+                            <!-- panel-heading -->
+                            <div class="panel-body nopadding">
+                                <form class="form-horizontal form-bordered">
+
+                                    <div class="form-group" ng-hide="dataReady()">
+                                        <label for="employee-business-unit" class="col-sm-4 control-label">Business Unit</label>
+                                        <div class="col-sm-4">
+                                            <select ng-model="employee.businessUnitId" id="employee-business-unit" data-placeholder="Choose One" style="width:100%">
+                                                <option value="">Choose One</option>
+                                                <option ng-repeat="businessUnit in businessUnits" on-finish-render="ngRepeatFinished" value="{{businessUnit._id}}">{{businessUnit.name}}</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            &nbsp;
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group" ng-hide="dataReady()">
+                                        <label for="employee-division" class="col-sm-4 control-label">Division</label>
+                                        <div class="col-sm-4">
+                                            <select ng-model="employee.divisionId" id="employee-division" data-placeholder="Choose One" style="width:100%">
+                                                <option value="">Choose One</option>
+                                                <option ng-repeat="division in getDivisions()" on-finish-render="ngRepeatFinished" value="{{division._id}}">{{division.name}}</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            &nbsp;
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group" ng-hide="dataReady()">
+                                        <label for="employee-department" class="col-sm-4 control-label">Department</label>
+                                        <div class="col-sm-4">
+                                            <select ng-model="employee.departmentId" id="employee-department" data-placeholder="Choose One" style="width:100%">
+                                                <option value="">Choose One</option>
+                                                <option ng-repeat="department in getDepartments()" on-finish-render="ngRepeatFinished" value="{{department._id}}">{{department.name}}</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            &nbsp;
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group" ng-hide="dataReady()">
+                                        <label for="employee-position" class="col-sm-4 control-label">Position</label>
+                                        <div class="col-sm-4">
+                                            <select ng-model="employee.positionId" id="employee-position" data-placeholder="Choose One" style="width:100%">
+                                                <option value="">Choose One</option>
+                                                <option ng-repeat="position in getPositions()" on-finish-render="ngRepeatFinished" value="{{position._id}}">{{position.name}}</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            &nbsp;
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="col-sm-4 control-label">Hire Date</label>
+                                        <div class="input-group col-sm-4" style="padding-left:10px;padding-right:10px">
+                                            <input ng-model="employee.employmentDate" type="text" class="form-control datepicker-multiple" placeholder="mm/dd/yyyy">
+                                            <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            &nbsp;
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="col-sm-4 control-label">Confirmation Date</label>
+                                        <div class="input-group col-sm-4" style="padding-left:10px;padding-right:10px">
+                                            <input ng-model="employee.confirmationDate" type="text" class="form-control datepicker-multiple" placeholder="mm/dd/yyyy">
+                                            <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            &nbsp;
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="col-sm-4 control-label">Termination/Resignation Date</label>
+                                        <div class="input-group col-sm-4" style="padding-left:10px;padding-right:10px">
+                                            <input ng-model="employee.terminationDate" type="text" class="form-control datepicker-multiple" placeholder="mm/dd/yyyy">
+                                            <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            &nbsp;
+                                        </div>
+                                    </div>
+                                </form>
+                            </div><!-- panel-body -->
+                        </div><!-- panel -->
+                    </div><!-- tab-pane -->
+                </div>
+
+                <div class="col-md-12" ng-show="inView === 'Payment Details'">
+                    <div class="tab-pane" id="following">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <div class="panel-btns">
+                                    <a href="" class="panel-minimize tooltips" data-toggle="tooltip"
+                                       title="Minimize Panel"><i class="fa fa-minus"></i></a>
+                                </div>
+                                <!-- panel-btns -->
+                                <p>Please fill the form accordingly</p>
+                            </div>
+                            <!-- panel-heading -->
+                            <div class="panel-body nopadding">
+                                <form class="form-horizontal form-bordered">
+
+                                    <div class="form-group">
+                                        <label for="employee-payment-method" class="col-sm-4 control-label">Payment Method</label>
+                                        <div class="col-sm-4">
+                                            <select id="employee-payment-method" data-placeholder="Choose One" style="width:100%">
+                                                <option value="">Choose One</option>
+                                                <option value="Bank Transfer">Bank Transfer</option>
+                                                <option value="Cheque">Cheque</option>
+                                                <option value="Cash">Cash</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            &nbsp;
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="employee-bank" class="col-sm-4 control-label">Bank</label>
+                                        <div class="col-sm-4">
+                                            <select id="employee-bank" data-placeholder="Choose One" style="width:100%">
+                                                <option value="">Choose One</option>
+                                                <option value="Stanbic IBTC Bank">Stanbic IBTC Bank</option>
+                                                <option value="UBA">UBA</option>
+                                                <option value="Zenith Bank">Zenith Bank</option>
+                                                <option value="First Bank">First Bank</option>
+                                                <option value="Union Bank">Union Bank</option>
+                                                <option value="Sterling Bank">Sterling Bank</option>
+                                                <option value="Access Bank">Access Bank</option>
+                                                <option value="GTB">GTB</option>
+                                                <option value="Skye Bank">Skye Bank</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            &nbsp;
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="col-sm-4 control-label">Bank Account No.</label>
+                                        <div class="col-sm-4">
+                                            <input ng-model="employee.paymentDetails.accountNumber" type="text" placeholder="Account Number" class="form-control"/>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            &nbsp;
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="col-sm-4 control-label">Bank Account Name</label>
+                                        <div class="col-sm-4">
+                                            <!--<input type="text" placeholder="" class="form-control" readonly="readonly"/>-->
+                                            <input ng-model="employee.paymentDetails.accountName" type="text" placeholder="Account Name" class="form-control"/>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            &nbsp;
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class="col-sm-12">
+                                            <h5>Payroll Information</h5>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="employee-pay-group" class="col-sm-4 control-label">Pay Group</label>
+                                        <div class="col-sm-4">
+                                            <select ng-model="employee.payGroupId" id="employee-pay-group" data-placeholder="Choose One" style="width:100%">
+                                                <option value="">Choose One</option>
+                                                <option ng-repeat="payGroup in payGroups" on-finish-render="ngRepeatFinished" value="{{payGroup._id}}">{{payGroup.name}}</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            &nbsp;
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">Copy From</label>
+                                        <div class="col-sm-6 input-group" style="padding-left:10px;padding-right:10px">
+                                            <div class="input-group-btn">
+                                                <button data-toggle="dropdown" class="btn btn-default dropdown-toggle" type="button">{{sourcePointer}} <span class="caret"></span>
+                                                </button>
+                                                <ul class="dropdown-menu">
+                                                    <li><a style="cursor: pointer;" ng-click="setSource('Employee')">Employee</a></li>
+                                                    <li><a style="cursor: pointer;" ng-click="setSource('Payroll Template')">Payroll Template</a></li>
+                                                </ul>
+                                            </div>
+                                            <select ng-disabled="sourceStatus" ng-model="sourceId" id="employee-copy-from" data-placeholder="Choose One" style="width:100%">
+                                                <option value="">Choose One</option>
+                                                <option ng-repeat="source in copySource" on-finish-render="ngRepeatFinished" value="{{source.displayId}}">{{source.display}}
+                                                </option>
+                                            </select>
+                                            <!--<input type="text" class="payroll-search form-control" placeholder="Search..."/>-->
+                                            <span class="input-group-btn">
+                                                <button ng-disabled="!copyStatus()" type="button" class="btn btn-default" ng-click="copy()">Copy</button>
+                                            </span>
+                                        </div>
+                                        <span class="help-block text-center">To speed up data entry, you can copy payroll data from another employee, or from a pre-defined pay grade</span>
+                                        <!--<div class="col-sm-3">
+                                            &nbsp;
+                                        </div>-->
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                <h6>&nbsp;Wages</h6>
+                                            </div>
+                                            <div class="col-sm-12">
+                                                <div class="row" ng-repeat="wage in getTypes('Wage') track by $index">
+                                                    <label class="col-sm-3"><h6>&nbsp;</h6></label>
+                                                    <div class="col-sm-1 text-right" style="padding-right:5px;">
+                                                        <span><a ng-click="removePayType(wage)" class="fa fa-times text-danger pointer"></a></span>
+                                                    </div>
+                                                    <div class="col-sm-4">
+                                                        <div class="input-group input-group-sm">
+                                                            <span ng-click="openType(wage)" class="input-group-addon pointer" style="width:150px">{{wage.code}} - {{wage.title}}</span>
+                                                            <input ng-model="wage.value" type="number" placeholder="" class="form-control" ng-disabled="wage.editablePerEmployee === 'No'"/>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-sm-4">
+                                                        <div class="input-group input-group-sm" ng-if="wage.derived !== 'Fixed'">
+                                                            <span class="input-group-addon" style="width:150px">Formula</span>
+                                                            <input ng-model="wage.derivative" type="text" placeholder="" class="form-control" ng-disabled="wage.editablePerEmployee === 'No'"/>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="col-sm-4">
+                                                        &nbsp;
+                                                    </div>
+
+                                                    <div class="col-sm-4 text-right">
+                                                        <span class="help-block"><a ng-click="add('Wage')" data-toggle="modal" data-target=".add-unit" class="fa fa-plus pointer" style="vertical-align:middle;">&nbsp;[add wage]</a></span>
+                                                    </div>
+                                                    <div class="col-sm-4">
+                                                        &nbsp;
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                <h6>&nbsp;Benefits</h6>
+                                            </div>
+                                            <div class="col-sm-12">
+                                                <div class="row" ng-repeat="benefit in getTypes('Benefit') track by $index">
+                                                    <label class="col-sm-3"><h6>&nbsp;</h6></label>
+                                                    <div class="col-sm-1 text-right" style="padding-right:0px;">
+                                                        <span><a ng-click="removePayType(benefit)" class="fa fa-times text-danger pointer" style="vertical-align:middle"></a></span>
+                                                    </div>
+                                                    <div class="col-sm-4">
+                                                        <div class="input-group input-group-sm">
+                                                            <span ng-click="openType(benefit)" class="input-group-addon pointer" style="width:150px">{{benefit.code}} - {{benefit.title}}</span>
+                                                            <input ng-model="benefit.value" type="number" placeholder="" class="form-control" ng-disabled="benefit.editablePerEmployee === 'No'"/>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-sm-4">
+                                                        <div class="input-group input-group-sm" ng-if="benefit.derived !== 'Fixed'">
+                                                            <span class="input-group-addon" style="width:150px">Formula</span>
+                                                            <input ng-model="benefit.derivative" type="text" placeholder="" class="form-control" ng-disabled="benefit.editablePerEmployee === 'No'"/>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="col-sm-4">
+                                                        &nbsp;
+                                                    </div>
+
+                                                    <div class="col-sm-4 text-right">
+                                                        <span class="help-block"><a ng-click="add('Benefit')" data-toggle="modal" data-target=".add-unit" class="fa fa-plus pointer" style="vertical-align:middle;">&nbsp;[add benefit]</a></span>
+                                                    </div>
+                                                    <div class="col-sm-4">
+                                                        &nbsp;
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                <h6>&nbsp;Deductions</h6>
+                                            </div>
+                                            <div class="col-sm-12">
+                                                <div class="row" ng-repeat="deduction in getTypes('Deduction') track by $index">
+                                                    <label class="col-sm-3"><h6>&nbsp;</h6></label>
+                                                    <div class="col-sm-1 text-right" style="padding-right:0px;">
+                                                        <span><a ng-click="removePayType(deduction)" class="fa fa-times text-danger pointer" style="vertical-align:middle"></a></span>
+                                                    </div>
+                                                    <div class="col-sm-4">
+                                                        <div class="input-group input-group-sm">
+                                                            <span ng-click="openType(deduction)" class="input-group-addon pointer" style="width:150px">{{deduction.code}} - {{deduction.title}}</span>
+                                                            <input ng-model="deduction.value" type="number" placeholder="" class="form-control" ng-disabled="deduction.editablePerEmployee === 'No'"/>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-sm-4">
+                                                        <div class="input-group input-group-sm" ng-if="deduction.derived !== 'Fixed'">
+                                                            <span class="input-group-addon" style="width:150px">Formula</span>
+                                                            <input ng-model="deduction.derivative" type="text" placeholder="" class="form-control" ng-disabled="deduction.editablePerEmployee === 'No'"/>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="col-sm-4">
+                                                        &nbsp;
+                                                    </div>
+
+                                                    <div class="col-sm-4 text-right">
+                                                        <span class="help-block"><a ng-click="add('Deduction')" data-toggle="modal" data-target=".add-unit" class="fa fa-plus pointer" style="vertical-align:middle;">&nbsp;[add deduction]</a></span>
+                                                    </div>
+                                                    <div class="col-sm-4">
+                                                        &nbsp;
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <div class="col-sm-6">
+                                                <h5><a class="pointer" ng-click="prepareSummary()" data-toggle="modal" data-target=".payroll-summary">View Payroll Summary</a></h5>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <h5 class="text-right"><a class="pointer" ng-click="restore()" data-toggle="modal" data-target=".restore-removed">Restore</a></h5>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="form-group">
+                                        <div class="col-md-12">
+                                            <ul class="list-unstyled wizard">
+                                                <li class="pull-right">
+                                                    <button type="button" class="btn btn-primary" ng-click="createEmployee()">Save
+                                                    </button>
+                                                </li>
+                                            </ul>
+                                        </div><!-- col-md-12 -->
+                                    </div>
+                                </form>
+                            </div><!-- panel-body -->
+                        </div><!-- panel -->
+                    </div><!-- tab-pane -->
+                </div>
+
+            </div>
+
+        </div><!-- col-sm-9 -->
+
+    </div><!-- row -->
+
+</div><!-- contentpanel -->
+
+
+<div class="modal fade add-unit" tabindex="-1" role="dialog" data-backdrop="static">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Add Custom Pay Type</h3>
+                </div>
+                <div class="panel-body">
+
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <div class="form-group">
+                                <label for="pay-type-code" class="control-label">Code (alphanumeric)</label>
+                                <input type="text" id="pay-type-code" class="form-control" placeholder="Unique e.g BC1" ng-model="customType.code" />
+                            </div><!-- form-group -->
+                        </div><!-- col-sm-3 -->
+
+                        <div class="col-sm-3">
+                            <div class="form-group">
+                                <label for="pay-type-title" class="control-label">Title</label>
+                                <input type="text" id="pay-type-title" class="form-control" placeholder="Basic Salary" ng-model="customType.title"/>
+                            </div><!-- form-group -->
+                        </div><!-- col-sm-3 -->
+
+                        <div class="col-sm-3">
+                            <div class="form-group">
+                                <label for="pay-type-type" class="control-label">Type</label>
+                                <select id="pay-type-type" disabled class="form-control width100p" data-placeholder="Choose One" required ng-model="customType.type">
+                                    <option value="">Choose One</option>
+                                    <option value="Wage">Wage</option>
+                                    <option value="Benefit">Benefit</option>
+                                    <option value="Deduction">Deduction</option>
+                                </select>
+                            </div><!-- form-group -->
+                        </div><!-- col-sm-3 -->
+
+                        <div class="col-sm-3">
+                            <div class="form-group">
+                                <label for="pay-type-derived" class="control-label">Derived</label>
+                                <select id="pay-type-derived" class="form-control width100p" data-placeholder="Choose One" required ng-model="customType.derived">
+                                    <option value="">Choose One</option>
+                                    <option value="Fixed">Fixed</option>
+                                    <option value="Formula">Formula</option>
+                                </select>
+                            </div><!-- form-group -->
+                        </div><!-- col-sm-3 -->
+                    </div><!-- row -->
+
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <div class="form-group">
+                                <label for="pay-type-frequency" class="control-label">Frequency</label>
+                                <select id="pay-type-frequency" class="form-control width100p" data-placeholder="Choose One" required ng-model="customType.frequency">
+                                    <option value="">Choose One</option>
+                                    <option value="Monthly">Monthly</option>
+                                    <option value="Quarterly">Quarterly</option>
+                                    <option value="Bi-Annually">Bi-Annually</option>
+                                    <option value="Annually">Annually</option>
+                                </select>
+                            </div><!-- form-group -->
+                        </div><!-- col-sm-3 -->
+
+                        <div class="col-sm-3">
+                            <div class="form-group">
+                                <label for="pay-type-taxable" class="control-label">Taxable</label>
+                                <select id="pay-type-taxable" class="form-control width100p" data-placeholder="Choose One" required ng-model="customType.taxable">
+                                    <option value="">Choose One</option>
+                                    <option value="Yes">Yes</option>
+                                    <option value="No">No</option>
+                                </select>
+                            </div><!-- form-group -->
+                        </div><!-- col-sm-3 -->
+
+                        <div class="col-sm-3">
+                            <div class="form-group">
+                                <label for="pay-type-active" class="control-label">Status</label>
+                                <select id="pay-type-active" class="form-control width100p" data-placeholder="Choose One" required ng-model="customType.status">
+                                    <option value="">Choose One</option>
+                                    <option value="Active">Active</option>
+                                    <option value="Inactive">Inactive</option>
+                                </select>
+                            </div><!-- form-group -->
+                        </div><!-- col-sm-3 -->
+
+                        <div class="col-sm-3">
+                            <div class="form-group">
+                                <label for="pay-type-employee-edit" class="control-label">Editable per Employee</label>
+                                <select id="pay-type-employee-edit" disabled class="form-control width100p" data-placeholder="Choose One" required ng-model="customType.editablePerEmployee">
+                                    <option value="">Choose One</option>
+                                    <option value="Yes">Yes</option>
+                                    <option value="No">No</option>
+                                </select>
+                            </div><!-- form-group -->
+                        </div><!-- col-sm-3 -->
+
+                    </div><!-- row -->
+                    <p class="text-center error" ng-show="errorOccur">{{errorMessage}}</p>
+
+                </div>
+                <div class="panel-footer">
+                    <button class="btn btn-primary mr5" ng-click="addCustomPayType()">Add</button>
+                    <button type="reset" class="btn btn-danger" id="new-pay-type-close" data-dismiss="modal">Cancel</button>
+                </div><!-- panel-footer -->
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade payroll-summary" tabindex="-1" role="dialog" data-backdrop="static">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Summary</h3>
+                </div>
+                <div class="panel-body big-font">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h5 class="lg-title mb5 text-center">{{business.name}}</h5>
+                            <p class="mb20 text-center">Payroll Summary</p>
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-primary mb30">
+                                    <thead>
+                                    <tr>
+                                        <th>Pay Components</th>
+                                        <th>Amount ( ₦  )</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr ng-repeat="payType in getNonDeductions()">
+                                        <td>{{payType.title}}</td>
+                                        <td>{{payType.value | currency:""}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>Gross Pay: </b></td>
+                                        <td><b>{{getPaymentGross() | currency:""}}</b></td>
+                                    </tr>
+                                    <tr>
+                                        <td>...</td>
+                                        <td>...</td>
+                                    </tr>
+                                    <tr>
+                                        <td>{{getTax().title}}</td>
+                                        <td>{{getTax().value | currency:""}}</td>
+                                    </tr>
+                                    <tr ng-repeat="payType in getDeductions()">
+                                        <td>{{payType.title}}</td>
+                                        <td>{{payType.value | currency:""}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>Total Deductions: </b></td>
+                                        <td><b>{{getTotalDeductions() | currency:""}}</b></td>
+                                    </tr>
+                                    <tr>
+                                        <td>...</td>
+                                        <td>...</td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>Net Pay: </b></td>
+                                        <td><b>{{getPaymentGross() - getTotalDeductions() | currency:""}}</b></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div><!-- table-responsive -->
+                        </div><!-- col-md-12 -->
+                    </div><!-- row -->
+                </div>
+                <div class="panel-footer">
+                    <button type="reset" ng-click="resetSummary()" class="btn btn-danger" id="payroll-summary-close" data-dismiss="modal">Close</button>
+                </div><!-- panel-footer -->
+            </div>
+        </div>
+    </div>
+</div>
+

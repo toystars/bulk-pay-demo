@@ -9,7 +9,6 @@ bulkPay.controller('EmployeeCreateCtrl', ['$scope', '$window', 'toastr', 'OrgSvc
   var sourceId = '';
   $scope.payScales = [];
   $scope.departments = [];
-  $scope.jobLevels = [];
   $scope.positions = [];
   $scope.sourcePointer = 'Select';
   $scope.copySource = [];
@@ -123,11 +122,6 @@ bulkPay.controller('EmployeeCreateCtrl', ['$scope', '$window', 'toastr', 'OrgSvc
     console.log($scope.newEmployee);
   };
 
-  jQuery('#select-copy-from').change(function () {
-    $scope.$apply(function() {
-      sourceId = jQuery('#select-copy-from').val();
-    });
-  });
 
   jQuery('#select-payment-method').change(function () {
     $scope.$apply(function() {
@@ -138,12 +132,6 @@ bulkPay.controller('EmployeeCreateCtrl', ['$scope', '$window', 'toastr', 'OrgSvc
   jQuery('#select-bank').change(function () {
     $scope.$apply(function() {
       $scope.newEmployee.paymentDetails.bank = jQuery('#select-bank').val();
-    });
-  });
-
-  jQuery('#select-department').change(function () {
-    $scope.$apply(function() {
-      $scope.newEmployee.departmentId = jQuery('#select-department').val();
     });
   });
 
@@ -166,15 +154,6 @@ bulkPay.controller('EmployeeCreateCtrl', ['$scope', '$window', 'toastr', 'OrgSvc
   jQuery("#select-marital-status").change(function () {
     $scope.newEmployee.maritalStatus = jQuery("#select-marital-status").val();
   });
-
-  jQuery('#select-state').change(function () {
-    $scope.newEmployee.state = jQuery('#select-state').val();
-  });
-
-  jQuery('#select-kin-state').change(function () {
-    $scope.newEmployee.guarantor.state = jQuery('#select-kin-state').val();
-  });
-
 
   /*
    * Controller logic
@@ -276,152 +255,6 @@ bulkPay.controller('EmployeeCreateCtrl', ['$scope', '$window', 'toastr', 'OrgSvc
     'Zamfara State'];
 
 
-  /*
-   * jQuery
-   * */
-  // Tags Input
-  var triggerSelect = function () {
-    jQuery('#tags').tagsInput({
-      width: 'auto'
-    });
-
-    // Textarea Autogrow
-    jQuery('#autoResizeTA').autogrow();
-
-    // Spinner
-    var spinner = jQuery('#spinner').spinner();
-    spinner.spinner('value', 0);
-
-    // Form Toggles
-    jQuery('.toggle').toggles({
-      on: true
-    });
-
-    // Time Picker
-    jQuery('#timepicker').timepicker({
-      defaultTIme: false
-    });
-    jQuery('#timepicker2').timepicker({
-      showMeridian: false
-    });
-    jQuery('#timepicker3').timepicker({
-      minuteStep: 15
-    });
-
-    // Date Picker
-    jQuery('#datepicker').datepicker();
-    jQuery('#datepicker-inline').datepicker();
-    jQuery('.datepicker-multiple').datepicker({
-      changeMonth: true,
-      changeYear: true
-    });
-
-    // Input Masks
-    jQuery("#date").mask("99/99/9999");
-    jQuery("#phone").mask("(999) 999-9999");
-    jQuery("#ssn").mask("999-99-9999");
-
-    // Select2
-    jQuery("#select-basic, #select-multi").select2();
-    jQuery('#select-gender').select2({
-      minimumResultsForSearch: -1
-    });
-
-    jQuery('#select-state').select2({
-      minimumResultsForSearch: 0
-    });
-
-    jQuery('#select-marital-status').select2({
-      minimumResultsForSearch: -1
-    });
-
-    jQuery('#select-state').select2({
-      minimumResultsForSearch: 0
-    });
-
-    jQuery('#select-kin-state').select2({
-      minimumResultsForSearch: 0
-    });
-
-
-    jQuery('#select-employee-type').select2({
-      minimumResultsForSearch: -1
-    });
-
-    jQuery('#select-department').select2({
-      minimumResultsForSearch: -1
-    });
-
-    jQuery('#select-job-level').select2({
-      minimumResultsForSearch: -1
-    });
-
-    jQuery('#select-job-title').select2({
-      minimumResultsForSearch: -1
-    });
-
-    jQuery('#select-station').select2({
-      minimumResultsForSearch: -1
-    });
-
-    jQuery('#select-contract').select2({
-      minimumResultsForSearch: -1
-    });
-
-    jQuery('#select-payment-method').select2({
-      minimumResultsForSearch: -1
-    });
-
-    jQuery('#select-bank').select2({
-      minimumResultsForSearch: -1
-    });
-
-    jQuery('#select-copy-from').select2({
-      minimumResultsForSearch: -1
-    });
-
-
-    function format(item) {
-      return '<i class="fa ' + ((item.element[0].getAttribute('rel') === undefined) ? "" : item.element[0].getAttribute('rel')) + ' mr10"></i>' + item.text;
-    }
-
-    // This will empty first option in select to enable placeholder
-    jQuery('select option:first-child').text('');
-
-    jQuery("#select-templating").select2({
-      formatResult: format,
-      formatSelection: format,
-      escapeMarkup: function (m) {
-        return m;
-      }
-    });
-
-    // Color Picker
-    if (jQuery('#colorpicker').length > 0) {
-      jQuery('#colorSelector').ColorPicker({
-        onShow: function (colpkr) {
-          jQuery(colpkr).fadeIn(500);
-          return false;
-        },
-        onHide: function (colpkr) {
-          jQuery(colpkr).fadeOut(500);
-          return false;
-        },
-        onChange: function (hsb, hex, rgb) {
-          jQuery('#colorSelector span').css('backgroundColor', '#' + hex);
-          jQuery('#colorpicker').val('#' + hex);
-        }
-      });
-    }
-
-    // Color Picker Flat Mode
-    jQuery('#colorpickerholder').ColorPicker({
-      flat: true,
-      onChange: function (hsb, hex, rgb) {
-        jQuery('#colorpicker3').val('#' + hex);
-      }
-    });
-  };
 
 }]);
 
