@@ -308,7 +308,7 @@ bulkPay.controller('BusinessEmployeeCreateCtrl', ['$scope', '$rootScope', 'AuthS
           types.push(payType);
         }
       } else {
-        if (!_.find($scope.employee.exemptedPayTypes, function (code) { return code === payType.code }) && payType.type === type) {
+        if (!_.find($scope.employee.exemptedPayTypes, function (exType) { return exType.code === payType.code }) && payType.type === type) {
           types.push(payType);
         }
       }
@@ -328,8 +328,11 @@ bulkPay.controller('BusinessEmployeeCreateCtrl', ['$scope', '$rootScope', 'AuthS
   };
 
   $scope.removePayType = function (payType) {
-    if (!_.find($scope.employee.exemptedPayTypes, function (code) { return code === payType.code })) {
-      $scope.employee.exemptedPayTypes.push(payType.code);
+    if (!_.find($scope.employee.exemptedPayTypes, function (exType) { return exType.code === payType.code })) {
+      $scope.employee.exemptedPayTypes.push({
+        code: payType.code,
+        title: payType.title
+      });
     }
   };
 
@@ -342,7 +345,7 @@ bulkPay.controller('BusinessEmployeeCreateCtrl', ['$scope', '$rootScope', 'AuthS
           concatenatedPayTypes[index] = type;
         }
       });
-      if (!_.find($scope.employee.exemptedPayTypes, function (code) { return code === payType.code })) {
+      if (!_.find($scope.employee.exemptedPayTypes, function (exType) { return exType.code === payType.code })) {
         $scope.newPayTypes.push(payType);
       }
     });
@@ -405,8 +408,16 @@ bulkPay.controller('BusinessEmployeeCreateCtrl', ['$scope', '$rootScope', 'AuthS
     return $scope.getTax().value + deductions;
   };
 
-  $scope.restore = function () {
-    console.log($scope.employee.exemptedPayTypes);
+  $scope.restore = function (payType) {
+    var matchedIndex = -1;
+    _.each($scope.employee.exemptedPayTypes, function (type, index) {
+      if (type.code === payType.code) {
+        matchedIndex = index;
+      }
+    });
+    if (matchedIndex !== -1) {
+      $scope.employee.exemptedPayTypes.splice(matchedIndex, 1);
+    }
   };
 
 
@@ -679,7 +690,7 @@ bulkPay.controller('BusinessEmployeeCreateCtrl', ['$scope', '$rootScope', 'AuthS
   /*
    * jQuery
    * */
-  jQuery.ig.loader({
+  /*jQuery.ig.loader({
     scriptPath: "http://cdn-na.infragistics.com/igniteui/latest/js/",
     resources: 'modules/infragistics.util.js,' + 'modules/infragistics.documents.core.js,' + 'modules/infragistics.excel.js'
   });
@@ -727,7 +738,7 @@ bulkPay.controller('BusinessEmployeeCreateCtrl', ['$scope', '$rootScope', 'AuthS
       }
     }
     return randomId;
-  };
+  };*/
 
 
   var triggerSelect = function () {
