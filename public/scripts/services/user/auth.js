@@ -115,10 +115,6 @@ bulkPay.factory('AuthSvc', ['$http', '$cookies', '$state', 'User', 'toastr', fun
 
 
 
-
-
-
-
     /*
     * Business management logic
     * */
@@ -135,6 +131,16 @@ bulkPay.factory('AuthSvc', ['$http', '$cookies', '$state', 'User', 'toastr', fun
     * */
     self.getBusinesses = function () {
       return currentUser.businesses;
+    };
+
+
+    /*
+    * Error handling
+    * */
+    self.handleError = function (error) {
+      if (error.message === 'Session Expired!') {
+        self.logout();
+      }
     };
 
   }
