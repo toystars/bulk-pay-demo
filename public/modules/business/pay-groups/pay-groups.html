@@ -95,6 +95,10 @@
                                 </select>
                             </div><!-- form-group -->
                         </div><!-- col-sm-12 -->
+
+                        <div class="col-sm-12">
+                            <span ng-show="histories.length > 0" class="pull-right">Last updated on {{getLastHistory().date | date:"MM/dd/yyyy 'at' h:mma"}}, by {{getLastHistory().user.username}}</span>
+                        </div><!-- col-sm-12 -->
                     </div><!-- row -->
 
                 </div><!-- panel-body -->

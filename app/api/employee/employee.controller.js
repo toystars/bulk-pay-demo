@@ -90,6 +90,22 @@ exports.getByPayGroup = function (req, res) {
 
 
 /*
+ * Fetch by position
+ * */
+exports.getPositionEmployees = function (req, res) {
+  Employee.find({ positionId: req.params.positionId }, function (error, employees) {
+    if (error) {
+      crudHelper.handleError(res, null, error);
+    } else if (employees) {
+      crudHelper.respondWithResult(res, null, employees);
+    } else {
+      crudHelper.handleError(res, null, { message: 'No employee found!' });
+    }
+  });
+};
+
+
+/*
  * Update single employee
  * */
 exports.updateEmployee = function (req, res) {

@@ -45,6 +45,11 @@ var payTypesSchema = new Schema({
     required: "Please specify type status",
     default: "Active"
   },
+  isBase: {
+    type: Boolean,
+    required: "Please specify base status",
+    default: false
+  },
   createdAt: {
     type: Date,
     default: Date.now

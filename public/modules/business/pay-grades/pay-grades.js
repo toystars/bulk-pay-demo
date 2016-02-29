@@ -141,10 +141,15 @@ bulkPay.controller('BusinessPayGradesCtrl', ['$scope', '$rootScope', 'AuthSvc', 
       derivative: '',
       type: type,
       value: null,
+      isBase: payType.isBase,
       frequency: payType.frequency,
       taxable: payType.taxable,
       editablePerEmployee: payType.editablePerEmployee
     });
+  };
+
+  $scope.getBaseStatus = function (status) {
+    return status ? ' - Base' : '';
   };
 
   var removeFromCollection = function (id) {
@@ -224,7 +229,7 @@ bulkPay.controller('BusinessPayGradesCtrl', ['$scope', '$rootScope', 'AuthSvc', 
       showLoaderOnConfirm: true
     }, function () {
       $http.delete('/api/paygrades/' + $scope.singlePayGrade._id).success(function (data) {
-        swal('Deleted!', $scope.singlePayGrade.title + ' pay grade deleted.', 'success');
+        swal('Deleted!', $scope.singlePayGrade.name + ' pay grade deleted.', 'success');
         removeFromCollection($scope.singlePayGrade._id);
         $scope.closePayGrade();
       }).error(function (error) {

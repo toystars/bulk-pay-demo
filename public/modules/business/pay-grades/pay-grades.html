@@ -472,7 +472,7 @@
                                                                 <div class="col-sm-8" ng-repeat="wage in getPayTypes('Wage') | filter:searchText">
                                                                     <div class="ckbox ckbox-success">
                                                                         <input ng-checked="isPresent(wage._id)" type="checkbox" id="{{'n' + wage._id}}" ng-click="check(wage, 'Wage')" ng-model="paymentCheck" />
-                                                                        <label for="{{'n' + wage._id}}">{{wage.title}}</label>
+                                                                        <label for="{{'n' + wage._id}}">{{wage.title + getBaseStatus(wage.isBase)}}</label>
                                                                     </div>
                                                                 </div><!-- col-sm-4 -->
                                                             </td>
@@ -495,7 +495,7 @@
                                                                 <div class="col-sm-8" ng-repeat="benefit in getPayTypes('Benefit') | filter:searchText">
                                                                     <div class="ckbox ckbox-success">
                                                                         <input ng-checked="isPresent(benefit._id)" type="checkbox" id="{{'n' + benefit._id}}" ng-click="check(benefit, 'Benefit')" checked="checked" ng-model="paymentCheck" />
-                                                                        <label for="{{'n' + benefit._id}}">{{benefit.title}}</label>
+                                                                        <label for="{{'n' + benefit._id}}">{{benefit.title + getBaseStatus(benefit.isBase)}}</label>
                                                                     </div>
                                                                 </div><!-- col-sm-4 -->
                                                             </td>
@@ -518,7 +518,7 @@
                                                                 <div class="col-sm-8" ng-repeat="deduction in getPayTypes('Deduction') | filter:searchText">
                                                                     <div class="ckbox ckbox-success">
                                                                         <input ng-checked="isPresent(deduction._id)" type="checkbox" id="{{'n' + deduction._id}}" ng-click="check(deduction, 'Deduction')" ng-model="deductionCheck" />
-                                                                        <label for="{{'n' + deduction._id}}">{{deduction.title}}</label>
+                                                                        <label for="{{'n' + deduction._id}}">{{deduction.title + getBaseStatus(deduction.isBase)}}</label>
                                                                     </div>
                                                                 </div><!-- col-sm-4 -->
                                                             </td>

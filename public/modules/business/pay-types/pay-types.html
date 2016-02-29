@@ -43,6 +43,7 @@
                         <th>Taxable</th>
                         <th>Can Override</th>
                         <th>Derivative</th>
+                        <th>Base</th>
                         <th>Status</th>
                     </tr>
                     </thead>
@@ -56,6 +57,10 @@
                         <td>{{payType.taxable}}</td>
                         <td>{{payType.editablePerEmployee}}</td>
                         <td>{{payType.derivative}}</td>
+                        <td>
+                            <span ng-if="payType.isBase">Yes</span>
+                            <span ng-if="!payType.isBase">No</span>
+                        </td>
                         <td>
                             <span ng-if="payType.status === 'Active'" class="label label-success">{{payType.status}}</span>
                             <span ng-if="payType.status === 'Inactive'" class="label label-danger">{{payType.status}}</span>
@@ -165,6 +170,17 @@
                                 </select>
                             </div><!-- form-group -->
                         </div><!-- col-sm-3 -->
+
+                        <div class="col-sm-4">
+                            <div class="ckbox ckbox-success">
+                                <input ng-checked="singlePayType.isBase" type="checkbox" id="update-pay-type-key-state" checked="checked" ng-model="singlePayType.isBase" />
+                                <label for="update-pay-type-key-state">Base Type</label>
+                            </div>
+                        </div><!-- col-sm-4 -->
+
+                        <div class="col-sm-12">
+                            <span ng-show="histories.length > 0" class="pull-right">Last updated on {{getLastHistory().date | date:"MM/dd/yyyy 'at' h:mma"}}, by {{getLastHistory().user.username}}</span>
+                        </div><!-- col-sm-12 -->
 
                     </div><!-- row -->
 
@@ -309,6 +325,13 @@
                                 </select>
                             </div><!-- form-group -->
                         </div><!-- col-sm-3 -->
+
+                        <div class="col-sm-4">
+                            <div class="ckbox ckbox-success">
+                                <input ng-checked="payType.isBase" type="checkbox" id="pay-type-key-state" checked="checked" ng-model="payType.isBase" />
+                                <label for="pay-type-key-state">Base Type</label>
+                            </div>
+                        </div><!-- col-sm-4 -->
 
                     </div><!-- row -->
                     <p class="text-center error" ng-show="errorOccur">{{errorMessage}}</p>

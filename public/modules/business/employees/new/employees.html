@@ -565,7 +565,7 @@
                                                     </div>
 
                                                     <div class="col-sm-4 text-right">
-                                                        <span class="help-block"><a ng-click="add('Wage')" data-toggle="modal" data-target=".add-unit" class="fa fa-plus pointer" style="vertical-align:middle;">&nbsp;[add wage]</a></span>
+                                                        <span class="help-block"><a ng-click="showOptions('Wage')" class="fa fa-plus pointer" style="vertical-align:middle;">&nbsp;[add wage]</a></span>
                                                     </div>
                                                     <div class="col-sm-4">
                                                         &nbsp;
@@ -609,7 +609,7 @@
                                                     </div>
 
                                                     <div class="col-sm-4 text-right">
-                                                        <span class="help-block"><a ng-click="add('Benefit')" data-toggle="modal" data-target=".add-unit" class="fa fa-plus pointer" style="vertical-align:middle;">&nbsp;[add benefit]</a></span>
+                                                        <span class="help-block"><a ng-click="showOptions('Benefit')" class="fa fa-plus pointer" style="vertical-align:middle;">&nbsp;[add benefit]</a></span>
                                                     </div>
                                                     <div class="col-sm-4">
                                                         &nbsp;
@@ -651,7 +651,7 @@
                                                     </div>
 
                                                     <div class="col-sm-4 text-right">
-                                                        <span class="help-block"><a ng-click="add('Deduction')" data-toggle="modal" data-target=".add-unit" class="fa fa-plus pointer" style="vertical-align:middle;">&nbsp;[add deduction]</a></span>
+                                                        <span class="help-block"><a ng-click="showOptions('Deduction')" class="fa fa-plus pointer" style="vertical-align:middle;">&nbsp;[add deduction]</a></span>
                                                     </div>
                                                     <div class="col-sm-4">
                                                         &nbsp;
@@ -698,7 +698,7 @@
 </div><!-- contentpanel -->
 
 
-<div class="modal fade add-unit" tabindex="-1" role="dialog" data-backdrop="static">
+<div class="modal fade add-custom-type" tabindex="-1" role="dialog" data-backdrop="static">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="panel panel-default">
@@ -909,9 +909,31 @@
                     </div><!-- row -->
                 </div>
                 <div class="panel-footer">
-                    <button type="reset" ng-click="resetSummary()" class="btn btn-danger" id="payroll-summary-close" data-dismiss="modal">Close</button>
+                    <button type="reset" ng-click="resetSummary()" class="btn btn-danger" id="exempted-pay-components" data-dismiss="modal">Close</button>
                 </div><!-- panel-footer -->
             </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Predefined pay types modal -->
+<button ng-hide="true" id="predefined-modal-button" data-toggle="modal" data-target=".predefined-types"></button>
+<button ng-hide="true" id="new-type-modal-button" data-toggle="modal" data-target=".add-custom-type"></button>
+<div class="modal fade predefined-types" tabindex="-1" role="dialog" data-backdrop="static">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Add custom pay type</h3>
+                </div>
+                <div class="panel-body big-font">
+
+                </div>
+            </div>
+            <div class="panel-footer">
+                <button type="reset" class="btn btn-danger" id="predefined-modal-close" data-dismiss="modal">Close</button>
+            </div><!-- panel-footer -->
         </div>
     </div>
 </div>

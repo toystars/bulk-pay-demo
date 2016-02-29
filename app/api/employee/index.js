@@ -10,6 +10,7 @@ module.exports = function (app) {
   router.get('/', auth.isAuthenticated, controller.index);
   router.post('/', auth.isAuthenticated, auth.isSuperAdmin, controller.create);
   router.get('/business/:id', auth.isAuthenticated, controller.employees);
+  router.get('/position/:positionId', auth.isAuthenticated, controller.getPositionEmployees);
   router.get('/:id', auth.isAuthenticated, controller.show);
   router.get('/paygroup/:payGroupId', auth.isAuthenticated, controller.getByPayGroup);
   router.put('/:id', auth.isAuthenticated, auth.isSuperAdmin, controller.updateEmployee);

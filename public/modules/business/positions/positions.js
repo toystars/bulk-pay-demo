@@ -205,12 +205,14 @@ bulkPay.controller('BusinessPositionsCtrl', ['$scope', '$rootScope', 'AuthSvc', 
   $scope.singlePosition = {};
   $scope.oldPosition = {};
   $scope.histories = [];
+  $scope.positionEmployees = [];
 
   $scope.showPosition = function (position) {
     $scope.singleView = true;
     angular.copy(position, $scope.oldPosition);
     angular.copy(position, $scope.singlePosition);
     getHistories($scope.singlePosition._id);
+    getPositionEmployees($scope.singlePosition._id);
   };
 
   $scope.edit = function () {
@@ -220,6 +222,22 @@ bulkPay.controller('BusinessPositionsCtrl', ['$scope', '$rootScope', 'AuthSvc', 
 
   $scope.cancel = function () {
     $scope.editActive = false;
+  };
+
+  var getPositionEmployees = function (positionId) {
+    $http.get('/api/employees/position/' + positionId).success(function (data) {
+      $scope.positionEmployees = data;
+    }).error(function (error) {
+      AuthSvc.handleError(error);
+    });
+  };
+
+  $scope.viewEmployee = function (employee) {
+    $scope.singleEmployee = employee;
+  };
+
+  $scope.resetEmployee = function () {
+    $scope.singleEmployee = {};
   };
 
   $scope.delete = function () {
@@ -248,6 +266,7 @@ bulkPay.controller('BusinessPositionsCtrl', ['$scope', '$rootScope', 'AuthSvc', 
   $scope.closePosition = function () {
     $scope.singlePosition = {};
     $scope.singleView = false;
+    $scope.positionEmployees = [];
   };
 
   $scope.updatePosition = function () {

@@ -83,6 +83,10 @@ bulkPay.controller('BusinessPayTypesCtrl', ['$scope', '$rootScope', 'AuthSvc', '
     }
   };
 
+  $scope.getLastHistory = function () {
+    return $scope.histories[$scope.histories.length - 1];
+  };
+
   var getHistories = function (objectId) {
     $http.get('/api/histories/object/' + objectId).success(function (data) {
       $scope.histories = data;
@@ -96,6 +100,7 @@ bulkPay.controller('BusinessPayTypesCtrl', ['$scope', '$rootScope', 'AuthSvc', '
    * Single unit display
    * */
   $scope.singleView = false;
+  $scope.histories = [];
 
   $scope.showPayType = function (payType) {
     $scope.singleView = true;

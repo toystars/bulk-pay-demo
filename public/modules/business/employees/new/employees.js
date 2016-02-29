@@ -1,4 +1,3 @@
-
 bulkPay.controller('BusinessEmployeeCreateCtrl', ['$scope', '$rootScope', 'AuthSvc', 'BusinessDataSvc', '$stateParams', '$cookies', '$http', '$state', function ($scope, $rootScope, AuthSvc, BusinessDataSvc, $stateParams, $cookies, $http, $state) {
 
   AuthSvc.isLoggedIn(function (status) {
@@ -58,7 +57,7 @@ bulkPay.controller('BusinessEmployeeCreateCtrl', ['$scope', '$rootScope', 'AuthS
       $scope.businessUnits = data;
     }).error(function (error) {
       console.log(error);
-    })
+    });
   };
 
   var getPayGroups = function (businessId) {
@@ -66,7 +65,7 @@ bulkPay.controller('BusinessEmployeeCreateCtrl', ['$scope', '$rootScope', 'AuthS
       $scope.payGroups = data;
     }).error(function (error) {
       console.log(error);
-    })
+    });
   };
 
   var getBusinessDivisions = function (businessId) {
@@ -74,7 +73,7 @@ bulkPay.controller('BusinessEmployeeCreateCtrl', ['$scope', '$rootScope', 'AuthS
       divisions = data;
     }).error(function (error) {
       console.log(error);
-    })
+    });
   };
 
   var getDepartments = function (businessId) {
@@ -82,7 +81,7 @@ bulkPay.controller('BusinessEmployeeCreateCtrl', ['$scope', '$rootScope', 'AuthS
       departments = data;
     }).error(function (error) {
       console.log(error);
-    })
+    });
   };
 
   var getPositions = function (businessId) {
@@ -90,7 +89,7 @@ bulkPay.controller('BusinessEmployeeCreateCtrl', ['$scope', '$rootScope', 'AuthS
       positions = data;
     }).error(function (error) {
       console.log(error);
-    })
+    });
   };
 
   var resetEmployee = function () {
@@ -133,10 +132,6 @@ bulkPay.controller('BusinessEmployeeCreateCtrl', ['$scope', '$rootScope', 'AuthS
       }
     };
   };
-
-
-
-
 
 
   /*
@@ -182,8 +177,8 @@ bulkPay.controller('BusinessEmployeeCreateCtrl', ['$scope', '$rootScope', 'AuthS
 
 
   /*
-  * Main controller logic
-  * */
+   * Main controller logic
+   * */
 
   $scope.getDivisions = function () {
     var newDivisions = [];
@@ -267,7 +262,7 @@ bulkPay.controller('BusinessEmployeeCreateCtrl', ['$scope', '$rootScope', 'AuthS
           $scope.sourceStatus = false;
         });
         break;
-      }
+    }
   };
 
   $scope.copy = function () {
@@ -308,7 +303,9 @@ bulkPay.controller('BusinessEmployeeCreateCtrl', ['$scope', '$rootScope', 'AuthS
           types.push(payType);
         }
       } else {
-        if (!_.find($scope.employee.exemptedPayTypes, function (exType) { return exType.code === payType.code }) && payType.type === type) {
+        if (!_.find($scope.employee.exemptedPayTypes, function (exType) {
+            return exType.code === payType.code
+          }) && payType.type === type) {
           types.push(payType);
         }
       }
@@ -322,13 +319,40 @@ bulkPay.controller('BusinessEmployeeCreateCtrl', ['$scope', '$rootScope', 'AuthS
     $scope.customType.editablePerEmployee = 'Yes';
   };
 
+  $scope.showOptions = function (which) {
+    swal({
+      title: '',
+      text: 'Add user specific pay type',
+      showCancelButton: true,
+      confirmButtonText: "Pre-defined pay type",
+      cancelButtonText: "New pay type",
+      confirmButtonColor: "#428BCA",
+      cancelButtonColor: "#DD6B55",
+      closeOnConfirm: true,
+      closeOnCancel: true
+    }, function (isConfirm) {
+      if (isConfirm) {
+        $http.get('/api/positions/business/' + businessId).success(function (data) {
+          jQuery('#predefined-modal-button').click();
+          positions = data;
+        }).error(function (error) {
+          console.log(error);
+        });
+      } else {
+        jQuery('#new-type-modal-button').click();
+      }
+    });
+  };
+
   $scope.addCustomPayType = function () {
     $scope.employee.customPayTypes.push(jQuery.extend(true, {}, $scope.customType));
     jQuery('#new-pay-type-close').click();
   };
 
   $scope.removePayType = function (payType) {
-    if (!_.find($scope.employee.exemptedPayTypes, function (exType) { return exType.code === payType.code })) {
+    if (!_.find($scope.employee.exemptedPayTypes, function (exType) {
+        return exType.code === payType.code
+      })) {
       $scope.employee.exemptedPayTypes.push({
         code: payType.code,
         title: payType.title
@@ -345,7 +369,9 @@ bulkPay.controller('BusinessEmployeeCreateCtrl', ['$scope', '$rootScope', 'AuthS
           concatenatedPayTypes[index] = type;
         }
       });
-      if (!_.find($scope.employee.exemptedPayTypes, function (exType) { return exType.code === payType.code })) {
+      if (!_.find($scope.employee.exemptedPayTypes, function (exType) {
+          return exType.code === payType.code
+        })) {
         $scope.newPayTypes.push(payType);
       }
     });
@@ -421,86 +447,6 @@ bulkPay.controller('BusinessEmployeeCreateCtrl', ['$scope', '$rootScope', 'AuthS
   };
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   $scope.createPayGrade = function () {
     $http.post('/api/paygrades/', $scope.payGrade).success(function (data) {
       $scope.payGrades.push(data);
@@ -515,7 +461,6 @@ bulkPay.controller('BusinessEmployeeCreateCtrl', ['$scope', '$rootScope', 'AuthS
   $scope.resetNewGrade = function () {
     resetPayGrade();
   };
-
 
 
   /*
@@ -691,54 +636,54 @@ bulkPay.controller('BusinessEmployeeCreateCtrl', ['$scope', '$rootScope', 'AuthS
    * jQuery
    * */
   /*jQuery.ig.loader({
-    scriptPath: "http://cdn-na.infragistics.com/igniteui/latest/js/",
-    resources: 'modules/infragistics.util.js,' + 'modules/infragistics.documents.core.js,' + 'modules/infragistics.excel.js'
-  });
+   scriptPath: "http://cdn-na.infragistics.com/igniteui/latest/js/",
+   resources: 'modules/infragistics.util.js,' + 'modules/infragistics.documents.core.js,' + 'modules/infragistics.excel.js'
+   });
 
-  var calculate = function () {
-    var workbook = new $.ig.excel.Workbook($.ig.excel.WorkbookFormat.excel2007);
-    var sheet = workbook.worksheets().add('Sheet1');
-    sheet.columns(0).setWidth(180, $.ig.excel.WorksheetColumnWidthUnit.pixel);
-    sheet.columns(1).setWidth(116, $.ig.excel.WorksheetColumnWidthUnit.pixel);
-    sheet.columns(2).setWidth(124, $.ig.excel.WorksheetColumnWidthUnit.pixel);
-    // loop through all payTypes to get the derived ones
-    _.each($scope.payGrade.payTypes, function (element) {
-      if (element.derived === 'Fixed') {
-        if (element.value) {
-          sheet.getCell(element.cellId).value(element.value);
-        }
-      } else {
-        sheet.getCell(element.cellId).applyFormula(mapCellIds(element.derivative));
-        element.value = sheet.getCell(element.cellId).value();
-      }
-    });
-  };
+   var calculate = function () {
+   var workbook = new $.ig.excel.Workbook($.ig.excel.WorkbookFormat.excel2007);
+   var sheet = workbook.worksheets().add('Sheet1');
+   sheet.columns(0).setWidth(180, $.ig.excel.WorksheetColumnWidthUnit.pixel);
+   sheet.columns(1).setWidth(116, $.ig.excel.WorksheetColumnWidthUnit.pixel);
+   sheet.columns(2).setWidth(124, $.ig.excel.WorksheetColumnWidthUnit.pixel);
+   // loop through all payTypes to get the derived ones
+   _.each($scope.payGrade.payTypes, function (element) {
+   if (element.derived === 'Fixed') {
+   if (element.value) {
+   sheet.getCell(element.cellId).value(element.value);
+   }
+   } else {
+   sheet.getCell(element.cellId).applyFormula(mapCellIds(element.derivative));
+   element.value = sheet.getCell(element.cellId).value();
+   }
+   });
+   };
 
-  var mapCellIds = function (formula) {
-    for (var x = 0; x < $scope.payGrade.payTypes.length; x++) {
-      if (formula.indexOf($scope.payGrade.payTypes[x].code) !== -1) {
-        var regex = new RegExp($scope.payGrade.payTypes[x].code, "g");
-        formula = formula.replace(regex, $scope.payGrade.payTypes[x].cellId);
-      }
-    }
-    return formula;
-  };
+   var mapCellIds = function (formula) {
+   for (var x = 0; x < $scope.payGrade.payTypes.length; x++) {
+   if (formula.indexOf($scope.payGrade.payTypes[x].code) !== -1) {
+   var regex = new RegExp($scope.payGrade.payTypes[x].code, "g");
+   formula = formula.replace(regex, $scope.payGrade.payTypes[x].cellId);
+   }
+   }
+   return formula;
+   };
 
-  var generateCellId = function (collection) {
-    var text = "";
-    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    var randomNumber = Math.floor(Math.random() * (9 - 1)) + 1;
-    for (var i = 0; i < 2; i++) {
-      text += possible.charAt(Math.floor(Math.random() * possible.length));
-    }
-    var randomId = text + randomNumber;
-    for (var x = 0; x < collection.length; x++) {
-      if (collection[x].cellId === randomId) {
-        generateCellId();
-      }
-    }
-    return randomId;
-  };*/
+   var generateCellId = function (collection) {
+   var text = "";
+   var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+   var randomNumber = Math.floor(Math.random() * (9 - 1)) + 1;
+   for (var i = 0; i < 2; i++) {
+   text += possible.charAt(Math.floor(Math.random() * possible.length));
+   }
+   var randomId = text + randomNumber;
+   for (var x = 0; x < collection.length; x++) {
+   if (collection[x].cellId === randomId) {
+   generateCellId();
+   }
+   }
+   return randomId;
+   };*/
 
 
   var triggerSelect = function () {

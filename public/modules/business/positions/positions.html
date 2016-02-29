@@ -125,7 +125,13 @@
                                     <span class="pull-left">Parent Position: {{getParentPositionName(oldPosition.parentPositionId)}}</span>
                                 </div>
                                 <div class="col-md-12">
-                                    <span class="pull-left"><a class="pointer">View Employee(s)</a></span>
+                                    <span class="pull-left employee-list">Employee(s):</span>
+                                </div>
+                                <div class="col-md-12" ng-show="positionEmployees.length === 0">
+                                    <span class="pull-left">No employee assigned to position.</span>
+                                </div>
+                                <div class="col-md-12" ng-show="positionEmployees.length > 0">
+                                    <span class="pull-left" ng-repeat="employee in positionEmployees"><a class="pointer" ng-click="viewEmployee(employee)">{{employee.fullName}}</a></span><br>
                                 </div>
                             </div>
                         </div><!-- panel-body -->

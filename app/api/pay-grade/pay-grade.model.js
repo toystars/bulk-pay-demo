@@ -73,6 +73,10 @@ var payGradesSchema = new Schema({
       type: String,
       required: "Please specify if type is editable per employee"
     },
+    isBase: {
+      type: Boolean,
+      default: false
+    },
     payDate: {
       type: Date
     }
