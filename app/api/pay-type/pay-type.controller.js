@@ -45,6 +45,23 @@ exports.payTypes = function (req, res) {
   });
 };
 
+
+/**
+ * Get all pay types per business and type
+ */
+exports.getCustomType = function (req, res) {
+  console.log(req.params.which);
+  PayType.find({ businessId: req.params.id, type: req.params.which, isBase: false }, function (error, payTypes) {
+    if (error) {
+      crudHelper.handleError(res, null, error);
+    }
+    if (payTypes) {
+      crudHelper.respondWithResult(res, null, payTypes);
+    }
+  });
+};
+
+
 /*
  * Create new pay type
  * */

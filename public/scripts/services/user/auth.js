@@ -138,7 +138,7 @@ bulkPay.factory('AuthSvc', ['$http', '$cookies', '$state', 'User', 'toastr', fun
     * Error handling
     * */
     self.handleError = function (error) {
-      if (error.message === 'Session Expired!') {
+      if (error.message && error.message === 'Session Expired!') {
         self.logout();
       }
     };

@@ -147,7 +147,7 @@
                                     <div class="form-group" ng-hide="dataReady()">
                                         <label for="employee-gender" class="col-sm-4 control-label">Gender</label>
                                         <div class="col-sm-4">
-                                            <select id="employee-gender" data-placeholder="Choose One" style="width:100%">
+                                            <select ng-model="employee.gender" id="employee-gender" data-placeholder="Choose One" style="width:100%">
                                                 <option value="">Choose One</option>
                                                 <option value="Male">Male</option>
                                                 <option value="Female">Female</option>
@@ -163,7 +163,7 @@
                                         <label for="employee-marital-status" class="col-sm-4 control-label">Marital
                                             Status</label>
                                         <div class="col-sm-4">
-                                            <select id="employee-marital-status" data-placeholder="Choose One" style="width:100%">
+                                            <select ng-model="employee.maritalStatus" id="employee-marital-status" data-placeholder="Choose One" style="width:100%">
                                                 <option value="">Choose One</option>
                                                 <option value="Single">Single</option>
                                                 <option value="Married">Married</option>
@@ -433,7 +433,7 @@
                                     <div class="form-group">
                                         <label for="employee-payment-method" class="col-sm-4 control-label">Payment Method</label>
                                         <div class="col-sm-4">
-                                            <select id="employee-payment-method" data-placeholder="Choose One" style="width:100%">
+                                            <select ng-model="employee.paymentDetails.paymentMethod" id="employee-payment-method" data-placeholder="Choose One" style="width:100%">
                                                 <option value="">Choose One</option>
                                                 <option value="Bank Transfer">Bank Transfer</option>
                                                 <option value="Cheque">Cheque</option>
@@ -448,7 +448,7 @@
                                     <div class="form-group">
                                         <label for="employee-bank" class="col-sm-4 control-label">Bank</label>
                                         <div class="col-sm-4">
-                                            <select id="employee-bank" data-placeholder="Choose One" style="width:100%">
+                                            <select ng-model="employee.paymentDetails.bank" id="employee-bank" data-placeholder="Choose One" style="width:100%">
                                                 <option value="">Choose One</option>
                                                 <option value="Stanbic IBTC Bank">Stanbic IBTC Bank</option>
                                                 <option value="UBA">UBA</option>
@@ -677,8 +677,7 @@
                                         <div class="col-md-12">
                                             <ul class="list-unstyled wizard">
                                                 <li class="pull-right">
-                                                    <button type="button" class="btn btn-primary" ng-click="createEmployee()">Save
-                                                    </button>
+                                                    <button type="button" class="btn btn-primary" ng-click="createEmployee()">Save</button>
                                                 </li>
                                             </ul>
                                         </div><!-- col-md-12 -->
@@ -737,7 +736,7 @@
                         <div class="col-sm-3">
                             <div class="form-group">
                                 <label for="pay-type-derived" class="control-label">Derived</label>
-                                <select id="pay-type-derived" class="form-control width100p" data-placeholder="Choose One" required ng-model="customType.derived">
+                                <select id="pay-type-derived" disabled class="form-control width100p" data-placeholder="Choose One" required ng-model="customType.derived">
                                     <option value="">Choose One</option>
                                     <option value="Fixed">Fixed</option>
                                     <option value="Formula">Formula</option>
@@ -763,7 +762,7 @@
                         <div class="col-sm-3">
                             <div class="form-group">
                                 <label for="pay-type-taxable" class="control-label">Taxable</label>
-                                <select id="pay-type-taxable" class="form-control width100p" data-placeholder="Choose One" required ng-model="customType.taxable">
+                                <select id="pay-type-taxable" disabled class="form-control width100p" data-placeholder="Choose One" required ng-model="customType.taxable">
                                     <option value="">Choose One</option>
                                     <option value="Yes">Yes</option>
                                     <option value="No">No</option>
@@ -774,7 +773,7 @@
                         <div class="col-sm-3">
                             <div class="form-group">
                                 <label for="pay-type-active" class="control-label">Status</label>
-                                <select id="pay-type-active" class="form-control width100p" data-placeholder="Choose One" required ng-model="customType.status">
+                                <select id="pay-type-active" disabled class="form-control width100p" data-placeholder="Choose One" required ng-model="customType.status">
                                     <option value="">Choose One</option>
                                     <option value="Active">Active</option>
                                     <option value="Inactive">Inactive</option>
@@ -792,6 +791,13 @@
                                 </select>
                             </div><!-- form-group -->
                         </div><!-- col-sm-3 -->
+
+                        <div class="col-sm-4">
+                            <div class="ckbox ckbox-success">
+                                <input ng-checked="payType.isBase" type="checkbox" id="pay-type-key-state" checked="checked" ng-model="customType.save" />
+                                <label for="pay-type-key-state">Save to database</label>
+                            </div>
+                        </div><!-- col-sm-4 -->
 
                     </div><!-- row -->
                     <p class="text-center error" ng-show="errorOccur">{{errorMessage}}</p>
@@ -883,7 +889,12 @@
                 </div>
                 <div class="panel-body big-font">
                     <div class="row">
-                        <div class="col-md-12">
+                        <div class="col-md-12" ng-if="employee.exemptedPayTypes.length === 0">
+                            <div class="alert alert-danger text-center">
+                                <p>No Exempted pay types.</p>
+                            </div>
+                        </div>
+                        <div class="col-md-12" ng-if="employee.exemptedPayTypes.length > 0">
                             <h5 class="lg-title mb5 text-center">Restore exempted pay components</h5>
                             <div class="table-responsive">
                                 <table class="table table-bordered mb30">
@@ -928,6 +939,54 @@
                     <h3 class="panel-title">Add custom pay type</h3>
                 </div>
                 <div class="panel-body big-font">
+
+                    <div class="row">
+                        <div class="col-md-12" ng-if="fetchedPayTypes.length === 0">
+                            <div class="alert alert-danger text-center">
+                                <p>No Pay Type available</p>
+                            </div>
+                        </div>
+                        <div class="col-md-12" ng-if="fetchedPayTypes.length > 0">
+                            <div class="table-responsive">
+                                <table class="table table-primary mb60 table-hover">
+                                    <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Code</th>
+                                        <th>Title</th>
+                                        <th>Type</th>
+                                        <th>Frequency</th>
+                                        <th>Taxable</th>
+                                        <th>Can Override</th>
+                                        <th>Derivative</th>
+                                        <th>Base</th>
+                                        <th>Status</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr class="pointer" ng-click="addCustomPayType(payType)" ng-repeat="payType in fetchedPayTypes | customTypesFilter:currentPayGrade.payTypes.concat(employee.customPayTypes)">
+                                        <td>{{$index + 1}}</td>
+                                        <td>{{payType.code}}</td>
+                                        <td>{{payType.title}}</td>
+                                        <td>{{payType.type}}</td>
+                                        <td>{{payType.frequency}}</td>
+                                        <td>{{payType.taxable}}</td>
+                                        <td>{{payType.editablePerEmployee}}</td>
+                                        <td>{{payType.derived}}</td>
+                                        <td>
+                                            <span ng-if="payType.isBase">Yes</span>
+                                            <span ng-if="!payType.isBase">No</span>
+                                        </td>
+                                        <td>
+                                            <span ng-if="payType.status === 'Active'" class="label label-success">{{payType.status}}</span>
+                                            <span ng-if="payType.status === 'Inactive'" class="label label-danger">{{payType.status}}</span>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div><!-- table-responsive -->
+                        </div>
+                    </div><!-- row -->
 
                 </div>
             </div>

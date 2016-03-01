@@ -21,6 +21,7 @@ bulkPay.controller('BusinessEmployeeCreateCtrl', ['$scope', '$rootScope', 'AuthS
   $scope.currentPayGrade = {
     payTypes: []
   };
+  $scope.fetchedPayTypes = [];
 
   var businessId = '';
   $scope.employee = {};
@@ -41,6 +42,7 @@ bulkPay.controller('BusinessEmployeeCreateCtrl', ['$scope', '$rootScope', 'AuthS
     getDepartments(businessId);
     getPositions(businessId);
     getPayGroups(businessId);
+    // getLastCreatedEmployee(businessId);
     resetEmployee();
   });
 
@@ -89,6 +91,14 @@ bulkPay.controller('BusinessEmployeeCreateCtrl', ['$scope', '$rootScope', 'AuthS
       positions = data;
     }).error(function (error) {
       console.log(error);
+    });
+  };
+
+  var getLastCreatedEmployee = function (businessId) {
+    $http.get('/api/employees/last/' + businessId).success(function (data) {
+      console.log(data);
+    }).error(function (error) {
+      AuthSvc.handleError(error);
     });
   };
 
@@ -289,7 +299,6 @@ bulkPay.controller('BusinessEmployeeCreateCtrl', ['$scope', '$rootScope', 'AuthS
     } else {
       // get from employee using id as well...
     }
-    console.log($scope.employee);
   };
 
   $scope.getTypes = function (type) {
@@ -313,13 +322,18 @@ bulkPay.controller('BusinessEmployeeCreateCtrl', ['$scope', '$rootScope', 'AuthS
     return types;
   };
 
-  $scope.add = function (which) {
+  var setUpCustom = function (which) {
     $scope.customType = {};
     $scope.customType.type = which;
     $scope.customType.editablePerEmployee = 'Yes';
+    $scope.customType.derived = 'Fixed';
+    $scope.customType.taxable = 'Yes';
+    $scope.customType.status = 'Active';
+    $scope.customType.save = true;
   };
 
   $scope.showOptions = function (which) {
+    setUpCustom(which);
     swal({
       title: '',
       text: 'Add user specific pay type',
@@ -332,11 +346,25 @@ bulkPay.controller('BusinessEmployeeCreateCtrl', ['$scope', '$rootScope', 'AuthS
       closeOnCancel: true
     }, function (isConfirm) {
       if (isConfirm) {
-        $http.get('/api/positions/business/' + businessId).success(function (data) {
+        $http.get('/api/paytypes/business/custom/' + businessId + '/' + which).success(function (data) {
+          $scope.fetchedPayTypes = [];
+          _.each(data, function (type) {
+            $scope.fetchedPayTypes.push({
+              code: type.code,
+              title: type.title,
+              derived: type.derivative,
+              status: type.status,
+              type: type.type,
+              value: 0,
+              frequency: type.frequency,
+              taxable: type.taxable,
+              editablePerEmployee: type.editablePerEmployee,
+              isBase: type.isBase
+            });
+          });
           jQuery('#predefined-modal-button').click();
-          positions = data;
         }).error(function (error) {
-          console.log(error);
+          AuthSvc.handleError(error);
         });
       } else {
         jQuery('#new-type-modal-button').click();
@@ -344,9 +372,29 @@ bulkPay.controller('BusinessEmployeeCreateCtrl', ['$scope', '$rootScope', 'AuthS
     });
   };
 
-  $scope.addCustomPayType = function () {
-    $scope.employee.customPayTypes.push(jQuery.extend(true, {}, $scope.customType));
-    jQuery('#new-pay-type-close').click();
+  $scope.addCustomPayType = function (type) {
+    if (type) {
+      $scope.employee.customPayTypes.push(jQuery.extend(true, {}, type));
+      jQuery('#predefined-modal-close').click();
+    } else {
+      $scope.customType.value = 0;
+      $scope.employee.customPayTypes.push(jQuery.extend(true, {}, $scope.customType));
+      if ($scope.customType.save) {
+        $http.post('/api/paytypes/', {
+          code: $scope.customType.code,
+          title: $scope.customType.title,
+          businessId: businessId,
+          type: $scope.customType.type,
+          frequency: $scope.customType.frequency,
+          taxable: $scope.customType.taxable,
+          editablePerEmployee: $scope.customType.editablePerEmployee,
+          derivative: $scope.customType.derived,
+          status: $scope.customType.status,
+          isBase: false
+        }).success(function (data) { }).error(function (error) { AuthSvc.handleError(error); });
+      }
+      jQuery('#new-pay-type-close').click();
+    }
   };
 
   $scope.removePayType = function (payType) {
@@ -447,19 +495,24 @@ bulkPay.controller('BusinessEmployeeCreateCtrl', ['$scope', '$rootScope', 'AuthS
   };
 
 
-  $scope.createPayGrade = function () {
-    $http.post('/api/paygrades/', $scope.payGrade).success(function (data) {
-      $scope.payGrades.push(data);
-      resetPayGrade();
-      jQuery('#new-pay-grade-close').click();
-      swal('Success', ' Pay Grade created.', 'success');
+  $scope.createEmployee = function () {
+    $http.post('/api/employees/', $scope.employee).success(function (data) {
+      console.log(data);
+      resetEmployee();
+      $state.transitionTo($state.current, $stateParams, {
+        reload: true,
+        inherit: false,
+        notify: true
+      });
+      swal('Success', 'Employee successfully created.', 'success');
     }).error(function (error) {
       console.log(error);
     });
+    //getLastCreatedEmployee();
   };
 
-  $scope.resetNewGrade = function () {
-    resetPayGrade();
+  $scope.resetNewEmployee = function () {
+    resetEmployee();
   };
 
 

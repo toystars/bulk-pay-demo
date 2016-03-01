@@ -57,7 +57,7 @@ bulkPay.controller('BusinessPayTypesCtrl', ['$scope', '$rootScope', 'AuthSvc', '
       resetPayType();
       swal('Success', ' Pay Type created.', 'success');
     }).error(function (error) {
-      console.log(error);
+      AuthSvc.handleError(error);
     });
   };
 

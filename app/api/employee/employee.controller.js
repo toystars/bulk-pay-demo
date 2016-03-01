@@ -29,6 +29,22 @@ exports.index = function (req, res) {
   });
 };
 
+
+/**
+ * Get last employee created
+ */
+exports.getLast = function (req, res) {
+  Employee.findOne({ businessId: req.params.id }, function (error, employee) {
+    if (error) {
+      crudHelper.handleError(res, null, error);
+    }
+    if (employee) {
+      crudHelper.respondWithResult(res, null, employee);
+    }
+  });
+};
+
+
 /**
  * Get all employees per business
  */
@@ -47,6 +63,7 @@ exports.employees = function (req, res) {
  * Create new employee
  * */
 exports.create = function (req, res) {
+  console.log(req.body);
   var newEmployee = new Employee(req.body);
   newEmployee.save(function (error, employee) {
     if (error) {

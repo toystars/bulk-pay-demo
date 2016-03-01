@@ -100,7 +100,7 @@ bulkPay.directive('updateTitle', ['$rootScope', '$timeout', function ($rootScope
 }]);
 
 bulkPay.filter('filterInput', function () {
-  return function(input, filerObject) {
+  return function (input, filerObject) {
     var out = [];
     var key = '';
     if (input instanceof Array && input.length > 0) {
@@ -117,6 +117,18 @@ bulkPay.filter('filterInput', function () {
     } else {
       out = input;
     }
+    return out;
+  }
+});
+
+bulkPay.filter('customTypesFilter', function () {
+  return function (input, masterArray) {
+    var out = [];
+    _.each(input, function (element) {
+      if (!_.find(masterArray, function (type) { return type.code === element.code })) {
+        out.push(element);
+      }
+    });
     return out;
   }
 });
