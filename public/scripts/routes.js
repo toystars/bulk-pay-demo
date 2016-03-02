@@ -1,9 +1,8 @@
 
 
-bulkPay.config(['$stateProvider', '$urlRouterProvider', '$locationProvider', 'toastrConfig', 'cfpLoadingBarProvider',
-  function($stateProvider, $urlRouterProvider, $locationProvider, toastrConfig, cfpLoadingBarProvider) {
+bulkPay.config(['$stateProvider', '$urlRouterProvider', '$locationProvider', 'toastrConfig',
+  function($stateProvider, $urlRouterProvider, $locationProvider, toastrConfig) {
 
-    cfpLoadingBarProvider.includeSpinner = false;
     $urlRouterProvider.otherwise('/dashboard');
 
     angular.extend(toastrConfig, {

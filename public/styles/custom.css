@@ -54,3 +54,13 @@
 .employee-list {
     margin-top: 15px;
 }
+
+.cropArea {
+    background: transparent;
+    overflow: hidden;
+    margin-right: auto;
+    margin-left: auto;
+    width:300px;
+    height:300px;
+}
+

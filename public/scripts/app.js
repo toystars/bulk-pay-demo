@@ -17,11 +17,22 @@ var bulkPay = angular.module('bulkPay', [
   'ng-sortable',
   'ui.bootstrap',
   'toastr',
-  'angular-loading-bar',
   'ngRoute',
   'ngSanitize',
-  'ngTouch'
+  'ngTouch',
+  'angularFileUpload'
 ]);
+
+bulkPay.factory('imageUploader', ['$upload', function($upload) {
+  return {
+    imageUpload: function(file) {
+      return $upload.upload({
+        url: '/api/employees/photo',
+        file: file
+      });
+    }
+  };
+}]);
 
 bulkPay.run(function($rootScope, $state, AuthSvc) {
   // Redirect to login if route requires auth and the user is not logged in, or doesn't have required role

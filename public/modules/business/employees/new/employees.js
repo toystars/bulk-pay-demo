@@ -1,4 +1,4 @@
-bulkPay.controller('BusinessEmployeeCreateCtrl', ['$scope', '$rootScope', 'AuthSvc', 'BusinessDataSvc', '$stateParams', '$cookies', '$http', '$state', function ($scope, $rootScope, AuthSvc, BusinessDataSvc, $stateParams, $cookies, $http, $state) {
+bulkPay.controller('BusinessEmployeeCreateCtrl', ['$scope', '$rootScope', 'AuthSvc', 'BusinessDataSvc', '$stateParams', '$cookies', '$http', '$state', 'imageUploader', function ($scope, $rootScope, AuthSvc, BusinessDataSvc, $stateParams, $cookies, $http, $state, imageUploader) {
 
   AuthSvc.isLoggedIn(function (status) {
     if (!status) {
@@ -494,9 +494,31 @@ bulkPay.controller('BusinessEmployeeCreateCtrl', ['$scope', '$rootScope', 'AuthS
     }
   };
 
+  $scope.fileSelected = function(files) {
+    if (files && files.length) {
+      $scope.file = files[0];
+      var reader = new FileReader();
+      reader.onload = function (e) {
+        $('#profile-img').attr('src', e.target.result);
+      };
+      reader.readAsDataURL($scope.file);
+    }
+  };
+
+  var uploadPicture = function(file) {
+    imageUploader.imageUpload(file).progress(function(evt) {
+      $scope.cloudinaryRequest = true;
+    }).success(function(data) {
+      console.log(data);
+      /*$scope.cloudinaryRequest = false;
+      reqObject.imageUrl = data.url;
+      saveManagerDetails();*/
+    });
+  };
 
   $scope.createEmployee = function () {
-    $http.post('/api/employees/', $scope.employee).success(function (data) {
+    uploadPicture($scope.file);
+    /*$http.post('/api/employees/', $scope.employee).success(function (data) {
       console.log(data);
       resetEmployee();
       $state.transitionTo($state.current, $stateParams, {
@@ -507,7 +529,7 @@ bulkPay.controller('BusinessEmployeeCreateCtrl', ['$scope', '$rootScope', 'AuthS
       swal('Success', 'Employee successfully created.', 'success');
     }).error(function (error) {
       console.log(error);
-    });
+    });*/
     //getLastCreatedEmployee();
   };
 
@@ -515,174 +537,6 @@ bulkPay.controller('BusinessEmployeeCreateCtrl', ['$scope', '$rootScope', 'AuthS
     resetEmployee();
   };
 
-
-  /*
-   * Helpers
-   * */
-  $scope.getPayGroup = function (id) {
-    for (var x = 0; x < payGroups.length; x++) {
-      if (payGroups[x]._id === id) {
-        return payGroups[x];
-      }
-    }
-  };
-
-  $scope.getActivePayGroups = function () {
-    var activePayGroups = [];
-    for (var x = 0; x < payGroups.length; x++) {
-      if (payGroups[x].status === 'Active') {
-        activePayGroups.push(payGroups[x]);
-      }
-    }
-    return activePayGroups;
-  };
-
-  $scope.getPayTypes = function (type) {
-    var types = [];
-    for (var x = 0; x < $scope.payTypes.length; x++) {
-      if ($scope.payTypes[x].type === type && $scope.payTypes[x].status === 'Active') {
-        types.push($scope.payTypes[x]);
-      }
-    }
-    return types;
-  };
-
-  $scope.check = function (payType, type) {
-    for (var x = 0; x < $scope.payGrade.payTypes.length; x++) {
-      if ($scope.payGrade.payTypes[x].payTypeId === payType._id) {
-        $scope.payGrade.payTypes.splice(x, 1);
-        return;
-      }
-    }
-    $scope.payGrade.payTypes.push({
-      cellId: generateCellId($scope.payGrade.payTypes),
-      code: payType.code,
-      title: payType.title,
-      derived: payType.derivative,
-      payTypeId: payType._id,
-      derivative: '',
-      type: type,
-      value: 0,
-      editablePerEmployee: payType.editablePerEmployee
-    });
-  };
-
-  var removeFromCollection = function (id) {
-    for (var x = 0; x < $scope.payGrades.length; x++) {
-      if ($scope.payGrades[x]._id === id) {
-        $scope.payGrades.splice(x, 1);
-      }
-    }
-  };
-
-  var replace = function (data) {
-    for (var x = 0; x < $scope.payGrades.length; x++) {
-      if ($scope.payGrades[x]._id === data._id) {
-        $scope.payGrades[x] = data;
-      }
-    }
-  };
-
-  $scope.getLastHistory = function () {
-    return $scope.histories[$scope.histories.length - 1];
-  };
-
-  $scope.isPresent = function (id) {
-    for (var x = 0; x < $scope.payGrade.payTypes.length; x++) {
-      if ($scope.payGrade.payTypes[x].payTypeId === id) {
-        return true;
-      }
-    }
-    return false;
-  };
-
-  var getHistories = function (objectId) {
-    $http.get('/api/histories/object/' + objectId).success(function (data) {
-      $scope.histories = data;
-    }).error(function (error) {
-      console.log(error);
-    });
-  };
-
-
-  /*
-   * Single unit display
-   * */
-  $scope.singleView = false;
-  $scope.editActive = false;
-  $scope.histories = [];
-
-  $scope.showPayGrade = function (payGrade) {
-    $scope.singleView = true;
-    $scope.singlePayGrade = {};
-    $scope.oldPayGrade = {};
-    angular.copy(payGrade, $scope.oldPayGrade);
-    angular.copy(payGrade, $scope.singlePayGrade);
-    getHistories($scope.singlePayGrade._id);
-  };
-
-  $scope.edit = function () {
-    $scope.editActive = true;
-    $scope.payGrade = $scope.singlePayGrade;
-  };
-
-  $scope.cancel = function () {
-    $scope.editActive = false;
-    resetPayGrade();
-  };
-
-  $scope.delete = function () {
-    swal({
-      title: 'Are you sure?',
-      text: 'Deleting ' + $scope.singlePayGrade.name + ' is irreversible!',
-      type: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Delete!',
-      closeOnConfirm: false,
-      showLoaderOnConfirm: true
-    }, function () {
-      $http.delete('/api/paygrades/' + $scope.singlePayGrade._id).success(function (data) {
-        swal('Deleted!', $scope.singlePayGrade.title + ' pay grade deleted.', 'success');
-        removeFromCollection($scope.singlePayGrade._id);
-        $scope.closePayGrade();
-      }).error(function (error) {
-        swal('Error Occurred', error.message, 'warning');
-        console.log(error);
-      });
-    });
-  };
-
-  $scope.closePayGrade = function () {
-    $scope.singlePayGrade = {};
-    $scope.singleView = false;
-    $scope.histories = [];
-  };
-
-  $scope.updatePayGrade = function () {
-    $http.put('/api/paygrades/' + $scope.singlePayGrade._id, $scope.singlePayGrade).success(function (data) {
-      getHistories(data._id);
-      replace(data);
-      $scope.editActive = false;
-      resetPayGrade();
-      swal("Success", "Pay grade updated.", "success");
-    }).error(function (error) {
-      console.log(error);
-    });
-  };
-
-  $scope.calculate = function () {
-    calculate();
-  };
-
-  $scope.payTypeSortConfig = {
-    group: 'foobar',
-    animation: 150,
-    onSort: function (evt) {
-      //compileForm();
-    }
-  };
 
 
   /*

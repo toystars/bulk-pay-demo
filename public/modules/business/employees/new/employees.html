@@ -22,43 +22,15 @@
 
         <div class="col-sm-4 col-md-3">
             <div class="text-center">
-                <img src="images/photos/avatar.jpg" class="img-circle img-offline img-responsive img-profile"
-                     alt=""/>
-                <h4 class="profile-name mb5">{{employee.firstName}} {{employee.lastName}}</h4>
-                <div><i class="fa fa-briefcase"></i> {{employee.department}}</div>
-                <div><i class="fa fa-map-marker"></i> {{employee.position}}</div>
 
-                <div class="mb20"></div>
-
+                <img id="profile-img" class="img-circle img-offline img-responsive img-profile" alt=""/>
+                <br><br>
+                <span>Upload image</span><br>
+                <input id="uploadBtn" type="file" ng-file-select="fileSelected($files)" accept="'image/*'" />
+                <!--<div class="btn btn-success" ngf-select ng-model="picFile" name="file" ngf-pattern="'image/*'" ngf-accept="'image/*'" ngf-max-size="5MB" ngf-min-height="100">Select Image</div>-->
 
             </div>
             <!-- text-center -->
-
-            <br/>
-
-            <h5 class="md-title">About</h5>
-            <p class="mb30">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt
-                ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitat... <a href="">Show
-                    More</a></p>
-
-            <h5 class="md-title">Connect</h5>
-            <ul class="list-unstyled social-list">
-                <li><i class="fa fa-twitter"></i> <a href="">twitter.com/eileensideways</a></li>
-                <li><i class="fa fa-facebook"></i> <a href="">facebook.com/eileen</a></li>
-                <li><i class="fa fa-youtube"></i> <a href="">youtube.com/eileen22</a></li>
-                <li><i class="fa fa-linkedin"></i> <a href="">linkedin.com/4ever-eileen</a></li>
-                <li><i class="fa fa-pinterest"></i> <a href="">pinterest.com/eileen</a></li>
-                <li><i class="fa fa-instagram"></i> <a href="">instagram.com/eiside</a></li>
-            </ul>
-
-            <div class="mb30"></div>
-
-            <h5 class="md-title">Address</h5>
-            <address>
-                795 Folsom Ave, Suite 600<br>
-                San Francisco, CA 94107<br>
-                <abbr title="Phone">P:</abbr> (123) 456-7890
-            </address>
 
         </div>
         <!-- col-sm-4 col-md-3 -->
@@ -996,4 +968,5 @@
         </div>
     </div>
 </div>
+
 

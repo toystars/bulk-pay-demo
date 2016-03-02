@@ -24,6 +24,7 @@
     "jsonwebtoken": "^5.5.4",
     "mongoose": "^4.3.7",
     "morgan": "^1.6.1",
+    "multer": "^0.1.8",
     "node-mongoose-validator": "^1.2.0",
     "passport": "^0.3.2",
     "passport-local": "^1.0.0",

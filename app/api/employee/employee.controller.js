@@ -121,6 +121,12 @@ exports.getPositionEmployees = function (req, res) {
   });
 };
 
+/*
+* Save employee photo
+* */
+exports.savePhoto = function (req, res) {
+  res.status(200).json(req.files.file);
+};
 
 /*
  * Update single employee

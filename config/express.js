@@ -6,7 +6,7 @@ var express = require("express"),
   session = require("express-session"),
   config = require('./config'),
   passport = require('passport'),
-  expressJwt = require('express-jwt');
+  multer = require('multer');
 
 module.exports = function() {
   var app = express();
@@ -26,6 +26,15 @@ module.exports = function() {
     resave: true,
     secret: config.sessionSecret
   }));
+
+  app.use(multer({
+      dest: __dirname + '../../public/uploads/',
+      limits: {
+        fileSize: 5000000,
+        files: 1
+      }
+    })
+  );
 
   app.use(passport.initialize());
   app.use(passport.session());
