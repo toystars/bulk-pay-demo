@@ -9,10 +9,12 @@ var employeesSchema = new Schema({
   businessUnitId: String,
   city: String,
   confirmationDate: Date,
-  customPayTypes: [{type: Schema.Types.Mixed }],
+  customPayTypes: [ { type: Schema.Types.Mixed } ],
   dateOfBirth: Date,
   departmentId: String,
   divisionId: String,
+  profilePictures: [ { type: Schema.Types.Mixed } ],
+  currentProfilePicture: String,
   editablePayTypes: [{
     cellId: String,
     code: String,
@@ -58,7 +60,23 @@ var employeesSchema = new Schema({
   phone: String,
   positionId: String,
   state: String,
+  location: String,
+  status: {
+    type: String,
+    default: 'Active'
+  },
   terminationDate: String
+}, {
+  toObject: {
+    virtuals: true
+  },
+  toJSON: {
+    virtuals: true
+  }
 });
 
-module.exports = mongoose.model('employee', employeesSchema);
+employeesSchema.virtual('fullName').get(function () {
+    return this.firstName + ' ' + this.lastName;
+});
+
+module.exports = mongoose.model('Employee', employeesSchema);

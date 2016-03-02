@@ -1,3 +1,59 @@
+<button ng-hide="true" id="position-employee-modal-button" data-toggle="modal" data-target=".position-employee"></button>
+<div class="modal fade position-employee" tabindex="-1" role="dialog" data-backdrop="static">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title"><b>Employee Profile Information ( {{singleEmployee.fullName}} - {{singleEmployee.employeeId}} )</b></h3>
+                </div>
+                <div class="panel-body big-font">
+
+                    <div class="row">
+
+                        <div class="col-md-3">
+                            <div class="text-center">
+                                <img ng-src="uploads/{{singleEmployee.currentProfilePicture}}" id="profile-img" class="img-thumbnail img-offline img-responsive img-profile" alt=""/>
+                            </div>
+                        </div>
+
+                        <div class="col-md-9">
+                            <b>Employee Id: </b> {{singleEmployee.employeeId}}<br>
+                            <b>Full Name: </b> {{singleEmployee.fullName}}<br>
+                            <b>Address: </b> {{singleEmployee.address}}<br>
+                            <b>Phone: </b> {{singleEmployee.phone}}<br>
+                            <b>Email: </b> {{singleEmployee.email}}<br><br><br>
+
+                            <span class="sub-header"><b>Work Information</b></span><br>
+                            <b>Business Unit: </b> {{singleEmployee.businessUnitName}}<br>
+                            <b>Division: </b> {{singleEmployee.divisionName}}<br>
+                            <b>Department: </b> {{singleEmployee.departmentName}}<br>
+                            <b>Position: </b> {{oldPosition.name}}<br>
+                            <b>Pay Group: </b> {{singleEmployee.payGroupName}}<br>
+                            <b>Pay Grade: </b> {{singleEmployee.payGradeName}}<br>
+                            <b>Supervisor: </b> <a class="pointer" ng-click="changeEmployee(singleEmployee.supervisor.id)">{{singleEmployee.supervisor.name}}</a><br>
+                            <b>Location: </b> {{singleEmployee.location}}<br>
+                            <b>Date Employed: </b> {{singleEmployee.employmentDate | date:"dd/MM/yyyy"}}<br>
+                            <b>Status: </b> {{singleEmployee.status}}<br>
+                        </div>
+
+                        <div class="col-md-12 text-right">
+                            <a class="pointer">View Full Profile</a>
+                        </div>
+
+                    </div><!-- row -->
+
+                </div>
+            </div>
+            <div class="panel-footer">
+                <button type="reset" class="btn btn-danger" ng-click="resetEmployee()" id="position-employee-modal-close" data-dismiss="modal">Close</button>
+            </div><!-- panel-footer -->
+        </div>
+    </div>
+</div>
+
+
+
+
 <div class="pageheader">
     <div class="media">
         <div class="pageicon pull-left">
@@ -131,7 +187,9 @@
                                     <span class="pull-left">No employee assigned to position.</span>
                                 </div>
                                 <div class="col-md-12" ng-show="positionEmployees.length > 0">
-                                    <span class="pull-left" ng-repeat="employee in positionEmployees"><a class="pointer" ng-click="viewEmployee(employee)">{{employee.fullName}}</a></span><br>
+                                    <span class="pull-left" ng-repeat="employee in positionEmployees">
+                                        <a class="pointer" ng-click="viewEmployee(employee)">{{employee.fullName}}</a>
+                                    </span><br>
                                 </div>
                             </div>
                         </div><!-- panel-body -->

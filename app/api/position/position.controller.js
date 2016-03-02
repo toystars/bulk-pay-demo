@@ -11,10 +11,22 @@
 
 require('../user/user.model.js');
 require('./position.model.js');
+require('../business-unit/business.unit.model.js');
+require('../division/division.model.js');
+require('../department/department.model.js');
+require('../employee/employee.model.js');
+require('../pay-group/pay-group.model.js');
+require('../pay-grade/pay-grade.model.js');
 var mongoose = require('mongoose'),
   User = mongoose.model('User'),
   Position = mongoose.model('Position'),
-  crudHelper = require('../../helpers/crud.js');
+  crudHelper = require('../../helpers/crud.js'),
+  BusinessUnit = mongoose.model('BusinessUnit'),
+  Division = mongoose.model('Division'),
+  Department = mongoose.model('Department'),
+  Employee = mongoose.model('Employee'),
+  PayGroup = mongoose.model('PayGroup'),
+  PayGrade = mongoose.model('PayGrade');
 
 
 /**
@@ -88,16 +100,39 @@ exports.updatePosition = function (req, res) {
 };
 
 /*
-* Get employees belonging to a position
-* */
-exports.getPositionEmployees = function (req, res) {
-  User.find({ positionId: req.params.positionId }, function (error, users) {
-    if (error) {
-      crudHelper.handleError(res, 400, error);
-    }
-    if (users) {
-      crudHelper.respondWithResult(res, null, users);
-    }
+ * Get additional info of single employee in position
+ * */
+exports.positionEmployee = function (req, res) {
+  var newEmployee = {};
+  Employee.findOne({ _id: req.params.employeeId }, function (error, employee) {
+    BusinessUnit.findOne({ _id: employee.businessUnitId }, function (error, businessUnit) {
+      newEmployee.businessUnitName = businessUnit ? businessUnit.name : '';
+      Division.findOne({ _id: employee.divisionId }, function (error, division) {
+        newEmployee.divisionName = division ? division.name : '';
+        Department.findOne({ _id: employee.departmentId }, function (error, department) {
+          newEmployee.departmentName = department ? department.name : '';
+          PayGroup.findOne({ _id: employee.payGroupId }, function (error, payGroup) {
+            newEmployee.payGroupName = payGroup ? payGroup.name : '';
+            PayGrade.findOne({ _id: employee.payGradeId }, function (error, payGrade) {
+              newEmployee.payGradeName = payGrade ? payGrade.name : '';
+              Position.findOne({ _id: employee.positionId }, function (error, position) {
+                if (position.parentPositionId) {
+                  Employee.findOne({ positionId: position.parentPositionId }, function (error, supervisor) {
+                    newEmployee.supervisor = {
+                      name: supervisor.fullName,
+                      id: supervisor._id
+                    };
+                    crudHelper.respondWithResult(res, null, { newEmployee: newEmployee, oldEmployee: employee });
+                  });
+                } else {
+                  crudHelper.respondWithResult(res, null, { newEmployee: newEmployee, oldEmployee: employee });
+                }
+              });
+            });
+          });
+        });
+      });
+    });
   });
 };
 

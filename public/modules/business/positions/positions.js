@@ -209,6 +209,7 @@ bulkPay.controller('BusinessPositionsCtrl', ['$scope', '$rootScope', 'AuthSvc', 
 
   $scope.showPosition = function (position) {
     $scope.singleView = true;
+    $scope.positionEmployees = [];
     angular.copy(position, $scope.oldPosition);
     angular.copy(position, $scope.singlePosition);
     getHistories($scope.singlePosition._id);
@@ -232,8 +233,37 @@ bulkPay.controller('BusinessPositionsCtrl', ['$scope', '$rootScope', 'AuthSvc', 
     });
   };
 
+  $scope.employeeInfoReady = function () {
+
+  };
+
+  $scope.changeEmployee = function (id) {
+    $http.get('/api/positions/employee/' + id).success(function (data) {
+      $scope.singleEmployee = data.oldEmployee;
+      $scope.singleEmployee.businessUnitName = data.newEmployee.businessUnitName;
+      $scope.singleEmployee.divisionName = data.newEmployee.divisionName;
+      $scope.singleEmployee.departmentName = data.newEmployee.departmentName;
+      $scope.singleEmployee.payGroupName = data.newEmployee.payGroupName;
+      $scope.singleEmployee.payGradeName = data.newEmployee.payGradeName;
+      $scope.singleEmployee.supervisor = data.newEmployee.supervisor;
+    }).error(function (error) {
+      console.log(error);
+    });
+  };
+
   $scope.viewEmployee = function (employee) {
     $scope.singleEmployee = employee;
+    jQuery('#position-employee-modal-button').click();
+    $http.get('/api/positions/employee/' + employee._id).success(function (data) {
+      $scope.singleEmployee.businessUnitName = data.newEmployee.businessUnitName;
+      $scope.singleEmployee.divisionName = data.newEmployee.divisionName;
+      $scope.singleEmployee.departmentName = data.newEmployee.departmentName;
+      $scope.singleEmployee.payGroupName = data.newEmployee.payGroupName;
+      $scope.singleEmployee.payGradeName = data.newEmployee.payGradeName;
+      $scope.singleEmployee.supervisor = data.newEmployee.supervisor;
+    }).error(function (error) {
+      console.log(error);
+    });
   };
 
   $scope.resetEmployee = function () {

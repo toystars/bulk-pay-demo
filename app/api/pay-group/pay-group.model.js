@@ -27,4 +27,4 @@ var payGroupsSchema = new Schema({
   }
 });
 
-module.exports = mongoose.model('payGroup', payGroupsSchema);
+module.exports = mongoose.model('PayGroup', payGroupsSchema);

@@ -53,14 +53,7 @@
                 <div class="col-md-12" ng-show="inView === 'Personal Details'">
                     <div class="tab-pane active" id="activities">
                         <div class="panel panel-default">
-                            <div class="panel-heading">
-                                <div class="panel-btns">
-                                    <a href="" class="panel-minimize tooltips" data-toggle="tooltip" title="Minimize Panel"><i class="fa fa-minus"></i></a>
-                                </div>
-                                <!-- panel-btns -->
-                                <p>Please fill the form accordingly</p>
-                            </div>
-                            <!-- panel-heading -->
+
                             <div class="panel-body nopadding">
                                 <form class="form-horizontal form-bordered">
                                     <div class="form-group">
@@ -286,16 +279,23 @@
                 <div class="col-md-12" ng-show="inView === 'Employment Details'">
                     <div class="tab-pane" id="followers">
                         <div class="panel panel-default">
-                            <div class="panel-heading">
-                                <div class="panel-btns">
-                                    <!--<a href="" class="panel-minimize tooltips" data-toggle="tooltip" title="Minimize Panel"><i class="fa fa-minus"></i></a>-->
-                                </div>
-                                <!-- panel-btns -->
-                                <p>Please fill the form accordingly</p>
-                            </div>
-                            <!-- panel-heading -->
+
                             <div class="panel-body nopadding">
                                 <form class="form-horizontal form-bordered">
+
+                                    <div class="form-group" ng-hide="dataReady()">
+                                        <label for="employee-location" class="col-sm-4 control-label">Location</label>
+                                        <div class="col-sm-4">
+                                            <select ng-model="employee.location" id="employee-location" data-placeholder="Choose One" style="width:100%">
+                                                <option value="">Choose One</option>
+                                                <option ng-repeat="state in states" on-finish-render="ngRepeatFinished" value="{{state}}">{{state}}
+                                                </option>
+                                            </select>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            &nbsp;
+                                        </div>
+                                    </div>
 
                                     <div class="form-group" ng-hide="dataReady()">
                                         <label for="employee-business-unit" class="col-sm-4 control-label">Business Unit</label>
@@ -371,6 +371,20 @@
                                         </div>
                                     </div>
 
+                                    <div class="form-group" ng-hide="dataReady()">
+                                        <label for="employee-status" class="col-sm-4 control-label">Status</label>
+                                        <div class="col-sm-4">
+                                            <select ng-model="employee.status" id="employee-status" data-placeholder="Choose One" style="width:100%">
+                                                <option value="">Choose One</option>
+                                                <option value="Active">Active</option>
+                                                <option value="Inactive">Inactive</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            &nbsp;
+                                        </div>
+                                    </div>
+
                                     <div class="form-group">
                                         <label class="col-sm-4 control-label">Termination/Resignation Date</label>
                                         <div class="input-group col-sm-4" style="padding-left:10px;padding-right:10px">
@@ -390,15 +404,7 @@
                 <div class="col-md-12" ng-show="inView === 'Payment Details'">
                     <div class="tab-pane" id="following">
                         <div class="panel panel-default">
-                            <div class="panel-heading">
-                                <div class="panel-btns">
-                                    <a href="" class="panel-minimize tooltips" data-toggle="tooltip"
-                                       title="Minimize Panel"><i class="fa fa-minus"></i></a>
-                                </div>
-                                <!-- panel-btns -->
-                                <p>Please fill the form accordingly</p>
-                            </div>
-                            <!-- panel-heading -->
+
                             <div class="panel-body nopadding">
                                 <form class="form-horizontal form-bordered">
 

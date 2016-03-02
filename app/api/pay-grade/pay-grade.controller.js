@@ -11,7 +11,7 @@
 
 require('./pay-grade.model.js');
 var mongoose = require('mongoose'),
-  PayGrade = mongoose.model('payGrade'),
+  PayGrade = mongoose.model('PayGrade'),
   crudHelper = require('../../helpers/crud.js');
 
 

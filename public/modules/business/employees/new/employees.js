@@ -116,6 +116,10 @@ bulkPay.controller('BusinessEmployeeCreateCtrl', ['$scope', '$rootScope', 'AuthS
       phone: '',
       address: '',
       city: '',
+      location: '',
+      status: '',
+      profilePictures: [],
+      currentProfilePicture: '',
       state: '',
       businessUnitId: '',
       divisionId: '',
@@ -505,20 +509,22 @@ bulkPay.controller('BusinessEmployeeCreateCtrl', ['$scope', '$rootScope', 'AuthS
     }
   };
 
-  var uploadPicture = function(file) {
-    imageUploader.imageUpload(file).progress(function(evt) {
-      $scope.cloudinaryRequest = true;
-    }).success(function(data) {
-      console.log(data);
-      /*$scope.cloudinaryRequest = false;
-      reqObject.imageUrl = data.url;
-      saveManagerDetails();*/
-    });
+  $scope.createEmployee = function () {
+    if ($scope.file) {
+      imageUploader.imageUpload($scope.file).progress(function(evt) {
+        $scope.cloudinaryRequest = true;
+      }).success(function(data) {
+        $scope.employee.profilePictures.push(data.name);
+        $scope.employee.currentProfilePicture = data.name;
+        saveEmployee();
+      });
+    } else {
+      saveEmployee();
+    }
   };
 
-  $scope.createEmployee = function () {
-    uploadPicture($scope.file);
-    /*$http.post('/api/employees/', $scope.employee).success(function (data) {
+  var saveEmployee = function () {
+    $http.post('/api/employees/', $scope.employee).success(function (data) {
       console.log(data);
       resetEmployee();
       $state.transitionTo($state.current, $stateParams, {
@@ -529,7 +535,7 @@ bulkPay.controller('BusinessEmployeeCreateCtrl', ['$scope', '$rootScope', 'AuthS
       swal('Success', 'Employee successfully created.', 'success');
     }).error(function (error) {
       console.log(error);
-    });*/
+    });
     //getLastCreatedEmployee();
   };
 
@@ -615,6 +621,12 @@ bulkPay.controller('BusinessEmployeeCreateCtrl', ['$scope', '$rootScope', 'AuthS
       minimumResultsForSearch: 0
     });
     jQuery('#employee-state').select2({
+      minimumResultsForSearch: 0
+    });
+    jQuery('#employee-location').select2({
+      minimumResultsForSearch: 0
+    });
+    jQuery('#employee-status').select2({
       minimumResultsForSearch: 0
     });
     jQuery('#employee-kin-state').select2({

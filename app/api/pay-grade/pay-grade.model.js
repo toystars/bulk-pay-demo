@@ -83,4 +83,4 @@ var payGradesSchema = new Schema({
   }]
 });
 
-module.exports = mongoose.model('payGrade', payGradesSchema);
+module.exports = mongoose.model('PayGrade', payGradesSchema);

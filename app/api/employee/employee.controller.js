@@ -11,7 +11,7 @@
 
 require('./employee.model.js');
 var mongoose = require('mongoose'),
-  Employee = mongoose.model('employee'),
+  Employee = mongoose.model('Employee'),
   crudHelper = require('../../helpers/crud.js');
 
 
@@ -63,7 +63,6 @@ exports.employees = function (req, res) {
  * Create new employee
  * */
 exports.create = function (req, res) {
-  console.log(req.body);
   var newEmployee = new Employee(req.body);
   newEmployee.save(function (error, employee) {
     if (error) {
