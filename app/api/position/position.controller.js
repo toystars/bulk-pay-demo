@@ -118,10 +118,12 @@ exports.positionEmployee = function (req, res) {
               Position.findOne({ _id: employee.positionId }, function (error, position) {
                 if (position.parentPositionId) {
                   Employee.findOne({ positionId: position.parentPositionId }, function (error, supervisor) {
-                    newEmployee.supervisor = {
-                      name: supervisor.fullName,
-                      id: supervisor._id
-                    };
+                    if (supervisor) {
+                      newEmployee.supervisor = {
+                        name: supervisor.fullName,
+                        id: supervisor._id
+                      };
+                    }
                     crudHelper.respondWithResult(res, null, { newEmployee: newEmployee, oldEmployee: employee });
                   });
                 } else {
