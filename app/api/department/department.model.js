@@ -16,6 +16,7 @@ var departmentSchema = new Schema({
     type: String,
     default: 'Yes'
   },
+  divisionsServed: [ { type: Schema.Types.Mixed } ],
   location: String,
   parentId: String,
   parentName: String,

@@ -57,7 +57,9 @@ bulkPay.controller('BusinessPositionsCtrl', ['$scope', '$rootScope', 'AuthSvc', 
 
   var resetPosition = function () {
     $scope.position = {
-      businessId: businessId
+      businessId: businessId,
+      headingSection: '',
+      headingSectionId: ''
     };
   };
 
@@ -82,6 +84,23 @@ bulkPay.controller('BusinessPositionsCtrl', ['$scope', '$rootScope', 'AuthSvc', 
 
 
   $scope.createPosition = function () {
+    switch ($scope.position.headingSection) {
+      case 'Business Unit':
+        $scope.position.headingSectionId = $scope.position.businessUnitId;
+        $scope.position.divisionId = '';
+        $scope.position.departmentId = '';
+        break;
+      case 'Division':
+        $scope.position.headingSectionId = $scope.position.divisionId;
+        $scope.position.departmentId = '';
+        break;
+      case 'Department':
+        $scope.position.headingSectionId = $scope.position.departmentId;
+        break;
+      default:
+        $scope.position.headingSectionId = '';
+        break;
+    }
     $http.post('/api/positions/', $scope.position).success(function (data) {
       $scope.positions.push(data);
       jQuery('#new-position-close').click();
@@ -114,17 +133,18 @@ bulkPay.controller('BusinessPositionsCtrl', ['$scope', '$rootScope', 'AuthSvc', 
 
   $scope.getDepartments = function () {
     var departments = [];
-    for (var x = 0; x < $scope.departments.length; x++) {
+    _.each($scope.departments, function (department) {
       if ($scope.position.divisionId && $scope.position.divisionId !== '') {
-        if ($scope.position.divisionId === $scope.departments[x].divisionId) {
-          departments.push($scope.departments[x]);
+        if ($scope.position.divisionId === department.divisionId || department.divisionsServed[0] === 'All' || _.find(department.divisionsServed, function (id) { return id == $scope.position.divisionId; })) {
+          departments.push(department);
         }
       } else {
-        departments.push($scope.departments[x]);
+        departments.push(department);
       }
-    }
+    });
     return departments;
   };
+
 
   $scope.getUnitName = function (id) {
     for (var x = 0; x < $scope.businessUnits.length; x++) {
@@ -155,6 +175,19 @@ bulkPay.controller('BusinessPositionsCtrl', ['$scope', '$rootScope', 'AuthSvc', 
       if ($scope.departments[x]._id === id) {
         return $scope.departments[x].name;
       }
+    }
+  };
+
+  $scope.getHeadName = function (head, id) {
+    switch (head) {
+      case 'Business Unit':
+        return $scope.getUnitName(id);
+      case 'Division':
+        return $scope.getDivisionName(id);
+        break;
+      case 'Department':
+        return $scope.getDepartmentName(id);
+        break;
     }
   };
 
@@ -194,6 +227,22 @@ bulkPay.controller('BusinessPositionsCtrl', ['$scope', '$rootScope', 'AuthSvc', 
     }).error(function (error) {
       console.log(error);
     });
+  };
+
+  /*
+  * Input disabling functions
+  * */
+  $scope.disableDivision = function () {
+    return $scope.position.headingSection === 'Business Unit';
+  };
+  $scope.disableDepartment = function () {
+    return $scope.position.headingSection === 'Business Unit' || $scope.position.headingSection === 'Division';
+  };
+  $scope.disableUpdateDivision = function () {
+    return $scope.singlePosition.headingSection === 'Business Unit';
+  };
+  $scope.disableUpdateDepartment = function () {
+    return $scope.singlePosition.headingSection === 'Business Unit' || $scope.singlePosition.headingSection === 'Division';
   };
 
 
@@ -237,8 +286,8 @@ bulkPay.controller('BusinessPositionsCtrl', ['$scope', '$rootScope', 'AuthSvc', 
 
   };
 
-  $scope.changeEmployee = function (id) {
-    $http.get('/api/positions/employee/' + id).success(function (data) {
+  var getSingleEmployeeInfo = function (employeeId) {
+    $http.get('/api/positions/employee/' + employeeId).success(function (data) {
       $scope.singleEmployee = data.oldEmployee;
       $scope.singleEmployee.businessUnitName = data.newEmployee.businessUnitName;
       $scope.singleEmployee.divisionName = data.newEmployee.divisionName;
@@ -247,23 +296,18 @@ bulkPay.controller('BusinessPositionsCtrl', ['$scope', '$rootScope', 'AuthSvc', 
       $scope.singleEmployee.payGradeName = data.newEmployee.payGradeName;
       $scope.singleEmployee.supervisor = data.newEmployee.supervisor;
     }).error(function (error) {
-      console.log(error);
+      AuthSvc.handleError(error);
     });
+  };
+
+  $scope.changeEmployee = function (id) {
+    getSingleEmployeeInfo(id);
   };
 
   $scope.viewEmployee = function (employee) {
     $scope.singleEmployee = employee;
     jQuery('#position-employee-modal-button').click();
-    $http.get('/api/positions/employee/' + employee._id).success(function (data) {
-      $scope.singleEmployee.businessUnitName = data.newEmployee.businessUnitName;
-      $scope.singleEmployee.divisionName = data.newEmployee.divisionName;
-      $scope.singleEmployee.departmentName = data.newEmployee.departmentName;
-      $scope.singleEmployee.payGroupName = data.newEmployee.payGroupName;
-      $scope.singleEmployee.payGradeName = data.newEmployee.payGradeName;
-      $scope.singleEmployee.supervisor = data.newEmployee.supervisor;
-    }).error(function (error) {
-      console.log(error);
-    });
+    getSingleEmployeeInfo(employee._id);
   };
 
   $scope.resetEmployee = function () {
@@ -300,6 +344,23 @@ bulkPay.controller('BusinessPositionsCtrl', ['$scope', '$rootScope', 'AuthSvc', 
   };
 
   $scope.updatePosition = function () {
+    switch ($scope.singlePosition.headingSection) {
+      case 'Business Unit':
+        $scope.singlePosition.headingSectionId = $scope.singlePosition.businessUnitId;
+        $scope.singlePosition.divisionId = '';
+        $scope.singlePosition.departmentId = '';
+        break;
+      case 'Division':
+        $scope.singlePosition.headingSectionId = $scope.singlePosition.divisionId;
+        $scope.singlePosition.departmentId = '';
+        break;
+      case 'Department':
+        $scope.singlePosition.headingSectionId = $scope.singlePosition.departmentId;
+        break;
+      default:
+        $scope.singlePosition.headingSectionId = '';
+        break;
+    }
     $http.put('/api/positions/' + $scope.singlePosition._id, $scope.singlePosition).success(function (data) {
       getHistories(data._id);
       angular.copy(data, $scope.oldPosition);
@@ -318,6 +379,9 @@ bulkPay.controller('BusinessPositionsCtrl', ['$scope', '$rootScope', 'AuthSvc', 
    * */
   var triggerSelect = function () {
     jQuery('#new-position-status').select2({
+      minimumResultsForSearch: 0
+    });
+    jQuery('#new-position-heading-section').select2({
       minimumResultsForSearch: 0
     });
     jQuery('#new-position-business-unit').select2({

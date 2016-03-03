@@ -51,7 +51,7 @@
                         <td>{{singleDepartment.name}}</td>
                         <td>{{singleDepartment.location}}</td>
                         <td>{{singleDepartment.isGeneric}}</td>
-                        <td>{{singleDepartment.divisionName}}</td>
+                        <td>{{getDivisions(singleDepartment)}}</td>
                         <td>{{singleDepartment.parentName}}</td>
                         <td>
                             <span ng-if="singleDepartment.status === 'Active'" class="label label-success">{{singleDepartment.status}}</span>
@@ -96,14 +96,23 @@
                             <div class="form-group">
                                 <label for="update-department-generic" class="control-label">Generic</label>
                                 <select ng-model="singleDepartment.isGeneric" id="update-department-generic" data-placeholder="Choose One" style="width:100%">
-                                    <option value="">Choose One</option>
                                     <option value="Yes">Yes</option>
                                     <option value="No">No</option>
                                 </select>
                             </div><!-- form-group -->
                         </div><!-- col-sm-6 -->
 
-                        <div class="col-sm-6">
+                        <div class="col-sm-6" ng-hide="singleDepartment.isGeneric === 'No'">
+                            <div class="form-group">
+                                <label for="update-department-divisions-served" class="control-label">Divisions Served</label>
+                                <select ng-model="singleDepartment.divisionsServed" multiple="multiple" id="update-department-divisions-served" data-placeholder="Choose One" style="width:100%">
+                                    <option value="All">All</option>
+                                    <option ng-repeat="division in divisions" on-finish-render="ngRepeatFinished" value="{{division._id}}">{{division.name}}</option>
+                                </select>
+                            </div><!-- form-group -->
+                        </div><!-- col-sm-6 -->
+
+                        <div class="col-sm-6" ng-hide="singleDepartment.isGeneric === 'Yes'">
                             <div class="form-group">
                                 <label for="update-department-parent-status" class="control-label">Parent</label>
                                 <select ng-model="singleDepartment.isParent" ng-disabled="singleDepartment.isGeneric === 'Yes'" id="update-department-parent-status" data-placeholder="Choose One" style="width:100%">
@@ -119,25 +128,27 @@
 
                     <div class="row">
 
-                        <div class="col-sm-12" ng-show="singleDepartment.isParent === 'Yes'">
-                            <div class="form-group">
-                                <label for="update-department-division" class="control-label">Division</label>
-                                <select ng-disabled="singleDepartment.isGeneric === 'Yes'" ng-model="singleDepartment.divisionId" id="update-department-division" data-placeholder="Choose One" style="width:100%">
-                                    <option value="">Choose One</option>
-                                    <option ng-repeat="division in divisions" on-finish-render="ngRepeatFinished" value="{{division._id}}">{{division.name}}</option>
-                                </select>
-                            </div><!-- form-group -->
-                        </div><!-- col-sm-12 -->
+                        <div ng-hide="singleDepartment.isGeneric === 'Yes'">
+                            <div class="col-sm-12" ng-show="singleDepartment.isParent === 'Yes'">
+                                <div class="form-group">
+                                    <label for="update-department-division" class="control-label">Division</label>
+                                    <select ng-disabled="singleDepartment.isGeneric === 'Yes'" ng-model="singleDepartment.divisionId" id="update-department-division" data-placeholder="Choose One" style="width:100%">
+                                        <option value="">Choose One</option>
+                                        <option ng-repeat="division in divisions" on-finish-render="ngRepeatFinished" value="{{division._id}}">{{division.name}}</option>
+                                    </select>
+                                </div><!-- form-group -->
+                            </div><!-- col-sm-12 -->
 
-                        <div class="col-sm-12" ng-hide="singleDepartment.isParent === 'Yes'">
-                            <div class="form-group">
-                                <label for="update-department-parent" class="control-label">Parent Department</label>
-                                <select ng-model="singleDepartment.parentId" id="update-department-parent" data-placeholder="Choose One" style="width:100%">
-                                    <option value="">Choose One</option>
-                                    <option ng-repeat="department in getValidDepartments()" on-finish-render="ngRepeatFinished" value="{{department._id}}">{{department.name}}</option>
-                                </select>
-                            </div><!-- form-group -->
-                        </div><!-- col-sm-12 -->
+                            <div class="col-sm-12" ng-hide="singleDepartment.isParent === 'Yes'">
+                                <div class="form-group">
+                                    <label for="update-department-parent" class="control-label">Parent Department</label>
+                                    <select ng-model="singleDepartment.parentId" id="update-department-parent" data-placeholder="Choose One" style="width:100%">
+                                        <option value="">Choose One</option>
+                                        <option ng-repeat="department in getValidDepartments()" on-finish-render="ngRepeatFinished" value="{{department._id}}">{{department.name}}</option>
+                                    </select>
+                                </div><!-- form-group -->
+                            </div><!-- col-sm-12 -->
+                        </div>
 
                         <div class="col-sm-12">
                             <div class="form-group">
@@ -235,17 +246,26 @@
                             <div class="form-group">
                                 <label for="new-department-generic" class="control-label">Generic</label>
                                 <select ng-model="department.isGeneric" id="new-department-generic" data-placeholder="Choose One" style="width:100%">
-                                    <option value="">Choose One</option>
                                     <option value="Yes">Yes</option>
                                     <option value="No">No</option>
                                 </select>
                             </div><!-- form-group -->
                         </div><!-- col-sm-6 -->
 
-                        <div class="col-sm-6">
+                        <div class="col-sm-6" ng-hide="department.isGeneric === 'No'">
+                            <div class="form-group">
+                                <label for="new-department-divisions-served" class="control-label">Divisions Served</label>
+                                <select ng-model="department.divisionsServed" multiple="multiple" id="new-department-divisions-served" data-placeholder="Choose One" style="width:100%">
+                                    <option value="All">All</option>
+                                    <option ng-repeat="division in divisions" on-finish-render="ngRepeatFinished" value="{{division._id}}">{{division.name}}</option>
+                                </select>
+                            </div><!-- form-group -->
+                        </div><!-- col-sm-6 -->
+
+                        <div class="col-sm-6" ng-hide="department.isGeneric === 'Yes'">
                             <div class="form-group">
                                 <label for="new-department-parent-status" class="control-label">Parent</label>
-                                <select ng-model="department.isParent" ng-disabled="department.isGeneric === 'Yes'" id="new-department-parent-status" data-placeholder="Choose One" style="width:100%">
+                                <select ng-model="department.isParent" id="new-department-parent-status" data-placeholder="Choose One" style="width:100%">
                                     <option value="">Choose One</option>
                                     <option value="Yes">Yes</option>
                                     <option value="No">No</option>
@@ -256,12 +276,12 @@
 
                     </div>
 
-                    <div class="row">
+                    <div class="row" ng-hide="department.isGeneric === 'Yes'">
 
                         <div class="col-sm-12" ng-show="department.isParent === 'Yes'">
                             <div class="form-group">
                                 <label for="new-department-division" class="control-label">Division</label>
-                                <select ng-disabled="department.isGeneric === 'Yes'" ng-model="department.divisionId" id="new-department-division" data-placeholder="Choose One" style="width:100%">
+                                <select ng-model="department.divisionId" id="new-department-division" data-placeholder="Choose One" style="width:100%">
                                     <option value="">Choose One</option>
                                     <option ng-repeat="division in divisions" on-finish-render="ngRepeatFinished" value="{{division._id}}">{{division.name}}</option>
                                 </select>

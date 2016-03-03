@@ -1,5 +1,5 @@
 
-bulkPay.controller('BusinessPayGradesCtrl', ['$scope', '$rootScope', 'AuthSvc', 'BusinessDataSvc', '$stateParams', '$cookies', '$http', '$state', function ($scope, $rootScope, AuthSvc, BusinessDataSvc, $stateParams, $cookies, $http, $state) {
+bulkPay.controller('BusinessPayGradesCtrl', ['$scope', '$rootScope', '$timeout', 'AuthSvc', 'BusinessDataSvc', '$stateParams', '$cookies', '$http', '$state', function ($scope, $rootScope, $timeout, AuthSvc, BusinessDataSvc, $stateParams, $cookies, $http, $state) {
 
   AuthSvc.isLoggedIn(function (status) {
     if (!status) {
@@ -79,7 +79,9 @@ bulkPay.controller('BusinessPayGradesCtrl', ['$scope', '$rootScope', 'AuthSvc', 
 
   $scope.createPayGrade = function () {
     $http.post('/api/paygrades/', $scope.payGrade).success(function (data) {
-      $scope.payGrades.push(data);
+      $timeout(function() {
+        $scope.payGrades.push(data);
+      }, 0);
       resetPayGrade();
       jQuery('#new-pay-grade-close').click();
       swal('Success', ' Pay Grade created.', 'success');

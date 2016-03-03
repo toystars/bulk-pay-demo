@@ -133,8 +133,13 @@
 
                     </div><!-- row -->
 
+                    <div class="row" ng-show="histories.length > 0">
+                        <span class="pull-right">Last updated on {{getLastHistory().date | date:"MM/dd/yyyy 'at' h:mma"}}, by {{getLastHistory().user.username}}</span>
+                    </div>
+
                 </div><!-- panel-body -->
                 <div class="panel-footer">
+
                     <button class="btn btn-primary mr5" ng-click="updateDivision()">Update</button>
                     <button type="reset" class="btn btn-warning" ng-click="closeDivision()">Cancel</button>
                     <button type="reset" class="btn btn-danger pull-right" ng-click="delete()">Delete</button>

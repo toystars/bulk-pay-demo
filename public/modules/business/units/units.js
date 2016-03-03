@@ -131,6 +131,11 @@ bulkPay.controller('BusinessUnitsCtrl', ['$scope', '$rootScope', 'AuthSvc', 'Bus
     }
   };
 
+  $scope.getLastHistory = function () {
+    return $scope.histories[$scope.histories.length - 1];
+  };
+
+
   var getHistories = function (objectId) {
     $http.get('/api/histories/object/' + objectId).success(function (data) {
       $scope.histories = data;
@@ -144,6 +149,7 @@ bulkPay.controller('BusinessUnitsCtrl', ['$scope', '$rootScope', 'AuthSvc', 'Bus
   * Single unit display
   * */
   $scope.singleView = false;
+  $scope.histories = [];
 
   $scope.showUnit = function (unit) {
     $scope.singleView = true;

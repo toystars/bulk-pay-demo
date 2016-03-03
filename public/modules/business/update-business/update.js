@@ -8,6 +8,7 @@ bulkPay.controller('BusinessUpdateCtrl', ['$scope', '$rootScope', 'AuthSvc', 'Bu
   });
 
   $scope.$parent.inView = 'Update Business Info';
+  $scope.businessHistory = [];
 
 
   if (!BusinessDataSvc.getBusinessId() || BusinessDataSvc.getBusinessId() !== $stateParams.businessId) {
@@ -27,6 +28,10 @@ bulkPay.controller('BusinessUpdateCtrl', ['$scope', '$rootScope', 'AuthSvc', 'Bu
   $rootScope.$on('history.fetched', function (event, history) {
     $scope.businessHistory = history;
   });
+
+  $scope.getLastHistory = function () {
+    return $scope.businessHistory[$scope.businessHistory.length - 1];
+  };
 
   $scope.$on('ngRepeatFinished', function (ngRepeatFinishedEvent) {
     triggerSelect();

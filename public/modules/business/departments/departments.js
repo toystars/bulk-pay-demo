@@ -17,6 +17,7 @@ bulkPay.controller('BusinessDepartmentsCtrl', ['$scope', '$rootScope', 'AuthSvc'
     $scope.department = {
       isGeneric: 'No',
       isParent: 'Yes',
+      divisionsServed: [],
       parentId: '',
       divisionId: ''
     };
@@ -74,6 +75,7 @@ bulkPay.controller('BusinessDepartmentsCtrl', ['$scope', '$rootScope', 'AuthSvc'
       isParent: $scope.department.isParent,
       isGeneric: $scope.department.isGeneric,
       location: $scope.department.location,
+      divisionsServed: $scope.department.divisionsServed,
       divisionId: $scope.department.divisionId,
       divisionName: (!$scope.department.divisionId || $scope.department.divisionId === '') ? '' : getDivisionName($scope.department.divisionId),
       parentId: $scope.department.parentId,
@@ -88,6 +90,8 @@ bulkPay.controller('BusinessDepartmentsCtrl', ['$scope', '$rootScope', 'AuthSvc'
       requestObject.divisionName = '';
       requestObject.parentId = '';
       requestObject.parentName = '';
+    } else {
+      requestObject.divisionsServed = [];
     }
 
     $http.post('/api/departments/', requestObject).success(function (data) {
@@ -96,7 +100,7 @@ bulkPay.controller('BusinessDepartmentsCtrl', ['$scope', '$rootScope', 'AuthSvc'
       jQuery('#new-division-close').click();
       swal("Success", "Department created.", "success");
     }).error(function (error) {
-      console.log(error);
+      AuthSvc.handleError(error);
     });
   };
 
@@ -184,7 +188,7 @@ bulkPay.controller('BusinessDepartmentsCtrl', ['$scope', '$rootScope', 'AuthSvc'
     $http.get('/api/histories/object/' + objectId).success(function (data) {
       $scope.histories = data;
     }).error(function (error) {
-      console.log(error);
+      AuthSvc.handleError(error);
     });
   };
 
@@ -220,8 +224,8 @@ bulkPay.controller('BusinessDepartmentsCtrl', ['$scope', '$rootScope', 'AuthSvc'
         removeFromCollection($scope.singleDepartment._id);
         $scope.closeDivision();
       }).error(function (error) {
+        AuthSvc.handleError(error);
         swal('Error Occurred', error.message, 'warning');
-        console.log(error);
       });
     });
   };
@@ -244,6 +248,8 @@ bulkPay.controller('BusinessDepartmentsCtrl', ['$scope', '$rootScope', 'AuthSvc'
       $scope.singleDepartment.divisionName = '';
       $scope.singleDepartment.parentId = '';
       $scope.singleDepartment.parentName = '';
+    } else {
+      $scope.singleDepartment.divisionsServed = [];
     }
 
     $http.put('/api/departments/' + $scope.singleDepartment._id, $scope.singleDepartment).success(function (data) {
@@ -251,7 +257,7 @@ bulkPay.controller('BusinessDepartmentsCtrl', ['$scope', '$rootScope', 'AuthSvc'
       replace(data);
       swal("Success", "Department updated.", "success");
     }).error(function (error) {
-      console.log(error);
+      AuthSvc.handleError(error);
     });
   };
 
@@ -267,6 +273,16 @@ bulkPay.controller('BusinessDepartmentsCtrl', ['$scope', '$rootScope', 'AuthSvc'
     return departments;
   };
 
+  $scope.getDivisions = function (singleDepartment) {
+    if (singleDepartment.divisionsServed.length === 0) {
+      return singleDepartment.divisionName;
+    } else if (singleDepartment.divisionsServed.length === 1 && singleDepartment.divisionsServed[0] === 'All') {
+      return 'All divisions';
+    }
+    var division = singleDepartment.divisionsServed.length === 1 ? ' division' : ' divisions';
+    return singleDepartment.divisionsServed.length + division;
+  };
+
 
   /*
    * jQuery
@@ -276,6 +292,9 @@ bulkPay.controller('BusinessDepartmentsCtrl', ['$scope', '$rootScope', 'AuthSvc'
       minimumResultsForSearch: 0
     });
     jQuery('#new-department-parent').select2({
+      minimumResultsForSearch: 0
+    });
+    jQuery('#new-department-divisions-served').select2({
       minimumResultsForSearch: 0
     });
     jQuery('#new-department-generic').select2({
@@ -304,6 +323,9 @@ bulkPay.controller('BusinessDepartmentsCtrl', ['$scope', '$rootScope', 'AuthSvc'
       minimumResultsForSearch: 0
     });
     jQuery('#update-department-status').select2({
+      minimumResultsForSearch: 0
+    });
+    jQuery('#update-department-divisions-served').select2({
       minimumResultsForSearch: 0
     });
   };

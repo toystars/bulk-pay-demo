@@ -167,6 +167,11 @@
                                 </div>
                                 <div class="col-md-12 text-center">
                                     <div class="row">
+                                        <div class="col-md-6 text-right">Section Head:</div><div class="col-md-6 text-left">{{oldPosition.headingSection}} - {{getHeadName(oldPosition.headingSection, oldPosition.headingSectionId)}}</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-12 text-center">
+                                    <div class="row">
                                         <div class="col-md-6 text-right">Allowed Employees:</div><div class="col-md-6 text-left">{{oldPosition.numberOfAllowedEmployees}}</div>
                                     </div>
                                 </div>
@@ -213,25 +218,25 @@
                 </div>
                 <div class="panel-body">
                     <div class="row">
-                        <div class="col-sm-12">
+                        <div class="col-sm-4">
                             <div class="form-group">
                                 <label for="update-position-code" class="control-label">Code</label>
                                 <input ng-model="singlePosition.code" type="text" id="update-position-code" placeholder="Position Code" class="form-control" />
                             </div><!-- form-group -->
-                        </div><!-- col-sm-12 -->
-                        <div class="col-sm-12">
+                        </div><!-- col-sm-4 -->
+                        <div class="col-sm-4">
                             <div class="form-group">
                                 <label for="update-position-name" class="control-label">Name</label>
                                 <input ng-model="singlePosition.name" type="text" id="update-position-name" placeholder="Position Name" class="form-control" />
                             </div><!-- form-group -->
-                        </div><!-- col-sm-12 -->
-                        <div class="col-sm-12">
+                        </div><!-- col-sm-4 -->
+                        <div class="col-sm-4">
                             <div class="form-group">
-                                <label for="update-position-allowed-employees" class="control-label">Name</label>
+                                <label for="update-position-allowed-employees" class="control-label">Number of Allowed Employees</label>
                                 <input ng-model="singlePosition.numberOfAllowedEmployees" type="number" id="update-position-allowed-employees" placeholder="1" class="form-control" />
                             </div><!-- form-group -->
-                        </div><!-- col-sm-12 -->
-                        <div class="col-sm-12">
+                        </div><!-- col-sm-4 -->
+                        <div class="col-sm-6">
                             <div class="form-group">
                                 <label for="update-position-status" class="control-label">Status</label>
                                 <select ng-model="singlePosition.status" id="update-position-status" data-placeholder="Choose One" class="form-control width100p">
@@ -240,8 +245,19 @@
                                     <option value="Inactive">Inactive</option>
                                 </select>
                             </div><!-- form-group -->
-                        </div><!-- col-sm-112 -->
-                        <div class="col-sm-12">
+                        </div><!-- col-sm-6 -->
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label for="update-position-heading-section" class="control-label">Heading Section</label>
+                                <select ng-model="singlePosition.headingSection" id="update-position-heading-section" data-placeholder="Choose One" class="form-control width100p">
+                                    <option value="">Choose One</option>
+                                    <option value="Business Unit">Business Unit</option>
+                                    <option value="Division">Division</option>
+                                    <option value="Department">Department</option>
+                                </select>
+                            </div><!-- form-group -->
+                        </div><!-- col-sm-6 -->
+                        <div class="col-sm-6">
                             <div class="form-group">
                                 <label for="update-position-business-unit" class="control-label">Business Unit</label>
                                 <select ng-model="singlePosition.businessUnitId"  id="update-position-business-unit" class="form-control width100p" data-placeholder="Choose One">
@@ -249,26 +265,26 @@
                                     <option ng-repeat="businessUnit in businessUnits" on-finish-render="ngRepeatFinished" value="{{businessUnit._id}}">{{businessUnit.name}}</option>
                                 </select>
                             </div><!-- form-group -->
-                        </div><!-- col-sm-12 -->
-                        <div class="col-sm-12">
+                        </div><!-- col-sm-6 -->
+                        <div class="col-sm-6">
                             <div class="form-group">
                                 <label for="update-position-division" class="control-label">Division</label>
-                                <select ng-model="singlePosition.divisionId" id="update-position-division" class="form-control width100p" data-placeholder="Choose One">
+                                <select ng-disabled="disableUpdateDivision()" ng-model="singlePosition.divisionId" id="update-position-division" class="form-control width100p" data-placeholder="Choose One">
                                     <option value="">Choose One</option>
                                     <option ng-repeat="division in getDivisions()" on-finish-render="ngRepeatFinished" value="{{division._id}}">{{division.name}}</option>
                                 </select>
                             </div><!-- form-group -->
-                        </div><!-- col-sm-12 -->
-                        <div class="col-sm-12">
+                        </div><!-- col-sm-6 -->
+                        <div class="col-sm-6">
                             <div class="form-group">
                                 <label for="update-position-department" class="control-label">Department</label>
-                                <select ng-model="singlePosition.departmentId"  id="update-position-department" class="form-control width100p" data-placeholder="Choose One">
+                                <select ng-disabled="disableUpdateDepartment()" ng-model="singlePosition.departmentId"  id="update-position-department" class="form-control width100p" data-placeholder="Choose One">
                                     <option value="">Choose One</option>
                                     <option ng-repeat="department in getDepartments()" on-finish-render="ngRepeatFinished" value="{{department._id}}">{{department.name}}</option>
                                 </select>
                             </div><!-- form-group -->
-                        </div><!-- col-sm-12 -->
-                        <div class="col-sm-12">
+                        </div><!-- col-sm-6 -->
+                        <div class="col-sm-6">
                             <div class="form-group">
                                 <label for="update-position-parent-position" class="control-label">Parent Position</label>
                                 <select ng-model="singlePosition.parentPositionId"  id="update-position-parent-position" class="form-control width100p" data-placeholder="Choose One">
@@ -276,7 +292,7 @@
                                     <option ng-repeat="position in getValidPositions()" on-finish-render="ngRepeatFinished" value="{{position._id}}">{{position.name}}</option>
                                 </select>
                             </div><!-- form-group -->
-                        </div><!-- col-sm-12 -->
+                        </div><!-- col-sm-6 -->
 
                     </div><!-- row -->
 
@@ -327,7 +343,7 @@
 
 
 <div class="modal fade add-unit" tabindex="-1" role="dialog" data-backdrop="static">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="panel panel-default">
                 <div class="panel-heading">
@@ -335,25 +351,25 @@
                 </div>
                 <div class="panel-body">
                     <div class="row">
-                        <div class="col-sm-12">
+                        <div class="col-sm-6">
                             <div class="form-group">
                                 <label for="new-position-code" class="control-label">Code</label>
                                 <input ng-model="position.code" type="text" id="new-position-code" placeholder="Position Code" class="form-control" />
                             </div><!-- form-group -->
-                        </div><!-- col-sm-12 -->
-                        <div class="col-sm-12">
+                        </div><!-- col-sm-6 -->
+                        <div class="col-sm-6">
                             <div class="form-group">
                                 <label for="new-position-name" class="control-label">Name</label>
                                 <input ng-model="position.name" type="text" id="new-position-name" placeholder="Position Name" class="form-control" />
                             </div><!-- form-group -->
-                        </div><!-- col-sm-12 -->
-                        <div class="col-sm-12">
+                        </div><!-- col-sm-6 -->
+                        <div class="col-sm-6">
                             <div class="form-group">
                                 <label for="new-position-allowed-employees" class="control-label">Number of Employees allowed</label>
                                 <input ng-model="position.numberOfAllowedEmployees" type="number" id="new-position-allowed-employees" placeholder="1" class="form-control" />
                             </div><!-- form-group -->
-                        </div><!-- col-sm-12 -->
-                        <div class="col-sm-12">
+                        </div><!-- col-sm-6 -->
+                        <div class="col-sm-6">
                             <div class="form-group">
                                 <label for="new-position-status" class="control-label">Status</label>
                                 <select ng-model="position.status"  id="new-position-status" style="width:100%" data-placeholder="Choose One">
@@ -362,8 +378,19 @@
                                     <option value="Inactive">Inactive</option>
                                 </select>
                             </div><!-- form-group -->
-                        </div><!-- col-sm-12 -->
-                        <div class="col-sm-12">
+                        </div><!-- col-sm-6 -->
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label for="new-position-heading-section" class="control-label">Heading Section</label>
+                                <select ng-model="position.headingSection"  id="new-position-heading-section" style="width:100%" data-placeholder="Choose One">
+                                    <option value="">Choose One</option>
+                                    <option value="Business Unit">Business Unit</option>
+                                    <option value="Division">Division</option>
+                                    <option value="Department">Department</option>
+                                </select>
+                            </div><!-- form-group -->
+                        </div><!-- col-sm-6 -->
+                        <div class="col-sm-6">
                             <div class="form-group">
                                 <label for="new-position-business-unit" class="control-label">Business Unit</label>
                                 <select ng-model="position.businessUnitId"  id="new-position-business-unit" style="width:100%" data-placeholder="Choose One">
@@ -371,26 +398,26 @@
                                     <option ng-repeat="businessUnit in businessUnits" on-finish-render="ngRepeatFinished" value="{{businessUnit._id}}">{{businessUnit.name}}</option>
                                 </select>
                             </div><!-- form-group -->
-                        </div><!-- col-sm-12 -->
-                        <div class="col-sm-12">
+                        </div><!-- col-sm-6 -->
+                        <div class="col-sm-6">
                             <div class="form-group">
                                 <label for="new-position-division" class="control-label">Division</label>
-                                <select ng-model="position.divisionId"  id="new-position-division" style="width:100%" data-placeholder="Choose One">
+                                <select ng-disabled="disableDivision()" ng-model="position.divisionId"  id="new-position-division" style="width:100%" data-placeholder="Choose One">
                                     <option value="">Choose One</option>
                                     <option ng-repeat="division in getDivisions()" on-finish-render="ngRepeatFinished" value="{{division._id}}">{{division.name}}</option>
                                 </select>
                             </div><!-- form-group -->
-                        </div><!-- col-sm-12 -->
-                        <div class="col-sm-12">
+                        </div><!-- col-sm-6 -->
+                        <div class="col-sm-6">
                             <div class="form-group">
                                 <label for="new-position-department" class="control-label">Department</label>
-                                <select ng-model="position.departmentId"  id="new-position-department" style="width:100%" data-placeholder="Choose One">
+                                <select ng-disabled="disableDepartment()" ng-model="position.departmentId"  id="new-position-department" style="width:100%" data-placeholder="Choose One">
                                     <option value="">Choose One</option>
                                     <option ng-repeat="department in getDepartments()" on-finish-render="ngRepeatFinished" value="{{department._id}}">{{department.name}}</option>
                                 </select>
                             </div><!-- form-group -->
-                        </div><!-- col-sm-12 -->
-                        <div class="col-sm-12">
+                        </div><!-- col-sm-6 -->
+                        <div class="col-sm-6">
                             <div class="form-group">
                                 <label for="new-position-parent-position" class="control-label">Parent Position</label>
                                 <select ng-model="position.parentPositionId"  id="new-position-parent-position" style="width:100%" data-placeholder="Choose One">
@@ -398,7 +425,7 @@
                                     <option ng-repeat="position in positions" on-finish-render="ngRepeatFinished" value="{{position._id}}">{{position.name}}</option>
                                 </select>
                             </div><!-- form-group -->
-                        </div><!-- col-sm-12 -->
+                        </div><!-- col-sm-6 -->
 
                     </div><!-- row -->
 
