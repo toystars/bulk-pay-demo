@@ -61,6 +61,8 @@ bulkPay.controller('BusinessEmployeeCreateCtrl', ['$scope', '$rootScope', 'AuthS
           $http.get('/api/employees/position/' + position._id).success(function (data) {
             if (data.length >= position.numberOfAllowedEmployees) {
                $scope.employee.positionId = '';
+              /*$('#employee-position').val('');
+              $('#employee-position').change();*/
               swal('Not Allowed', 'Already exceeded number of employees for ' + position.name + ' position. Contact admin if quota should be increased.', 'warning');
             }
           }).error(function (error) {

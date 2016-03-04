@@ -123,6 +123,15 @@ bulkPay.config(['$stateProvider', '$urlRouterProvider', '$locationProvider', 'to
         }
       })
 
+      .state('business.taxes', {
+        url: '/taxes',
+        templateUrl: 'modules/business/taxes/taxes.html',
+        controller: 'BusinessTaxesCtrl',
+        data: {
+          pageTitle: 'Tax Rules | BulkPay'
+        }
+      })
+
       .state('business.pensions', {
         url: '/pensions',
         templateUrl: 'modules/business/pensions/pensions.html',

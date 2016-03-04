@@ -40,6 +40,7 @@ bulkPay.controller('BusinessPayGradesCtrl', ['$scope', '$rootScope', '$timeout',
   var getPayTypes = function (businessId) {
     $http.get('/api/paytypes/business/' + businessId).success(function (data) {
       $scope.payTypes = data;
+      resetPayGrade();
     }).error(function (error) {
       console.log(error);
     })
@@ -55,6 +56,24 @@ bulkPay.controller('BusinessPayGradesCtrl', ['$scope', '$rootScope', '$timeout',
       payGroupId: '',
       payTypes: []
     };
+    insertBaseTypes();
+  };
+
+  var insertBaseTypes = function () {
+    var concatenated = getBasePayTypes('Wage').concat(getBasePayTypes('Benefit'), getBasePayTypes('Deduction'));
+    _.each(concatenated, function (type) {
+      $scope.check(type, type.type);
+    });
+  };
+
+  var getBasePayTypes = function (type) {
+    var types = [];
+    for (var x = 0; x < $scope.payTypes.length; x++) {
+      if ($scope.payTypes[x].type === type && $scope.payTypes[x].status === 'Active' && $scope.payTypes[x].isBase === true) {
+        types.push($scope.payTypes[x]);
+      }
+    }
+    return types;
   };
 
 
@@ -68,7 +87,6 @@ bulkPay.controller('BusinessPayGradesCtrl', ['$scope', '$rootScope', '$timeout',
     getPayGrades(businessId);
     getPayGroups(businessId);
     getPayTypes(businessId);
-    resetPayGrade();
   });
 
   $scope.$on('ngRepeatFinished', function (ngRepeatFinishedEvent) {
@@ -79,9 +97,10 @@ bulkPay.controller('BusinessPayGradesCtrl', ['$scope', '$rootScope', '$timeout',
 
   $scope.createPayGrade = function () {
     $http.post('/api/paygrades/', $scope.payGrade).success(function (data) {
-      $timeout(function() {
+      getPayGrades();
+      /*$timeout(function() {
         $scope.payGrades.push(data);
-      }, 0);
+      }, 0);*/
       resetPayGrade();
       jQuery('#new-pay-grade-close').click();
       swal('Success', ' Pay Grade created.', 'success');
