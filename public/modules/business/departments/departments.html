@@ -82,8 +82,8 @@
 
                         <div class="col-sm-6">
                             <div class="form-group">
-                                <label for="update-department-location" class="control-label">Location</label>
-                                <select ng-model="singleDepartment.location" id="update-department-location" data-placeholder="Choose One" style="width:100%">
+                                <label class="control-label">Location</label>
+                                <select class="fancy-select" ng-model="singleDepartment.location" data-placeholder="Choose One" style="width:100%">
                                     <option value="">Choose One</option>
                                     <option ng-repeat="state in states" on-finish-render="ngRepeatFinished" value="{{state}}">{{state}}</option>
                                 </select>
@@ -94,8 +94,8 @@
                     <div class="row">
                         <div class="col-sm-6">
                             <div class="form-group">
-                                <label for="update-department-generic" class="control-label">Generic</label>
-                                <select ng-model="singleDepartment.isGeneric" id="update-department-generic" data-placeholder="Choose One" style="width:100%">
+                                <label class="control-label">Generic</label>
+                                <select class="fancy-select" ng-model="singleDepartment.isGeneric" data-placeholder="Choose One" style="width:100%">
                                     <option value="Yes">Yes</option>
                                     <option value="No">No</option>
                                 </select>
@@ -104,8 +104,8 @@
 
                         <div class="col-sm-6" ng-hide="singleDepartment.isGeneric === 'No'">
                             <div class="form-group">
-                                <label for="update-department-divisions-served" class="control-label">Divisions Served</label>
-                                <select ng-model="singleDepartment.divisionsServed" multiple="multiple" id="update-department-divisions-served" data-placeholder="Choose One" style="width:100%">
+                                <label class="control-label">Divisions Served</label>
+                                <select class="fancy-select" ng-model="singleDepartment.divisionsServed" multiple="multiple" data-placeholder="Choose One" style="width:100%">
                                     <option value="All">All</option>
                                     <option ng-repeat="division in divisions" on-finish-render="ngRepeatFinished" value="{{division._id}}">{{division.name}}</option>
                                 </select>
@@ -114,8 +114,8 @@
 
                         <div class="col-sm-6" ng-hide="singleDepartment.isGeneric === 'Yes'">
                             <div class="form-group">
-                                <label for="update-department-parent-status" class="control-label">Parent</label>
-                                <select ng-model="singleDepartment.isParent" ng-disabled="singleDepartment.isGeneric === 'Yes'" id="update-department-parent-status" data-placeholder="Choose One" style="width:100%">
+                                <label class="control-label">Parent</label>
+                                <select class="fancy-select" ng-model="singleDepartment.isParent" ng-disabled="singleDepartment.isGeneric === 'Yes'" data-placeholder="Choose One" style="width:100%">
                                     <option value="">Choose One</option>
                                     <option value="Yes">Yes</option>
                                     <option value="No">No</option>
@@ -131,8 +131,8 @@
                         <div ng-hide="singleDepartment.isGeneric === 'Yes'">
                             <div class="col-sm-12" ng-show="singleDepartment.isParent === 'Yes'">
                                 <div class="form-group">
-                                    <label for="update-department-division" class="control-label">Division</label>
-                                    <select ng-disabled="singleDepartment.isGeneric === 'Yes'" ng-model="singleDepartment.divisionId" id="update-department-division" data-placeholder="Choose One" style="width:100%">
+                                    <label class="control-label">Division</label>
+                                    <select class="fancy-select" ng-disabled="singleDepartment.isGeneric === 'Yes'" ng-model="singleDepartment.divisionId" data-placeholder="Choose One" style="width:100%">
                                         <option value="">Choose One</option>
                                         <option ng-repeat="division in divisions" on-finish-render="ngRepeatFinished" value="{{division._id}}">{{division.name}}</option>
                                     </select>
@@ -141,8 +141,8 @@
 
                             <div class="col-sm-12" ng-hide="singleDepartment.isParent === 'Yes'">
                                 <div class="form-group">
-                                    <label for="update-department-parent" class="control-label">Parent Department</label>
-                                    <select ng-model="singleDepartment.parentId" id="update-department-parent" data-placeholder="Choose One" style="width:100%">
+                                    <label class="control-label">Parent Department</label>
+                                    <select class="fancy-select" ng-model="singleDepartment.parentId" data-placeholder="Choose One" style="width:100%">
                                         <option value="">Choose One</option>
                                         <option ng-repeat="department in getValidDepartments()" on-finish-render="ngRepeatFinished" value="{{department._id}}">{{department.name}}</option>
                                     </select>
@@ -152,8 +152,8 @@
 
                         <div class="col-sm-12">
                             <div class="form-group">
-                                <label for="update-department-status" class="control-label">Status</label>
-                                <select ng-model="singleDepartment.status" id="update-department-status" data-placeholder="Choose One" style="width:100%">
+                                <label class="control-label">Status</label>
+                                <select class="fancy-select" ng-model="singleDepartment.status" data-placeholder="Choose One" style="width:100%">
                                     <option value="">Choose One</option>
                                     <option value="Active">Active</option>
                                     <option value="Inactive">Inactive</option>
@@ -229,8 +229,8 @@
 
                         <div class="col-sm-6">
                             <div class="form-group">
-                                <label for="new-department-location" class="control-label">Location</label>
-                                <select ng-model="department.location" id="new-department-location" data-placeholder="Choose One" style="width:100%">
+                                <label class="control-label">Location</label>
+                                <select class="fancy-select" ng-model="department.location" data-placeholder="Choose One" style="width:100%">
                                     <option value="">Choose One</option>
                                     <option ng-repeat="state in states" on-finish-render="ngRepeatFinished" value="{{state}}">{{state}}</option>
                                 </select>
@@ -244,8 +244,8 @@
 
                         <div class="col-sm-6">
                             <div class="form-group">
-                                <label for="new-department-generic" class="control-label">Generic</label>
-                                <select ng-model="department.isGeneric" id="new-department-generic" data-placeholder="Choose One" style="width:100%">
+                                <label class="control-label">Generic</label>
+                                <select class="fancy-select" ng-model="department.isGeneric" data-placeholder="Choose One" style="width:100%">
                                     <option value="Yes">Yes</option>
                                     <option value="No">No</option>
                                 </select>
@@ -254,8 +254,8 @@
 
                         <div class="col-sm-6" ng-hide="department.isGeneric === 'No'">
                             <div class="form-group">
-                                <label for="new-department-divisions-served" class="control-label">Divisions Served</label>
-                                <select ng-model="department.divisionsServed" multiple="multiple" id="new-department-divisions-served" data-placeholder="Choose One" style="width:100%">
+                                <label class="control-label">Divisions Served</label>
+                                <select class="fancy-select" ng-model="department.divisionsServed" multiple="multiple" data-placeholder="Choose One" style="width:100%">
                                     <option value="All">All</option>
                                     <option ng-repeat="division in divisions" on-finish-render="ngRepeatFinished" value="{{division._id}}">{{division.name}}</option>
                                 </select>
@@ -264,8 +264,8 @@
 
                         <div class="col-sm-6" ng-hide="department.isGeneric === 'Yes'">
                             <div class="form-group">
-                                <label for="new-department-parent-status" class="control-label">Parent</label>
-                                <select ng-model="department.isParent" id="new-department-parent-status" data-placeholder="Choose One" style="width:100%">
+                                <label class="control-label">Parent</label>
+                                <select class="fancy-select" ng-model="department.isParent" data-placeholder="Choose One" style="width:100%">
                                     <option value="">Choose One</option>
                                     <option value="Yes">Yes</option>
                                     <option value="No">No</option>
@@ -280,8 +280,8 @@
 
                         <div class="col-sm-12" ng-show="department.isParent === 'Yes'">
                             <div class="form-group">
-                                <label for="new-department-division" class="control-label">Division</label>
-                                <select ng-model="department.divisionId" id="new-department-division" data-placeholder="Choose One" style="width:100%">
+                                <label class="control-label">Division</label>
+                                <select class="fancy-select" ng-model="department.divisionId" data-placeholder="Choose One" style="width:100%">
                                     <option value="">Choose One</option>
                                     <option ng-repeat="division in divisions" on-finish-render="ngRepeatFinished" value="{{division._id}}">{{division.name}}</option>
                                 </select>
@@ -290,8 +290,8 @@
 
                         <div class="col-sm-12" ng-hide="department.isParent === 'Yes'">
                             <div class="form-group">
-                                <label for="new-department-parent" class="control-label">Parent Department</label>
-                                <select ng-model="department.parentId" id="new-department-parent" data-placeholder="Choose One" style="width:100%">
+                                <label class="control-label">Parent Department</label>
+                                <select class="fancy-select" ng-model="department.parentId" data-placeholder="Choose One" style="width:100%">
                                     <option value="">Choose One</option>
                                     <option ng-repeat="department in departments" on-finish-render="ngRepeatFinished" value="{{department._id}}">{{department.name}}</option>
                                 </select>

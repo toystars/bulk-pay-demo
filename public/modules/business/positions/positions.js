@@ -289,6 +289,7 @@ bulkPay.controller('BusinessPositionsCtrl', ['$scope', '$rootScope', 'AuthSvc', 
   var getSingleEmployeeInfo = function (employeeId) {
     $http.get('/api/positions/employee/' + employeeId).success(function (data) {
       $scope.singleEmployee = data.oldEmployee;
+      $scope.singleEmployee.positionName = data.newEmployee.positionName;
       $scope.singleEmployee.businessUnitName = data.newEmployee.businessUnitName;
       $scope.singleEmployee.divisionName = data.newEmployee.divisionName;
       $scope.singleEmployee.departmentName = data.newEmployee.departmentName;

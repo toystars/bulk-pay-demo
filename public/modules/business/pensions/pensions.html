@@ -1,0 +1,53 @@
+<div class="pageheader">
+    <div class="media">
+        <div class="pageicon pull-left">
+            <i class="fa fa-money"></i>
+        </div>
+        <div class="media-body">
+            <ul class="breadcrumb">
+                <li><a href=""><i class="glyphicon glyphicon-home"></i></a></li>
+                <li><a ui-sref="business.overview">Business</a></li>
+                <li>{{business.name}}</li>
+                <li>Pensions</li>
+            </ul>
+            <h4>Pensions</h4>
+        </div>
+    </div><!-- media -->
+</div><!-- pageheader -->
+
+<div class="contentpanel">
+
+    <div class="col-sm-12 col-md-12">
+
+        <div class="row">
+            <!-- Nav tabs -->
+            <div class="col-md-12">
+                <ul class="nav nav-tabs">
+                    <li ng-class="{active: inView === 'Pension Rules'}">
+                        <a ng-click="changeView('Pension Rules')" style="cursor: pointer;">Pension Rules</a>
+                    </li>
+                    <li ng-class="{active: inView === 'Pension Managers'}">
+                        <a ng-click="changeView('Pension Managers')" style="cursor: pointer;">Pension Managers</a>
+                    </li>
+                </ul>
+            </div><!-- col-md-12 -->
+
+            <div class="col-md-12" ng-show="inView === 'Pension Rules'">
+                <div class="tab-pane active" id="activities">
+                    Pension Rules
+                </div><!-- tab-pane -->
+            </div>
+
+            <div class="col-md-12" ng-show="inView === 'Pension Managers'">
+                <div class="tab-pane" id="followers">
+                    Pension Managers
+                </div><!-- tab-pane -->
+            </div>
+
+        </div>
+
+    </div><!-- col-sm-9 -->
+
+
+
+</div><!-- contentpanel -->

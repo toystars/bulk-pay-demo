@@ -22,6 +22,7 @@ bulkPay.controller('BusinessEmployeeCreateCtrl', ['$scope', '$rootScope', 'AuthS
     payTypes: []
   };
   $scope.fetchedPayTypes = [];
+  $scope.message = '';
 
   var businessId = '';
   $scope.employee = {};
@@ -50,30 +51,34 @@ bulkPay.controller('BusinessEmployeeCreateCtrl', ['$scope', '$rootScope', 'AuthS
     triggerSelect();
   });
 
-  $scope.$watch('employee.positionId', function (newValue, oldValue) {
-    if (oldValue !== newValue) {
-      var position = _.find(positions, function (currentPosition) {
-        return currentPosition._id === newValue;
-      });
-      if (position) {
-        $http.get('/api/positions/' + position._id).success(function (data) {
-          position = data;
-          $http.get('/api/employees/position/' + position._id).success(function (data) {
-            if (data.length >= position.numberOfAllowedEmployees) {
-               $scope.employee.positionId = '';
-              /*$('#employee-position').val('');
-              $('#employee-position').change();*/
-              swal('Not Allowed', 'Already exceeded number of employees for ' + position.name + ' position. Contact admin if quota should be increased.', 'warning');
-            }
-          }).error(function (error) {
-            AuthSvc.handleError(error);
-          });
+  $scope.checkValidity = function () {
+    $scope.message = '';
+    var position = _.find(positions, function (currentPosition) {
+      return currentPosition._id === $scope.employee.positionId;
+    });
+    if (position) {
+      $http.get('/api/positions/' + position._id).success(function (data) {
+        position = data;
+        $http.get('/api/employees/position/' + position._id).success(function (data) {
+          if (data.length >= position.numberOfAllowedEmployees) {
+            $scope.employee.positionId = '';
+            $scope.message = 'Select another position.';
+            swal('Not Allowed', 'Already exceeded number of employees for ' + position.name + ' position. Contact admin if quota should be increased.', 'warning');
+          }
         }).error(function (error) {
           AuthSvc.handleError(error);
         });
-      }
+      }).error(function (error) {
+        AuthSvc.handleError(error);
+      });
     }
-  });
+  };
+
+  /*$scope.$watch('employee.positionId', function (newValue, oldValue) {
+    if (oldValue !== newValue) {
+
+    }
+  });*/
 
   $scope.changeView = function (view) {
     $scope.inView = view;
@@ -622,7 +627,6 @@ bulkPay.controller('BusinessEmployeeCreateCtrl', ['$scope', '$rootScope', 'AuthS
    }
    return randomId;
    };*/
-
 
   var triggerSelect = function () {
 

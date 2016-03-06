@@ -116,6 +116,7 @@ exports.positionEmployee = function (req, res) {
             PayGrade.findOne({ _id: employee.payGradeId }, function (error, payGrade) {
               newEmployee.payGradeName = payGrade ? payGrade.name : '';
               Position.findOne({ _id: employee.positionId }, function (error, position) {
+                newEmployee.positionName = position.name;
                 if (position.parentPositionId) {
                   Employee.findOne({ positionId: position.parentPositionId }, function (error, supervisor) {
                     if (supervisor) {

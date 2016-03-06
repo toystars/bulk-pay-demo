@@ -288,44 +288,7 @@ bulkPay.controller('BusinessDepartmentsCtrl', ['$scope', '$rootScope', 'AuthSvc'
    * jQuery
    * */
   var triggerSelect = function () {
-    jQuery('#new-department-location').select2({
-      minimumResultsForSearch: 0
-    });
-    jQuery('#new-department-parent').select2({
-      minimumResultsForSearch: 0
-    });
-    jQuery('#new-department-divisions-served').select2({
-      minimumResultsForSearch: 0
-    });
-    jQuery('#new-department-generic').select2({
-      minimumResultsForSearch: 0
-    });
-    jQuery('#new-department-parent-status').select2({
-      minimumResultsForSearch: 0
-    });
-    jQuery('#new-department-division').select2({
-      minimumResultsForSearch: 0
-    });
-
-    jQuery('#update-department-location').select2({
-      minimumResultsForSearch: 0
-    });
-    jQuery('#update-department-parent').select2({
-      minimumResultsForSearch: 0
-    });
-    jQuery('#update-department-generic').select2({
-      minimumResultsForSearch: 0
-    });
-    jQuery('#update-department-parent-status').select2({
-      minimumResultsForSearch: 0
-    });
-    jQuery('#update-department-division').select2({
-      minimumResultsForSearch: 0
-    });
-    jQuery('#update-department-status').select2({
-      minimumResultsForSearch: 0
-    });
-    jQuery('#update-department-divisions-served').select2({
+    jQuery('.fancy-select').select2({
       minimumResultsForSearch: 0
     });
   };
