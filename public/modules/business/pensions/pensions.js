@@ -7,23 +7,12 @@ bulkPay.controller('BusinessPensionsCtrl', ['$scope', '$rootScope', 'AuthSvc', '
     }
   });
 
-  $scope.tax = {};
-  $scope.taxes = [];
+  $scope.pension = {};
+  $scope.pensions = [];
+  $scope.payTypes = [];
   $scope.$parent.inView = 'Pensions';
   var businessId = '';
-  $scope.payTypeSortConfig = {
-    group: 'foobar',
-    animation: 150,
-    onSort: function (evt) {
-      //compileForm();
-    }
-  };
-
   $scope.inView = 'Pension Rules';
-
-  $scope.changeView = function (view) {
-    $scope.inView = view;
-  };
 
   if (!BusinessDataSvc.getBusinessId() || BusinessDataSvc.getBusinessId() !== $stateParams.businessId) {
     $cookies.put('currentBusiness', $stateParams.businessId);
@@ -32,20 +21,30 @@ bulkPay.controller('BusinessPensionsCtrl', ['$scope', '$rootScope', 'AuthSvc', '
     BusinessDataSvc.setLocalScope();
   }
 
-  var getTaxes = function (businessId) {
-    $http.get('/api/taxes/business/' + businessId).success(function (data) {
-      $scope.taxes = data;
+  var getPensions = function (businessId) {
+    $http.get('/api/pensions/business/' + businessId).success(function (data) {
+      $scope.pensions = data;
     }).error(function (error) {
       AuthSvc.handleError(error);
     })
   };
 
-  var resetTax = function () {
-    $scope.tax = {
+  var getPayTypes = function (businessId) {
+    $http.get('/api/paytypes/business/' + businessId).success(function (data) {
+      $scope.payTypes = data;
+    }).error(function (error) {
+      console.log(error);
+    })
+  };
+
+  var resetPension = function () {
+    $scope.pension = {
       businessId: businessId,
       code: '',
       name: '',
-      rules: []
+      payTypes: [],
+      employerContributionRate: 0,
+      employeeContributionRate: 0
     };
   };
 
@@ -56,8 +55,9 @@ bulkPay.controller('BusinessPensionsCtrl', ['$scope', '$rootScope', 'AuthSvc', '
   $rootScope.$on('business.fetched', function (event, args) {
     $scope.business = args;
     businessId = args._id;
-    getTaxes(businessId);
-    resetTax();
+    getPensions(businessId);
+    getPayTypes(businessId);
+    resetPension();
   });
 
   $scope.$on('ngRepeatFinished', function (ngRepeatFinishedEvent) {
@@ -65,15 +65,19 @@ bulkPay.controller('BusinessPensionsCtrl', ['$scope', '$rootScope', 'AuthSvc', '
   });
 
 
-  $scope.createTax = function () {
-    $http.post('/api/taxes/', $scope.tax).success(function (data) {
-      $scope.taxes.push(data);
-      jQuery('#new-tax-close').click();
-      resetTax();
-      swal('Success', 'Tax created.', 'success');
+  $scope.createPension = function () {
+    $http.post('/api/pensions/', $scope.pension).success(function (data) {
+      $scope.pensions.push(data);
+      jQuery('#new-pension-close').click();
+      resetPension();
+      swal('Success', 'Pension created.', 'success');
     }).error(function (error) {
-      console.log(error);
+      AuthSvc.handleError(error);
     });
+  };
+
+  $scope.changeView = function (view) {
+    $scope.inView = view;
   };
 
 
@@ -82,18 +86,18 @@ bulkPay.controller('BusinessPensionsCtrl', ['$scope', '$rootScope', 'AuthSvc', '
    * Helpers
    * */
 
-  var removeFromCollection = function (id) {
-    for (var x = 0; x < $scope.taxes.length; x++) {
-      if ($scope.taxes[x]._id === id) {
-        $scope.taxes.splice(x, 1);
+  var removeFromPensions = function (id) {
+    for (var x = 0; x < $scope.pensions.length; x++) {
+      if ($scope.pensions[x]._id === id) {
+        $scope.pensions.splice(x, 1);
       }
     }
   };
 
-  var replace = function (data) {
-    for (var x = 0; x < $scope.taxes.length; x++) {
-      if ($scope.taxes[x]._id === data._id) {
-        $scope.taxes[x] = data;
+  var replaceInPensions = function (data) {
+    for (var x = 0; x < $scope.pensions.length; x++) {
+      if ($scope.pensions[x]._id === data._id) {
+        $scope.pensions[x] = data;
       }
     }
   };
@@ -110,62 +114,26 @@ bulkPay.controller('BusinessPensionsCtrl', ['$scope', '$rootScope', 'AuthSvc', '
     });
   };
 
-  $scope.getRange = function () {
-    var ranges = ['FIRST', 'NEXT', 'OVER'];
-    if ($scope.singleTax) {
-      if (_.find($scope.singleTax.rules, function (rule) { return rule.range === 'FIRST' })) {
-        ranges.splice(ranges.indexOf('FIRST'), 1);
-      }
-      if (_.find($scope.singleTax.rules, function (rule) { return rule.range === 'OVER' })) {
-        ranges.splice(ranges.indexOf('OVER'), 1);
-      }
-    }
-    return ranges;
-  };
-
-  $scope.removeRule = function (index) {
-    swal({
-      title: 'Are you sure?',
-      text: 'Deleting rule is irreversible!',
-      type: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Delete!',
-      closeOnConfirm: true
-    }, function () {
-      $scope.singleTax.rules.splice(index, 1);
-      toastr.success('Rule deleted!');
-    });
-  };
-
 
   /*
-   * Single unit display
+   * Single pension display
    * */
-  $scope.singleView = false;
+  $scope.singlePensionView = false;
   $scope.histories = [];
-  $scope.taxRule = {};
 
-  $scope.showTax = function (tax) {
-    $scope.singleView = true;
-    $scope.singleTax = {};
-    $scope.oldTax = {};
-    angular.copy(tax, $scope.singleTax);
-    angular.copy(tax, $scope.oldTax);
-    getHistories($scope.singleTax._id);
+  $scope.showPension = function (pension) {
+    $scope.singlePensionView = true;
+    $scope.singlePension = {};
+    $scope.oldPension = {};
+    angular.copy(pension, $scope.singlePension);
+    angular.copy(pension, $scope.oldPension);
+    getHistories($scope.singlePension._id);
   };
 
-  $scope.addRule = function () {
-    $scope.singleTax.rules.push($scope.taxRule);
-    jQuery('#new-rule-close').click();
-    $scope.taxRule = {};
-  };
-
-  $scope.delete = function () {
+  $scope.deletePension = function () {
     swal({
       title: 'Are you sure?',
-      text: 'Deleting ' + $scope.singleTax.name + ' is irreversible!',
+      text: 'Deleting ' + $scope.singlePension.name + ' is irreversible!',
       type: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
@@ -174,9 +142,9 @@ bulkPay.controller('BusinessPensionsCtrl', ['$scope', '$rootScope', 'AuthSvc', '
       closeOnConfirm: false,
       showLoaderOnConfirm: true
     }, function () {
-      $http.delete('/api/taxes/' + $scope.singleTax._id).success(function (data) {
-        swal('Deleted!', $scope.singleTax.name + ' tax deleted.', 'success');
-        removeFromCollection($scope.singleTax._id);
+      $http.delete('/api/pensions/' + $scope.singlePension._id).success(function (data) {
+        swal('Deleted!', $scope.singlePension.name + ' tax deleted.', 'success');
+        removeFromPensions($scope.singlePension._id);
         $scope.closeTax();
       }).error(function (error) {
         swal('Error Occurred', error.message, 'warning');
@@ -185,28 +153,33 @@ bulkPay.controller('BusinessPensionsCtrl', ['$scope', '$rootScope', 'AuthSvc', '
     });
   };
 
-  $scope.closeTax = function () {
-    $scope.singleTax = {};
-    $scope.singleView = false;
+  $scope.closePension = function () {
+    $scope.singlePension = {};
+    $scope.oldPension = {};
+    $scope.singlePensionView = false;
     $scope.histories = [];
   };
 
-  $scope.updateTax = function () {
-    $http.put('/api/taxes/' + $scope.singleTax._id, $scope.singleTax).success(function (data) {
+  $scope.updatePension = function () {
+    $http.put('/api/pensions/' + $scope.singlePension._id, $scope.singlePension).success(function (data) {
       getHistories(data._id);
-      replace(data);
-      swal("Success", "Tax updated.", "success");
+      replaceInPensions(data);
+      swal("Success", 'Pension updated.", "success');
     }).error(function (error) {
       AuthSvc.handleError(error);
     });
   };
 
+  $scope.statuses = ['Active', 'Inactive'];
 
   /*
    * jQuery
    * */
   var triggerSelect = function () {
-    jQuery('#update-position-status').select2({
+    jQuery('#pension-rule-types').select2({
+      minimumResultsForSearch: 0
+    });
+    jQuery('#pension-rule-status').select2({
       minimumResultsForSearch: 0
     });
   };
