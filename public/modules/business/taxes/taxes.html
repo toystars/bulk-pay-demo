@@ -1,16 +1,16 @@
 <div class="pageheader">
     <div class="media">
         <div class="pageicon pull-left">
-            <i class="fa fa-users"></i>
+            <i class="fa fa-money"></i>
         </div>
         <div class="media-body">
             <ul class="breadcrumb">
                 <li><a href=""><i class="glyphicon glyphicon-home"></i></a></li>
                 <li><a ui-sref="business.overview">Business</a></li>
                 <li>{{business.name}}</li>
-                <li>Pay Groups</li>
+                <li>Tax Rules</li>
             </ul>
-            <h4>Pay Groups</h4>
+            <h4>Tax Rules</h4>
         </div>
     </div><!-- media -->
 </div><!-- pageheader -->
@@ -19,18 +19,18 @@
 
     <div class="row" ng-show="!singleView">
         <div class="col-md-12">
-            <h5 class="lg-title mb5">Pay Groups</h5>
-            <p class="mb20 pull-right"><button class="btn btn-primary" data-toggle="modal" data-target=".add-unit">New Pay Group</button></p>
+            <h5 class="lg-title mb5">Taxes</h5>
+            <p class="mb20 pull-right"><button class="btn btn-primary" data-toggle="modal" data-target=".add-unit">New Tax Rule</button></p>
         </div>
     </div>
 
     <div class="row" ng-show="!singleView">
-        <div class="col-md-12" ng-if="payGroups.length === 0">
+        <div class="col-md-12" ng-if="taxes.length === 0">
             <div class="alert alert-danger text-center">
-                <p>No Pay Group available</p>
+                <p>No Tax available</p>
             </div>
         </div>
-        <div class="col-md-12" ng-if="payGroups.length > 0">
+        <div class="col-md-12" ng-if="taxes.length > 0">
             <div class="table-responsive">
                 <table class="table table-primary mb60 table-hover">
                     <thead>
@@ -42,13 +42,13 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr class="pointer" ng-click="showPayGroup(payGroup)" ng-repeat="payGroup in payGroups">
+                    <tr class="pointer" ng-click="showTax(tax)" ng-repeat="tax in taxes">
                         <td>{{$index + 1}}</td>
-                        <td>{{payGroup.code}}</td>
-                        <td>{{payGroup.name}}</td>
+                        <td>{{tax.code}}</td>
+                        <td>{{tax.name}}</td>
                         <td>
-                            <span ng-if="payGroup.status === 'Active'" class="label label-success">{{payGroup.status}}</span>
-                            <span ng-if="payGroup.status === 'Inactive'" class="label label-danger">{{payGroup.status}}</span>
+                            <span ng-if="tax.status === 'Active'" class="label label-success">{{tax.status}}</span>
+                            <span ng-if="tax.status === 'Inactive'" class="label label-danger">{{tax.status}}</span>
                         </td>
                     </tr>
                     </tbody>
@@ -66,7 +66,7 @@
                         <a href="" class="panel-minimize tooltips" data-toggle="tooltip" title="Minimize Panel"><i class="fa fa-minus"></i></a>
                         <a href="" class="panel-close tooltips" data-toggle="tooltip" title="Close Panel"><i class="fa fa-times"></i></a>
                     </div><!-- panel-btns -->
-                    <h4 class="panel-title">Update - {{oldPayType.title}} Pay type</h4>
+                    <h4 class="panel-title">Update - {{oldTax.name}} Tax</h4>
                 </div>
                 <div class="panel-body">
 
@@ -74,26 +74,67 @@
                         <div class="col-sm-6">
                             <div class="form-group">
                                 <label for="update-pay-group-code" class="control-label">Code (alphanumeric)</label>
-                                <input type="text" id="update-pay-group-code" class="form-control" placeholder="SNR-MAN" ng-model="singlePayGroup.code" />
+                                <input type="text" id="update-pay-group-code" class="form-control" placeholder="PAYE" ng-model="singleTax.code" />
                             </div><!-- form-group -->
                         </div><!-- col-sm-6 -->
 
                         <div class="col-sm-6">
                             <div class="form-group">
                                 <label for="update-pay-group-name" class="control-label">Name</label>
-                                <input type="text" id="update-pay-group-name" class="form-control" placeholder="Senior Managers Pay Group" ng-model="singlePayGroup.name"/>
+                                <input type="text" id="update-pay-group-name" class="form-control" placeholder="Pay as you earn" ng-model="singleTax.name"/>
                             </div><!-- form-group -->
                         </div><!-- col-sm-6 -->
 
                         <div class="col-sm-12">
                             <div class="form-group">
                                 <label for="update-pay-group-status" class="control-label">Status</label>
-                                <select id="update-pay-group-status" class="form-control width100p" data-placeholder="Choose One" required ng-model="singlePayGroup.status">
+                                <select id="update-pay-group-status" class="form-control width100p" data-placeholder="Choose One" required ng-model="singleTax.status">
                                     <option value="">Choose One</option>
                                     <option value="Active">Active</option>
                                     <option value="Inactive">Inactive</option>
                                 </select>
                             </div><!-- form-group -->
+                        </div><!-- col-sm-12 -->
+
+                        <div class="col-sm-12">
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <br>
+                                    <h5 class="lg-title mb5">Tax Rules</h5>
+                                    <p class="mb20 pull-right"><button id="add-rule-button" class="btn btn-primary btn-sm" data-toggle="modal" data-target=".add-rule">Add Rule</button></p>
+                                </div><!-- col-sm-12 -->
+                                <div class="col-md-12" ng-if="singleTax.rules.length > 0">
+                                    <div class="table-responsive">
+                                        <table class="table table-primary mb60 table-hover">
+                                            <thead>
+                                            <tr>
+                                                <th>#</th>
+                                                <th>Range</th>
+                                                <th>Upper Limit Value</th>
+                                                <th>Rate %</th>
+                                                <th>Max Value</th>
+                                                <th></th>
+                                            </tr>
+                                            </thead>
+                                            <tbody ng-sortable="payTypeSortConfig">
+                                            <tr ng-repeat="rule in singleTax.rules" class="pointer">
+                                                <td>{{$index + 1}}</td>
+                                                <td>{{rule.range}}</td>
+                                                <td><a class="pointer" editable-number="rule.upperLimitValue" buttons="no">{{ rule.upperLimitValue }}</a></td>
+                                                <td><a class="pointer" editable-number="rule.rate" buttons="no">{{ rule.rate }}</a></td>
+                                                <td><a class="pointer" editable-number="rule.maxValue" buttons="no">{{ rule.maxValue }}</a></td>
+                                                <td><a class="pointer" ng-click="removeRule($index)"><i class="fa fa-trash"></i></a></td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div><!-- table-responsive -->
+                                </div>
+                                <div class="col-md-12" ng-if="singleTax.rules.length === 0">
+                                    <div class="alert alert-danger text-center">
+                                        <p>No rule created yet.</p>
+                                    </div>
+                                </div>
+                            </div>
                         </div><!-- col-sm-12 -->
 
                         <div class="col-sm-12">
@@ -103,8 +144,8 @@
 
                 </div><!-- panel-body -->
                 <div class="panel-footer">
-                    <button class="btn btn-primary mr5" ng-click="updatePayGroup()">Update</button>
-                    <button type="reset" class="btn btn-warning" ng-click="closePayGroup()">Cancel</button>
+                    <button class="btn btn-primary mr5" ng-click="updateTax()">Update</button>
+                    <button type="reset" class="btn btn-warning" ng-click="closeTax()">Cancel</button>
                     <button type="reset" class="btn btn-danger pull-right" ng-click="delete()">Delete</button>
                 </div><!-- panel-footer -->
             </div><!-- panel -->
@@ -153,21 +194,21 @@
         <div class="modal-content">
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <h3 class="panel-title">New Pay Group</h3>
+                    <h3 class="panel-title">New Tax Rule</h3>
                 </div>
                 <div class="panel-body">
                     <div class="row">
                         <div class="col-sm-6">
                             <div class="form-group">
-                                <label for="pay-group-code" class="control-label">Code (alphanumeric)</label>
-                                <input type="text" id="pay-group-code" class="form-control" placeholder="SNR-MAN" ng-model="payGroup.code" />
+                                <label for="tax-code" class="control-label">Code (alphanumeric)</label>
+                                <input type="text" id="tax-code" class="form-control" placeholder="PAYE" ng-model="tax.code" />
                             </div><!-- form-group -->
                         </div><!-- col-sm-6 -->
 
                         <div class="col-sm-6">
                             <div class="form-group">
-                                <label for="pay-group-name" class="control-label">Name</label>
-                                <input type="text" id="pay-group-name" class="form-control" placeholder="Senior Managers Pay Group" ng-model="payGroup.name"/>
+                                <label for="tax-name" class="control-label">Name</label>
+                                <input type="text" id="tax-name" class="form-control" placeholder="Pay as you earn" ng-model="tax.name"/>
                             </div><!-- form-group -->
                         </div><!-- col-sm-6 -->
 
@@ -175,8 +216,61 @@
                     <p class="text-center error" ng-show="errorOccur">{{errorMessage}}</p>
                 </div>
                 <div class="panel-footer">
-                    <button class="btn btn-primary mr5" ng-click="createPayGroup()">Save</button>
-                    <button type="reset" class="btn btn-danger" id="new-pay-group-close" data-dismiss="modal">Cancel</button>
+                    <button class="btn btn-primary mr5" ng-click="createTax()">Create</button>
+                    <button type="reset" class="btn btn-danger" id="new-tax-close" data-dismiss="modal">Cancel</button>
+                </div><!-- panel-footer -->
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade add-rule" tabindex="-1" role="dialog" data-backdrop="static">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">New Rule</h3>
+                </div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label for="rule-range" class="control-label">Range</label>
+                                <select id="rule-range" class="form-control width100p" data-placeholder="Choose One" required ng-model="taxRule.range">
+                                    <option value="">Choose One</option>
+                                    <option ng-repeat="range in getRange()" value="{{range}}">{{range}}</option>
+                                </select>
+                            </div><!-- form-group -->
+                        </div><!-- col-sm-6 -->
+
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label for="rule-upper-limit" class="control-label">Upper Limit Value</label>
+                                <input type="number" id="rule-upper-limit" class="form-control" placeholder="55000" ng-model="taxRule.upperLimitValue"/>
+                            </div><!-- form-group -->
+                        </div><!-- col-sm-6 -->
+
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label for="rule-rate" class="control-label">Rate</label>
+                                <input type="number" id="rule-rate" class="form-control" placeholder="7.5" ng-model="taxRule.rate"/>
+                            </div><!-- form-group -->
+                        </div><!-- col-sm-6 -->
+
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label for="rule-maximum-value" class="control-label">Maximum Value</label>
+                                <input type="number" id="rule-maximum-value" class="form-control" placeholder="15000" ng-model="taxRule.maxValue"/>
+                            </div><!-- form-group -->
+                        </div><!-- col-sm-6 -->
+
+                    </div><!-- row -->
+                    <p class="text-center error" ng-show="errorOccur">{{errorMessage}}</p>
+                </div>
+                <div class="panel-footer">
+                    <button class="btn btn-primary mr5" ng-click="addRule()">Add</button>
+                    <button type="reset" class="btn btn-danger" id="new-rule-close" data-dismiss="modal">Cancel</button>
                 </div><!-- panel-footer -->
             </div>
         </div>

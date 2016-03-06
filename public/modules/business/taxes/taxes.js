@@ -1,5 +1,5 @@
 
-bulkPay.controller('BusinessPayGroupsCtrl', ['$scope', '$rootScope', 'AuthSvc', 'BusinessDataSvc', '$stateParams', '$cookies', '$http', '$state', function ($scope, $rootScope, AuthSvc, BusinessDataSvc, $stateParams, $cookies, $http, $state) {
+bulkPay.controller('BusinessTaxesCtrl', ['$scope', '$rootScope', 'AuthSvc', 'BusinessDataSvc', '$stateParams', '$cookies', '$http', '$state', 'toastr', function ($scope, $rootScope, AuthSvc, BusinessDataSvc, $stateParams, $cookies, $http, $state, toastr) {
 
   AuthSvc.isLoggedIn(function (status) {
     if (!status) {
@@ -7,10 +7,17 @@ bulkPay.controller('BusinessPayGroupsCtrl', ['$scope', '$rootScope', 'AuthSvc', 
     }
   });
 
-  $scope.payGroup = {};
-  $scope.payGroups = [];
-  $scope.$parent.inView = 'Pay Groups';
+  $scope.tax = {};
+  $scope.taxes = [];
+  $scope.$parent.inView = 'Taxes';
   var businessId = '';
+  $scope.payTypeSortConfig = {
+    group: 'foobar',
+    animation: 150,
+    onSort: function (evt) {
+      //compileForm();
+    }
+  };
 
   if (!BusinessDataSvc.getBusinessId() || BusinessDataSvc.getBusinessId() !== $stateParams.businessId) {
     $cookies.put('currentBusiness', $stateParams.businessId);
@@ -19,20 +26,22 @@ bulkPay.controller('BusinessPayGroupsCtrl', ['$scope', '$rootScope', 'AuthSvc', 
     BusinessDataSvc.setLocalScope();
   }
 
-  var getPayGroups = function (businessId) {
-    $http.get('/api/paygroups/business/' + businessId).success(function (data) {
-      $scope.payGroups = data;
+  var getTaxes = function (businessId) {
+    $http.get('/api/taxes/business/' + businessId).success(function (data) {
+      $scope.taxes = data;
     }).error(function (error) {
-      console.log(error);
+      AuthSvc.handleError(error);
     })
   };
 
-  var resetPayGroup = function () {
-    $scope.payGroup = {
-      businessId: businessId
+  var resetTax = function () {
+    $scope.tax = {
+      businessId: businessId,
+      code: '',
+      name: '',
+      rules: []
     };
   };
-
 
 
   /*
@@ -41,8 +50,8 @@ bulkPay.controller('BusinessPayGroupsCtrl', ['$scope', '$rootScope', 'AuthSvc', 
   $rootScope.$on('business.fetched', function (event, args) {
     $scope.business = args;
     businessId = args._id;
-    getPayGroups(businessId);
-    resetPayGroup();
+    getTaxes(businessId);
+    resetTax();
   });
 
   $scope.$on('ngRepeatFinished', function (ngRepeatFinishedEvent) {
@@ -50,12 +59,12 @@ bulkPay.controller('BusinessPayGroupsCtrl', ['$scope', '$rootScope', 'AuthSvc', 
   });
 
 
-  $scope.createPayGroup = function () {
-    $http.post('/api/paygroups/', $scope.payGroup).success(function (data) {
-      $scope.payGroups.push(data);
-      jQuery('#new-pay-group-close').click();
-      resetPayGroup();
-      swal('Success', ' Pay Group created.', 'success');
+  $scope.createTax = function () {
+    $http.post('/api/taxes/', $scope.tax).success(function (data) {
+      $scope.taxes.push(data);
+      jQuery('#new-tax-close').click();
+      resetTax();
+      swal('Success', 'Tax created.', 'success');
     }).error(function (error) {
       console.log(error);
     });
@@ -68,17 +77,17 @@ bulkPay.controller('BusinessPayGroupsCtrl', ['$scope', '$rootScope', 'AuthSvc', 
    * */
 
   var removeFromCollection = function (id) {
-    for (var x = 0; x < $scope.payGroups.length; x++) {
-      if ($scope.payGroups[x]._id === id) {
-        $scope.payGroups.splice(x, 1);
+    for (var x = 0; x < $scope.taxes.length; x++) {
+      if ($scope.taxes[x]._id === id) {
+        $scope.taxes.splice(x, 1);
       }
     }
   };
 
   var replace = function (data) {
-    for (var x = 0; x < $scope.payGroups.length; x++) {
-      if ($scope.payGroups[x]._id === data._id) {
-        $scope.payGroups[x] = data;
+    for (var x = 0; x < $scope.taxes.length; x++) {
+      if ($scope.taxes[x]._id === data._id) {
+        $scope.taxes[x] = data;
       }
     }
   };
@@ -95,26 +104,62 @@ bulkPay.controller('BusinessPayGroupsCtrl', ['$scope', '$rootScope', 'AuthSvc', 
     });
   };
 
+  $scope.getRange = function () {
+    var ranges = ['FIRST', 'NEXT', 'OVER'];
+    if ($scope.singleTax) {
+      if (_.find($scope.singleTax.rules, function (rule) { return rule.range === 'FIRST' })) {
+        ranges.splice(ranges.indexOf('FIRST'), 1);
+      }
+      if (_.find($scope.singleTax.rules, function (rule) { return rule.range === 'OVER' })) {
+        ranges.splice(ranges.indexOf('OVER'), 1);
+      }
+    }
+    return ranges;
+  };
+
+  $scope.removeRule = function (index) {
+    swal({
+      title: 'Are you sure?',
+      text: 'Deleting rule is irreversible!',
+      type: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Delete!',
+      closeOnConfirm: true
+    }, function () {
+      $scope.singleTax.rules.splice(index, 1);
+      toastr.success('Rule deleted!');
+    });
+  };
+
 
   /*
    * Single unit display
    * */
   $scope.singleView = false;
   $scope.histories = [];
+  $scope.taxRule = {};
 
-  $scope.showPayGroup = function (payGroup) {
+  $scope.showTax = function (tax) {
     $scope.singleView = true;
-    $scope.singlePayGroup = {};
-    $scope.oldPayGroup = {};
-    angular.copy(payGroup, $scope.oldPayGroup);
-    angular.copy(payGroup, $scope.singlePayGroup);
-    getHistories($scope.singlePayGroup._id);
+    $scope.singleTax = {};
+    $scope.oldTax = {};
+    angular.copy(tax, $scope.singleTax);
+    angular.copy(tax, $scope.oldTax);
+    getHistories($scope.singleTax._id);
+  };
+
+  $scope.addRule = function () {
+    $scope.singleTax.rules.push($scope.taxRule);
+    jQuery('#new-rule-close').click();
+    $scope.taxRule = {};
   };
 
   $scope.delete = function () {
     swal({
       title: 'Are you sure?',
-      text: 'Deleting ' + $scope.singlePayGroup.name + ' is irreversible!',
+      text: 'Deleting ' + $scope.singleTax.name + ' is irreversible!',
       type: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
@@ -123,30 +168,30 @@ bulkPay.controller('BusinessPayGroupsCtrl', ['$scope', '$rootScope', 'AuthSvc', 
       closeOnConfirm: false,
       showLoaderOnConfirm: true
     }, function () {
-      $http.delete('/api/paygroups/' + $scope.singlePayGroup._id).success(function (data) {
-        swal('Deleted!', $scope.singlePayGroup.title + ' pay group deleted.', 'success');
-        removeFromCollection($scope.singlePayGroup._id);
-        $scope.closePayGroup();
+      $http.delete('/api/taxes/' + $scope.singleTax._id).success(function (data) {
+        swal('Deleted!', $scope.singleTax.name + ' tax deleted.', 'success');
+        removeFromCollection($scope.singleTax._id);
+        $scope.closeTax();
       }).error(function (error) {
         swal('Error Occurred', error.message, 'warning');
-        console.log(error);
+        AuthSvc.handleError(error);
       });
     });
   };
 
-  $scope.closePayGroup = function () {
-    $scope.singlePayGroup = {};
+  $scope.closeTax = function () {
+    $scope.singleTax = {};
     $scope.singleView = false;
     $scope.histories = [];
   };
 
-  $scope.updatePayGroup = function () {
-    $http.put('/api/paygroups/' + $scope.singlePayGroup._id, $scope.singlePayGroup).success(function (data) {
+  $scope.updateTax = function () {
+    $http.put('/api/taxes/' + $scope.singleTax._id, $scope.singleTax).success(function (data) {
       getHistories(data._id);
       replace(data);
-      swal("Success", "Pay group updated.", "success");
+      swal("Success", "Tax updated.", "success");
     }).error(function (error) {
-      console.log(error);
+      AuthSvc.handleError(error);
     });
   };
 

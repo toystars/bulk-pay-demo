@@ -20,7 +20,8 @@ var bulkPay = angular.module('bulkPay', [
   'ngRoute',
   'ngSanitize',
   'ngTouch',
-  'angularFileUpload'
+  'angularFileUpload',
+  'xeditable'
 ]);
 
 bulkPay.factory('imageUploader', ['$upload', function($upload) {

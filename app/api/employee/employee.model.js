@@ -65,7 +65,11 @@ var employeesSchema = new Schema({
     type: String,
     default: 'Active'
   },
-  terminationDate: String
+  terminationDate: Date,
+  createdAt: {
+    type: Date,
+    default: Date.now
+  }
 }, {
   toObject: {
     virtuals: true
