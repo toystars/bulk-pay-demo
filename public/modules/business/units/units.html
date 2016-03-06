@@ -77,11 +77,8 @@
 
                         <div class="col-sm-6">
                             <div class="form-group">
-                                <label for="update-unit-location" class="control-label">Location</label>
-                                <select ng-model="singleUnit.location" id="update-unit-location" data-placeholder="Choose One" style="width:100%">
-                                    <option value="">Choose One</option>
-                                    <option ng-repeat="state in states" on-finish-render="ngRepeatFinished" value="{{state}}">{{state}}</option>
-                                </select>
+                                <label class="control-label">Location</label>
+                                <select2 options="options" ng-model="singleUnit.location" s2-options="state as state for state in states" style="width: 100%"></select2>
                             </div><!-- form-group -->
                         </div><!-- col-sm-6 -->
                     </div><!-- row -->
@@ -89,11 +86,8 @@
                     <div class="row">
                         <div class="col-sm-12">
                             <div class="form-group">
-                                <label for="update-unit-parent" class="control-label">Parent</label>
-                                <select ng-model="singleUnit.parentId" id="update-unit-parent" data-placeholder="Choose One" style="width:100%">
-                                    <option value="">Choose One</option>
-                                    <option ng-repeat="businessUnit in getValidUnits()" on-finish-render="ngRepeatFinished" value="{{businessUnit._id}}">{{businessUnit.name}}</option>
-                                </select>
+                                <label class="control-label">Parent</label>
+                                <select2 options="options" ng-model="singleUnit.parentId" s2-options="businessUnit._id as businessUnit.name for businessUnit in getValidUnits()" style="width: 100%"></select2>
                             </div><!-- form-group -->
                         </div><!-- col-sm-12 -->
 
@@ -168,11 +162,8 @@
 
                         <div class="col-sm-6">
                             <div class="form-group">
-                                <label for="new-unit-location" class="control-label">Location</label>
-                                <select ng-model="unit.location" id="new-unit-location" data-placeholder="Choose One" style="width:100%">
-                                    <option value="">Choose One</option>
-                                    <option ng-repeat="state in states" on-finish-render="ngRepeatFinished" value="{{state}}">{{state}}</option>
-                                </select>
+                                <label class="control-label">Location</label>
+                                <select2 options="options" ng-model="unit.location" s2-options="state as state for state in states" style="width: 100%"></select2>
                             </div><!-- form-group -->
                         </div><!-- col-sm-6 -->
                     </div><!-- row -->
@@ -180,11 +171,8 @@
                     <div class="row">
                         <div class="col-sm-12">
                             <div class="form-group">
-                                <label for="new-unit-parent" class="control-label">Parent</label>
-                                <select ng-model="unit.parentId" id="new-unit-parent" data-placeholder="Choose One" style="width:100%">
-                                    <option value="">Choose One</option>
-                                    <option ng-repeat="businessUnit in businessUnits" on-finish-render="ngRepeatFinished" value="{{businessUnit._id}}">{{businessUnit.name}}</option>
-                                </select>
+                                <label class="control-label">Parent</label>
+                                <select2 options="options" ng-model="unit.parentId" s2-options="businessUnit._id as businessUnit.name for businessUnit in businessUnits" style="width: 100%"></select2>
                             </div><!-- form-group -->
                         </div><!-- col-sm-12 -->
 

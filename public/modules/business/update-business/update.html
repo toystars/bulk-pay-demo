@@ -54,11 +54,8 @@
                                 </div><!-- col-sm-12 -->
                                 <div class="col-sm-12">
                                     <div class="form-group">
-                                        <label for="new-business-state" class="control-label">State</label>
-                                        <select ng-model="business.state" id="new-business-state" data-placeholder="Choose One" style="width:100%">
-                                            <option value="">Choose One</option>
-                                            <option ng-repeat="state in states" on-finish-render="ngRepeatFinished" value="{{state}}">{{state}}</option>
-                                        </select>
+                                        <label class="control-label">State</label>
+                                        <select2 ng-model="business.state" s2-options="state as state for state in states" style="width: 100%"></select2>
                                     </div><!-- form-group -->
                                 </div><!-- col-sm-12 -->
                                 <div class="col-sm-12">
@@ -75,11 +72,8 @@
                             <div class="row">
                                 <div class="col-sm-12">
                                     <div class="form-group">
-                                        <label for="new-business-industry" class="control-label">Industry</label>
-                                        <select ng-model="business.industry" id="new-business-industry" data-placeholder="Choose One" style="width:100%">
-                                            <option value="">Choose One</option>
-                                            <option ng-repeat="industry in industries" on-finish-render="ngRepeatFinished" value="{{industry}}">{{industry}}</option>
-                                        </select>
+                                        <label class="control-label">Industry</label>
+                                        <select2 ng-model="business.industry" s2-options="industry as industry for industry in industries" style="width: 100%"></select2>
                                     </div><!-- form-group -->
                                 </div><!-- col-sm-12 -->
                                 <div class="col-sm-12">
@@ -108,12 +102,8 @@
                                 </div><!-- col-sm-12 -->
                                 <div class="col-sm-12">
                                     <div class="form-group">
-                                        <label for="new-business-status" class="control-label">Status</label>
-                                        <select ng-model="business.status" id="new-business-status" data-placeholder="Choose One" style="width:100%">
-                                            <option value="">Choose One</option>
-                                            <option value="Active">Active</option>
-                                            <option value="Inactive">Inactive</option>
-                                        </select>
+                                        <label class="control-label">Status</label>
+                                        <select2 ng-model="business.status" s2-options="status as status for status in statuses" style="width: 100%"></select2>
                                     </div><!-- form-group -->
                                 </div><!-- col-sm-12 -->
                             </div>

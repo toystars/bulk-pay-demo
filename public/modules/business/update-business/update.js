@@ -33,11 +33,6 @@ bulkPay.controller('BusinessUpdateCtrl', ['$scope', '$rootScope', 'AuthSvc', 'Bu
     return $scope.businessHistory[$scope.businessHistory.length - 1];
   };
 
-  $scope.$on('ngRepeatFinished', function (ngRepeatFinishedEvent) {
-    triggerSelect();
-  });
-
-
   $scope.updateBusiness = function () {
     Business.update($scope.business).success(function (data) {
       $scope.business = data;
@@ -144,37 +139,7 @@ bulkPay.controller('BusinessUpdateCtrl', ['$scope', '$rootScope', 'AuthSvc', 'Bu
     'Web Services'
   ];
 
-
-  /*
-  * jQuery
-  * */
-  jQuery('#new-business-state').change(function () {
-    $scope.$apply(function () {
-      $scope.business.state = jQuery('#new-business-state').val();
-    });
-  });
-  jQuery('#new-business-industry').change(function () {
-    $scope.$apply(function () {
-      $scope.business.industry = jQuery('#new-business-industry').val();
-    });
-  });
-  jQuery('#new-business-status').change(function () {
-    $scope.$apply(function () {
-      $scope.business.status = jQuery('#new-business-status').val();
-    });
-  });
-
-  var triggerSelect = function () {
-    jQuery('#new-business-state').select2({
-      minimumResultsForSearch: 0
-    });
-    jQuery('#new-business-industry').select2({
-      minimumResultsForSearch: 0
-    });
-    jQuery('#new-business-status').select2({
-      minimumResultsForSearch: 0
-    });
-  };
+  $scope.statuses = ['Active', 'Inactive'];
 
 }]);
 

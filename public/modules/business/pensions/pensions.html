@@ -90,6 +90,8 @@
                                         <th>#</th>
                                         <th>Code</th>
                                         <th>Name</th>
+                                        <th>Employee %</th>
+                                        <th>Employer %</th>
                                         <th>Status</th>
                                     </tr>
                                     </thead>
@@ -98,6 +100,8 @@
                                         <td>{{$index + 1}}</td>
                                         <td>{{pension.code}}</td>
                                         <td>{{pension.name}}</td>
+                                        <td>{{pension.employeeContributionRate}}</td>
+                                        <td>{{pension.employerContributionRate}}</td>
                                         <td>
                                             <span ng-if="pension.status === 'Active'" class="label label-success">{{pension.status}}</span>
                                             <span ng-if="pension.status === 'Inactive'" class="label label-danger">{{pension.status}}</span>
@@ -135,34 +139,31 @@
 
                                         <div class="col-sm-12">
                                             <div class="form-group">
-                                                <label for="pension-rule-types" class="control-label">Pay Types</label>
-                                                <select class="fancy-select" ng-model="singlePension.payTypes" id="pension-rule-types" multiple="multiple" data-placeholder="Choose One" style="width:100%">
-                                                    <option value="">Choose One</option>
-                                                    <option ng-repeat="types in payTypes" on-finish-render="ngRepeatFinished" value="{{types._id}}">{{types.title}}</option>
-                                                </select>
+                                                <label class="control-label">Pay Types</label>
+                                                <select2 ng-model="singlePension.payTypes" multiple="multiple" s2-options="types._id as types.title for types in payTypes" style="width: 100%"></select2>
                                             </div><!-- form-group -->
                                         </div><!-- col-sm-12 -->
+
+                                        <div class="col-sm-6">
+                                            <div class="form-group">
+                                                <label class="control-label">Employer's Contribution</label>
+                                                <input type="number" class="form-control" placeholder="Name" ng-model="singlePension.employerContributionRate"/>
+                                            </div><!-- form-group -->
+                                        </div><!-- col-sm-6 -->
+
+                                        <div class="col-sm-6">
+                                            <div class="form-group">
+                                                <label class="control-label">Employee's Contribution</label>
+                                                <input type="number" class="form-control" placeholder="Name" ng-model="singlePension.employeeContributionRate"/>
+                                            </div><!-- form-group -->
+                                        </div><!-- col-sm-6 -->
 
                                         <div class="col-sm-12">
                                             <div class="form-group">
-                                                <label for="pension-rule-status" class="control-label">Status</label>
-                                                <select class="fancy-select" ng-model="singlePension.status" id="pension-rule-status" data-placeholder="Choose One" style="width:100%">
-                                                    <!--<option value="">Choose One</option>-->
-                                                    <option ng-repeat="status in statuses" on-finish-render="ngRepeatFinished" value="{{status}}">{{status}}</option>
-                                                </select>
+                                                <label class="control-label">Status</label>
+                                                <select2 ng-model="singlePension.status" s2-options="status as status for status in statuses" style="width: 100%"></select2>
                                             </div><!-- form-group -->
                                         </div><!-- col-sm-12 -->
-
-                                        <!--<div class="col-sm-12">
-                                            <div class="form-group">
-                                                <label for="update-pay-group-status" class="control-label">Status</label>
-                                                <select id="update-pay-group-status" class="form-control width100p" data-placeholder="Choose One" required ng-model="singlePension.status">
-                                                    <option value="">Choose One</option>
-                                                    <option value="Active">Active</option>
-                                                    <option value="Inactive">Inactive</option>
-                                                </select>
-                                            </div>&lt;!&ndash; form-group &ndash;&gt;
-                                        </div>&lt;!&ndash; col-sm-12 &ndash;&gt;-->
 
 
                                         <div class="col-sm-12">

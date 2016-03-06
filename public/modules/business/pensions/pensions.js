@@ -172,18 +172,6 @@ bulkPay.controller('BusinessPensionsCtrl', ['$scope', '$rootScope', 'AuthSvc', '
 
   $scope.statuses = ['Active', 'Inactive'];
 
-  /*
-   * jQuery
-   * */
-  var triggerSelect = function () {
-    jQuery('#pension-rule-types').select2({
-      minimumResultsForSearch: 0
-    });
-    jQuery('#pension-rule-status').select2({
-      minimumResultsForSearch: 0
-    });
-  };
-
 
 }]);
 

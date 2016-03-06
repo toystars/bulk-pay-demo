@@ -36,11 +36,6 @@ bulkPay.controller('BusinessUnitsCtrl', ['$scope', '$rootScope', 'AuthSvc', 'Bus
     getBusinessUnits(businessId);
   });
 
-  $scope.$on('ngRepeatFinished', function (ngRepeatFinishedEvent) {
-    triggerSelect();
-  });
-
-
   $scope.createBusinessUnit = function () {
     var requestObject = {
       name: $scope.unit.name,
@@ -57,6 +52,10 @@ bulkPay.controller('BusinessUnitsCtrl', ['$scope', '$rootScope', 'AuthSvc', 'Bus
     }).error(function (error) {
       console.log(error);
     });
+  };
+
+  $scope.options = {
+    placeholder: "Choose One"
   };
 
 
@@ -210,26 +209,6 @@ bulkPay.controller('BusinessUnitsCtrl', ['$scope', '$rootScope', 'AuthSvc', 'Bus
       }
     }
     return units;
-  };
-
-
-  /*
-   * jQuery
-   * */
-  var triggerSelect = function () {
-    jQuery('#new-unit-location').select2({
-      minimumResultsForSearch: 0
-    });
-    jQuery('#new-unit-parent').select2({
-      minimumResultsForSearch: 0
-    });
-
-    jQuery('#update-unit-location').select2({
-      minimumResultsForSearch: 0
-    });
-    jQuery('#update-unit-parent').select2({
-      minimumResultsForSearch: 0
-    });
   };
 
 }]);

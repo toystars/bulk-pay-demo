@@ -21,8 +21,14 @@ var bulkPay = angular.module('bulkPay', [
   'ngSanitize',
   'ngTouch',
   'angularFileUpload',
-  'xeditable'
+  'xeditable',
+  'rt.select2'
 ]);
+
+bulkPay.run(function (select2Config) {
+  select2Config.minimumResultsForSearch = 1;
+  select2Config.dropdownAutoWidth = true;
+});
 
 bulkPay.factory('imageUploader', ['$upload', function($upload) {
   return {

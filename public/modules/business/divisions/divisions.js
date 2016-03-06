@@ -46,9 +46,9 @@ bulkPay.controller('BusinessDivisionsCtrl', ['$scope', '$rootScope', 'AuthSvc', 
     getBusinessDivisions(businessId);
   });
 
-  $scope.$on('ngRepeatFinished', function (ngRepeatFinishedEvent) {
-    triggerSelect();
-  });
+  $scope.options = {
+    placeholder: "Choose One"
+  };
 
 
   $scope.createDivision = function () {
@@ -77,6 +77,8 @@ bulkPay.controller('BusinessDivisionsCtrl', ['$scope', '$rootScope', 'AuthSvc', 
   /*
    * Data
    * */
+  $scope.statuses = ['Active', 'Inactive'];
+
   $scope.states = ['Abia State',
     'Adamawa State',
     'Akwa Ibom State',
@@ -239,34 +241,6 @@ bulkPay.controller('BusinessDivisionsCtrl', ['$scope', '$rootScope', 'AuthSvc', 
     return divisions;
   };
 
-
-  /*
-   * jQuery
-   * */
-  var triggerSelect = function () {
-    jQuery('#new-division-location').select2({
-      minimumResultsForSearch: 0
-    });
-    jQuery('#new-division-business-unit').select2({
-      minimumResultsForSearch: 0
-    });
-    jQuery('#new-division-parent').select2({
-      minimumResultsForSearch: 0
-    });
-
-    jQuery('#update-division-location').select2({
-      minimumResultsForSearch: 0
-    });
-    jQuery('#update-division-business-unit').select2({
-      minimumResultsForSearch: 0
-    });
-    jQuery('#update-division-parent').select2({
-      minimumResultsForSearch: 0
-    });
-    jQuery('#update-division-status').select2({
-      minimumResultsForSearch: 0
-    });
-  };
 
 }]);
 
