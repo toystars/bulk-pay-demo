@@ -14,6 +14,10 @@ bulkPay.controller('BusinessPositionsCtrl', ['$scope', '$rootScope', 'AuthSvc', 
   $scope.departments = [];
   $scope.$parent.inView = 'Positions';
   var businessId = '';
+  $scope.options = {
+    placeholder: "Choose One",
+    allowClear: true
+  };
 
   if (!BusinessDataSvc.getBusinessId() || BusinessDataSvc.getBusinessId() !== $stateParams.businessId) {
     $cookies.put('currentBusiness', $stateParams.businessId);
@@ -78,10 +82,6 @@ bulkPay.controller('BusinessPositionsCtrl', ['$scope', '$rootScope', 'AuthSvc', 
     getDepartments(businessId);
   });
 
-  $scope.$on('ngRepeatFinished', function (ngRepeatFinishedEvent) {
-    triggerSelect();
-  });
-
 
   $scope.createPosition = function () {
     switch ($scope.position.headingSection) {
@@ -117,33 +117,88 @@ bulkPay.controller('BusinessPositionsCtrl', ['$scope', '$rootScope', 'AuthSvc', 
    * Helpers
    * */
 
-  $scope.getDivisions = function () {
-    var divisions = [];
-    for (var x = 0; x < $scope.divisions.length; x++) {
-      if ($scope.position.businessUnitId && $scope.position.businessUnitId !== '') {
-        if ($scope.position.businessUnitId === $scope.divisions[x].businessUnitId) {
+  $scope.filteredDivisions = [];
+  $scope.$watch('singlePosition.businessUnitId', function (newValue, oldValue) {
+    if (newValue !== oldValue) {
+      var divisions = [];
+      for (var x = 0; x < $scope.divisions.length; x++) {
+        if ($scope.singlePosition.businessUnitId && $scope.singlePosition.businessUnitId !== '') {
+          if ($scope.singlePosition.businessUnitId === $scope.divisions[x].businessUnitId) {
+            divisions.push($scope.divisions[x]);
+          }
+        } else {
           divisions.push($scope.divisions[x]);
         }
-      } else {
-        divisions.push($scope.divisions[x]);
       }
+      $scope.filteredDivisions = divisions;
     }
-    return divisions;
-  };
+  });
 
-  $scope.getDepartments = function () {
-    var departments = [];
-    _.each($scope.departments, function (department) {
-      if ($scope.position.divisionId && $scope.position.divisionId !== '') {
-        if ($scope.position.divisionId === department.divisionId || department.divisionsServed[0] === 'All' || _.find(department.divisionsServed, function (id) { return id == $scope.position.divisionId; })) {
+  $scope.filteredDepartments = [];
+  $scope.$watch('singlePosition.divisionId', function (newValue, oldValue) {
+    if (newValue !== oldValue) {
+      var departments = [];
+      _.each($scope.departments, function (department) {
+        if ($scope.singlePosition.divisionId && $scope.singlePosition.divisionId !== '') {
+          if ($scope.singlePosition.divisionId === department.divisionId || department.divisionsServed[0] === 'All' || _.find(department.divisionsServed, function (id) { return id == $scope.singlePosition.divisionId; })) {
+            departments.push(department);
+          }
+        } else {
           departments.push(department);
         }
-      } else {
-        departments.push(department);
+      });
+      $scope.filteredDepartments = departments;
+    }
+  });
+
+  $scope.filteredPositions = [];
+  $scope.$watch('singlePosition._id', function (newValue, oldValue) {
+    if (newValue !== oldValue) {
+      var positions = [];
+      for (var x = 0; x < $scope.positions.length; x++) {
+        if ($scope.singlePosition._id && $scope.positions[x]._id !== $scope.singlePosition._id && $scope.positions[x].parentPositionId !== $scope.singlePosition._id) {
+          positions.push($scope.positions[x]);
+        }
       }
-    });
-    return departments;
-  };
+    }
+    $scope.filteredPositions = positions;
+  });
+
+  $scope.filteredNewDivisions = [];
+  $scope.$watch('position.businessUnitId', function (newValue, oldValue) {
+    if (newValue !== oldValue) {
+      $scope.position.divisionId = '';
+      var divisions = [];
+      for (var x = 0; x < $scope.divisions.length; x++) {
+        if ($scope.position.businessUnitId && $scope.position.businessUnitId !== '') {
+          if ($scope.position.businessUnitId === $scope.divisions[x].businessUnitId) {
+            divisions.push($scope.divisions[x]);
+          }
+        } else {
+          divisions.push($scope.divisions[x]);
+        }
+      }
+      $scope.filteredNewDivisions = divisions;
+    }
+  });
+
+  $scope.filteredNewDepartments = [];
+  $scope.$watch('position.divisionId', function (newValue, oldValue) {
+    if (newValue !== oldValue) {
+      $scope.position.departmentId = '';
+      var departments = [];
+      _.each($scope.departments, function (department) {
+        if ($scope.position.divisionId && $scope.position.divisionId !== '') {
+          if ($scope.position.divisionId === department.divisionId || department.divisionsServed[0] === 'All' || _.find(department.divisionsServed, function (id) { return id == $scope.position.divisionId; })) {
+            departments.push(department);
+          }
+        } else {
+          departments.push(department);
+        }
+      });
+      $scope.filteredNewDepartments = departments;
+    }
+  });
 
 
   $scope.getUnitName = function (id) {
@@ -189,16 +244,6 @@ bulkPay.controller('BusinessPositionsCtrl', ['$scope', '$rootScope', 'AuthSvc', 
         return $scope.getDepartmentName(id);
         break;
     }
-  };
-
-  $scope.getValidPositions = function () {
-    var positions = [];
-    for (var x = 0; x < $scope.positions.length; x++) {
-      if ($scope.singlePosition._id && $scope.positions[x]._id !== $scope.singlePosition._id && $scope.positions[x].parentPositionId !== $scope.singlePosition._id) {
-        positions.push($scope.positions[x]);
-      }
-    }
-    return positions;
   };
 
   $scope.getLastHistory = function () {
@@ -375,30 +420,9 @@ bulkPay.controller('BusinessPositionsCtrl', ['$scope', '$rootScope', 'AuthSvc', 
   };
 
 
-  /*
-   * jQuery
-   * */
-  var triggerSelect = function () {
-    jQuery('#new-position-status').select2({
-      minimumResultsForSearch: 0
-    });
-    jQuery('#new-position-heading-section').select2({
-      minimumResultsForSearch: 0
-    });
-    jQuery('#new-position-business-unit').select2({
-      minimumResultsForSearch: 0
-    });
-    jQuery('#new-position-division').select2({
-      minimumResultsForSearch: 0
-    });
-    jQuery('#new-position-department').select2({
-      minimumResultsForSearch: 0
-    });
-    jQuery('#new-position-parent-position').select2({
-      minimumResultsForSearch: 0
-    });
-  };
-
+  $scope.choices = ['Yes', 'No'];
+  $scope.statuses = ['Active', 'Inactive'];
+  $scope.headingSections = ['Business Unit', 'Division', 'Department'];
 
 }]);
 

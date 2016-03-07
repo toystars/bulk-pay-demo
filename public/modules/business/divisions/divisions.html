@@ -95,7 +95,7 @@
 
                             <div class="form-group" ng-hide="singleDivision.isParent">
                                 <label class="control-label">Parent</label>
-                                <select2 options="options" ng-model="singleDivision.parentId" s2-options="division._id as division.name for division in divisions" style="width: 100%"></select2>
+                                <select2 options="options" ng-model="singleDivision.parentId" s2-options="division._id as division.name for division in filteredDivisions" style="width: 100%"></select2>
                             </div><!-- form-group -->
 
                             <div class="form-group" ng-show="singleDivision.isParent">

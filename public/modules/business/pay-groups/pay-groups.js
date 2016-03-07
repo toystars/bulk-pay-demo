@@ -11,6 +11,10 @@ bulkPay.controller('BusinessPayGroupsCtrl', ['$scope', '$rootScope', 'AuthSvc', 
   $scope.payGroups = [];
   $scope.$parent.inView = 'Pay Groups';
   var businessId = '';
+  $scope.options = {
+    placeholder: "Choose One"
+  };
+  $scope.statuses = ['Active', 'Inactive'];
 
   if (!BusinessDataSvc.getBusinessId() || BusinessDataSvc.getBusinessId() !== $stateParams.businessId) {
     $cookies.put('currentBusiness', $stateParams.businessId);
@@ -43,10 +47,6 @@ bulkPay.controller('BusinessPayGroupsCtrl', ['$scope', '$rootScope', 'AuthSvc', 
     businessId = args._id;
     getPayGroups(businessId);
     resetPayGroup();
-  });
-
-  $scope.$on('ngRepeatFinished', function (ngRepeatFinishedEvent) {
-    triggerSelect();
   });
 
 
@@ -147,16 +147,6 @@ bulkPay.controller('BusinessPayGroupsCtrl', ['$scope', '$rootScope', 'AuthSvc', 
       swal("Success", "Pay group updated.", "success");
     }).error(function (error) {
       console.log(error);
-    });
-  };
-
-
-  /*
-   * jQuery
-   * */
-  var triggerSelect = function () {
-    jQuery('#update-position-status').select2({
-      minimumResultsForSearch: 0
     });
   };
 

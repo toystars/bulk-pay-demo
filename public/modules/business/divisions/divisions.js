@@ -174,6 +174,7 @@ bulkPay.controller('BusinessDivisionsCtrl', ['$scope', '$rootScope', 'AuthSvc', 
    * */
   $scope.singleView = false;
   $scope.histories = [];
+  $scope.filteredDivisions = [];
 
   $scope.showDivision = function (division) {
     $scope.singleView = true;
@@ -182,6 +183,7 @@ bulkPay.controller('BusinessDivisionsCtrl', ['$scope', '$rootScope', 'AuthSvc', 
     angular.copy(division, $scope.oldDivision);
     angular.copy(division, $scope.singleDivision);
     getHistories($scope.singleDivision._id);
+    setParentsDivisions();
   };
 
   $scope.delete = function () {
@@ -229,16 +231,17 @@ bulkPay.controller('BusinessDivisionsCtrl', ['$scope', '$rootScope', 'AuthSvc', 
     });
   };
 
-  $scope.getValidDivisions = function () {
+  var setParentsDivisions = function () {
     var divisions = [];
     for (var x = 0; x < $scope.divisions.length; x++) {
-      if ($scope.divisions[x]._id !== $scope.oldDivision._id) {
-        if ($scope.divisions[x].parentId !== $scope.oldDivision._id) {
-          divisions.push($scope.divisions[x]);
-        }
+
+      if ((!$scope.singleDivision.parentId || $scope.singleDivision.parentId === '') && $scope.divisions[x]._id !== $scope.singleDivision._id && $scope.divisions[x].parentId !== $scope.singleDivision._id) {
+        divisions.push($scope.divisions[x]);
+      } else if ($scope.divisions[x]._id !== $scope.singleDivision._id && $scope.divisions[x].parentId !== $scope.singleDivision._id) {
+        divisions.push($scope.divisions[x]);
       }
     }
-    return divisions;
+    $scope.filteredDivisions = divisions;
   };
 
 

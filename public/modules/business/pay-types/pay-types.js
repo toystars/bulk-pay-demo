@@ -11,6 +11,14 @@ bulkPay.controller('BusinessPayTypesCtrl', ['$scope', '$rootScope', 'AuthSvc', '
   $scope.payTypes = [];
   $scope.$parent.inView = 'Pay Types';
   var businessId = '';
+  $scope.options = {
+    placeholder: "Choose One"
+  };
+  $scope.statuses = ['Active', 'Inactive'];
+  $scope.choices = ['Yes', 'No'];
+  $scope.types = ['Wage', 'Benefit', 'Deduction'];
+  $scope.derivatives = ['Fixed', 'Formula'];
+  $scope.frequencies = ['Monthly', 'Quarterly', 'Bi-Annually', 'Annually'];
 
   if (!BusinessDataSvc.getBusinessId() || BusinessDataSvc.getBusinessId() !== $stateParams.businessId) {
     $cookies.put('currentBusiness', $stateParams.businessId);

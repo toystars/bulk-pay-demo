@@ -102,24 +102,15 @@
 
                         <div class="col-sm-3">
                             <div class="form-group">
-                                <label for="update-pay-type-type" class="control-label">Type</label>
-                                <select id="update-pay-type-type" class="form-control width100p" data-placeholder="Choose One" required ng-model="singlePayType.type">
-                                    <option value="">Choose One</option>
-                                    <option value="Wage">Wage</option>
-                                    <option value="Benefit">Benefit</option>
-                                    <option value="Deduction">Deduction</option>
-                                </select>
+                                <label class="control-label">Type</label>
+                                <select2 options="options" ng-model="singlePayType.type" s2-options="type as type for type in types" style="width: 100%"></select2>
                             </div><!-- form-group -->
                         </div><!-- col-sm-3 -->
 
                         <div class="col-sm-3">
                             <div class="form-group">
-                                <label for="update-pay-type-derived" class="control-label">Derived</label>
-                                <select id="update-pay-type-derived" class="form-control width100p" data-placeholder="Choose One" required ng-model="singlePayType.derivative">
-                                    <option value="">Choose One</option>
-                                    <option value="Fixed">Fixed</option>
-                                    <option value="Formula">Formula</option>
-                                </select>
+                                <label class="control-label">Derived</label>
+                                <select2 options="options" ng-model="singlePayType.derivative" s2-options="derivative as derivative for derivative in derivatives" style="width: 100%"></select2>
                             </div><!-- form-group -->
                         </div><!-- col-sm-3 -->
                     </div><!-- row -->
@@ -127,47 +118,29 @@
                     <div class="row">
                         <div class="col-sm-3">
                             <div class="form-group">
-                                <label for="update-pay-type-frequency" class="control-label">Frequency</label>
-                                <select id="update-pay-type-frequency" class="form-control width100p" data-placeholder="Choose One" required ng-model="singlePayType.frequency">
-                                    <option value="">Choose One</option>
-                                    <option value="Monthly">Monthly</option>
-                                    <option value="Quarterly">Quarterly</option>
-                                    <option value="Bi-Annually">Bi-Annually</option>
-                                    <option value="Annually">Annually</option>
-                                </select>
+                                <label class="control-label">Frequency</label>
+                                <select2 options="options" ng-model="singlePayType.frequency" s2-options="frequency as frequency for frequency in frequencies" style="width: 100%"></select2>
                             </div><!-- form-group -->
                         </div><!-- col-sm-3 -->
 
                         <div class="col-sm-3">
                             <div class="form-group">
-                                <label for="update-pay-type-taxable" class="control-label">Taxable</label>
-                                <select id="update-pay-type-taxable" class="form-control width100p" data-placeholder="Choose One" required ng-model="singlePayType.taxable">
-                                    <option value="">Choose One</option>
-                                    <option value="Yes">Yes</option>
-                                    <option value="No">No</option>
-                                </select>
+                                <label class="control-label">Taxable</label>
+                                <select2 options="options" ng-model="singlePayType.taxable" s2-options="choice as choice for choice in choices" style="width: 100%"></select2>
                             </div><!-- form-group -->
                         </div><!-- col-sm-3 -->
 
                         <div class="col-sm-3">
                             <div class="form-group">
-                                <label for="update-pay-type-active" class="control-label">Status</label>
-                                <select id="update-pay-type-active" class="form-control width100p" data-placeholder="Choose One" required ng-model="singlePayType.status">
-                                    <option value="">Choose One</option>
-                                    <option value="Active">Active</option>
-                                    <option value="Inactive">Inactive</option>
-                                </select>
+                                <label class="control-label">Status</label>
+                                <select2 options="options" ng-model="singlePayType.status" s2-options="status as status for status in statuses" style="width: 100%"></select2>
                             </div><!-- form-group -->
                         </div><!-- col-sm-3 -->
 
                         <div class="col-sm-3">
                             <div class="form-group">
-                                <label for="update-pay-type-employee-edit" class="control-label">Editable per Employee</label>
-                                <select id="update-pay-type-employee-edit" class="form-control width100p" data-placeholder="Choose One" required ng-model="singlePayType.editablePerEmployee">
-                                    <option value="">Choose One</option>
-                                    <option value="Yes">Yes</option>
-                                    <option value="No">No</option>
-                                </select>
+                                <label class="control-label">Editable per Employee</label>
+                                <select2 options="options" ng-model="singlePayType.editablePerEmployee" s2-options="choice as choice for choice in choices" style="width: 100%"></select2>
                             </div><!-- form-group -->
                         </div><!-- col-sm-3 -->
 
@@ -257,24 +230,15 @@
 
                         <div class="col-sm-3">
                             <div class="form-group">
-                                <label for="pay-type-type" class="control-label">Type</label>
-                                <select id="pay-type-type" class="form-control width100p" data-placeholder="Choose One" required ng-model="payType.type">
-                                    <option value="">Choose One</option>
-                                    <option value="Wage">Wage</option>
-                                    <option value="Benefit">Benefit</option>
-                                    <option value="Deduction">Deduction</option>
-                                </select>
+                                <label class="control-label">Type</label>
+                                <select2 options="options" ng-model="payType.type" s2-options="type as type for type in types" style="width: 100%"></select2>
                             </div><!-- form-group -->
                         </div><!-- col-sm-3 -->
 
                         <div class="col-sm-3">
                             <div class="form-group">
-                                <label for="pay-type-derived" class="control-label">Derived</label>
-                                <select id="pay-type-derived" class="form-control width100p" data-placeholder="Choose One" required ng-model="payType.derivative">
-                                    <option value="">Choose One</option>
-                                    <option value="Fixed">Fixed</option>
-                                    <option value="Formula">Formula</option>
-                                </select>
+                                <label class="control-label">Derived</label>
+                                <select2 options="options" ng-model="payType.derivative" s2-options="derivative as derivative for derivative in derivatives" style="width: 100%"></select2>
                             </div><!-- form-group -->
                         </div><!-- col-sm-3 -->
                     </div><!-- row -->
@@ -282,47 +246,29 @@
                     <div class="row">
                         <div class="col-sm-3">
                             <div class="form-group">
-                                <label for="pay-type-frequency" class="control-label">Frequency</label>
-                                <select id="pay-type-frequency" class="form-control width100p" data-placeholder="Choose One" required ng-model="payType.frequency">
-                                    <option value="">Choose One</option>
-                                    <option value="Monthly">Monthly</option>
-                                    <option value="Quarterly">Quarterly</option>
-                                    <option value="Bi-Annually">Bi-Annually</option>
-                                    <option value="Annually">Annually</option>
-                                </select>
+                                <label class="control-label">Frequency</label>
+                                <select2 options="options" ng-model="payType.frequency" s2-options="frequency as frequency for frequency in frequencies" style="width: 100%"></select2>
                             </div><!-- form-group -->
                         </div><!-- col-sm-3 -->
 
                         <div class="col-sm-3">
                             <div class="form-group">
-                                <label for="pay-type-taxable" class="control-label">Taxable</label>
-                                <select id="pay-type-taxable" class="form-control width100p" data-placeholder="Choose One" required ng-model="payType.taxable">
-                                    <option value="">Choose One</option>
-                                    <option value="Yes">Yes</option>
-                                    <option value="No">No</option>
-                                </select>
+                                <label class="control-label">Taxable</label>
+                                <select2 options="options" ng-model="payType.taxable" s2-options="choice as choice for choice in choices" style="width: 100%"></select2>
                             </div><!-- form-group -->
                         </div><!-- col-sm-3 -->
 
                         <div class="col-sm-3">
                             <div class="form-group">
-                                <label for="pay-type-active" class="control-label">Status</label>
-                                <select id="pay-type-active" class="form-control width100p" data-placeholder="Choose One" required ng-model="payType.status">
-                                    <option value="">Choose One</option>
-                                    <option value="Active">Active</option>
-                                    <option value="Inactive">Inactive</option>
-                                </select>
+                                <label class="control-label">Status</label>
+                                <select2 options="options" ng-model="payType.status" s2-options="status as status for status in statuses" style="width: 100%"></select2>
                             </div><!-- form-group -->
                         </div><!-- col-sm-3 -->
 
                         <div class="col-sm-3">
                             <div class="form-group">
-                                <label for="pay-type-employee-edit" class="control-label">Editable per Employee</label>
-                                <select id="pay-type-employee-edit" class="form-control width100p" data-placeholder="Choose One" required ng-model="payType.editablePerEmployee">
-                                    <option value="">Choose One</option>
-                                    <option value="Yes">Yes</option>
-                                    <option value="No">No</option>
-                                </select>
+                                <label class="control-label">Editable per Employee</label>
+                                <select2 options="options" ng-model="payType.editablePerEmployee" s2-options="choice as choice for choice in choices" style="width: 100%"></select2>
                             </div><!-- form-group -->
                         </div><!-- col-sm-3 -->
 

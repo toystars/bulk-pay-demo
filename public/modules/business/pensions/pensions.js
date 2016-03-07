@@ -8,11 +8,15 @@ bulkPay.controller('BusinessPensionsCtrl', ['$scope', '$rootScope', 'AuthSvc', '
   });
 
   $scope.pension = {};
+  $scope.pensionManager = {};
   $scope.pensions = [];
+  $scope.pensionManagers = [];
   $scope.payTypes = [];
   $scope.$parent.inView = 'Pensions';
   var businessId = '';
   $scope.inView = 'Pension Rules';
+  $scope.histories = [];
+  $scope.pensionManagerHistories = [];
 
   if (!BusinessDataSvc.getBusinessId() || BusinessDataSvc.getBusinessId() !== $stateParams.businessId) {
     $cookies.put('currentBusiness', $stateParams.businessId);
@@ -24,6 +28,14 @@ bulkPay.controller('BusinessPensionsCtrl', ['$scope', '$rootScope', 'AuthSvc', '
   var getPensions = function (businessId) {
     $http.get('/api/pensions/business/' + businessId).success(function (data) {
       $scope.pensions = data;
+    }).error(function (error) {
+      AuthSvc.handleError(error);
+    })
+  };
+
+  var getPensionManagers = function (businessId) {
+    $http.get('/api/pensionmanagers/business/' + businessId).success(function (data) {
+      $scope.pensionManagers = data;
     }).error(function (error) {
       AuthSvc.handleError(error);
     })
@@ -48,6 +60,15 @@ bulkPay.controller('BusinessPensionsCtrl', ['$scope', '$rootScope', 'AuthSvc', '
     };
   };
 
+  var resetPensionManager = function () {
+    $scope.pensionManager = {
+      businessId: businessId,
+      code: '',
+      name: '',
+      status: 'Active'
+    };
+  };
+
 
   /*
    * Event Listeners
@@ -57,11 +78,9 @@ bulkPay.controller('BusinessPensionsCtrl', ['$scope', '$rootScope', 'AuthSvc', '
     businessId = args._id;
     getPensions(businessId);
     getPayTypes(businessId);
+    getPensionManagers(businessId);
     resetPension();
-  });
-
-  $scope.$on('ngRepeatFinished', function (ngRepeatFinishedEvent) {
-    triggerSelect();
+    resetPensionManager();
   });
 
 
@@ -71,6 +90,17 @@ bulkPay.controller('BusinessPensionsCtrl', ['$scope', '$rootScope', 'AuthSvc', '
       jQuery('#new-pension-close').click();
       resetPension();
       swal('Success', 'Pension created.', 'success');
+    }).error(function (error) {
+      AuthSvc.handleError(error);
+    });
+  };
+
+  $scope.createPensionManager = function () {
+    $http.post('/api/pensionmanagers/', $scope.pensionManager).success(function (data) {
+      $scope.pensionManagers.push(data);
+      jQuery('#new-pension-manager-close').click();
+      resetPensionManager();
+      swal('Success', 'Pension Manager created.', 'success');
     }).error(function (error) {
       AuthSvc.handleError(error);
     });
@@ -94,6 +124,14 @@ bulkPay.controller('BusinessPensionsCtrl', ['$scope', '$rootScope', 'AuthSvc', '
     }
   };
 
+  var removeFromPensionManagers = function (id) {
+    for (var x = 0; x < $scope.pensionManagers.length; x++) {
+      if ($scope.pensionManagers[x]._id === id) {
+        $scope.pensionManagers.splice(x, 1);
+      }
+    }
+  };
+
   var replaceInPensions = function (data) {
     for (var x = 0; x < $scope.pensions.length; x++) {
       if ($scope.pensions[x]._id === data._id) {
@@ -102,29 +140,50 @@ bulkPay.controller('BusinessPensionsCtrl', ['$scope', '$rootScope', 'AuthSvc', '
     }
   };
 
+  var replaceInPensionManagers = function (data) {
+    for (var x = 0; x < $scope.pensionManagers.length; x++) {
+      if ($scope.pensionManagers[x]._id === data._id) {
+        $scope.pensionManagers[x] = data;
+      }
+    }
+  };
+
   $scope.getLastHistory = function () {
     return $scope.histories[$scope.histories.length - 1];
+  };
+
+  $scope.getLastPensionManagerHistory = function () {
+    return $scope.pensionManagerHistories[$scope.pensionManagerHistories.length - 1];
   };
 
   var getHistories = function (objectId) {
     $http.get('/api/histories/object/' + objectId).success(function (data) {
       $scope.histories = data;
     }).error(function (error) {
-      console.log(error);
+      AuthSvc.handleError(error);
     });
   };
+
+  var getPensionManagerHistories = function (objectId) {
+    $http.get('/api/histories/object/' + objectId).success(function (data) {
+      $scope.pensionManagerHistories = data;
+    }).error(function (error) {
+      AuthSvc.handleError(error);
+    });
+  };
+
 
 
   /*
    * Single pension display
    * */
   $scope.singlePensionView = false;
-  $scope.histories = [];
 
   $scope.showPension = function (pension) {
     $scope.singlePensionView = true;
     $scope.singlePension = {};
     $scope.oldPension = {};
+    $scope.histories = [];
     angular.copy(pension, $scope.singlePension);
     angular.copy(pension, $scope.oldPension);
     getHistories($scope.singlePension._id);
@@ -145,7 +204,7 @@ bulkPay.controller('BusinessPensionsCtrl', ['$scope', '$rootScope', 'AuthSvc', '
       $http.delete('/api/pensions/' + $scope.singlePension._id).success(function (data) {
         swal('Deleted!', $scope.singlePension.name + ' tax deleted.', 'success');
         removeFromPensions($scope.singlePension._id);
-        $scope.closeTax();
+        $scope.closePension();
       }).error(function (error) {
         swal('Error Occurred', error.message, 'warning');
         AuthSvc.handleError(error);
@@ -164,7 +223,71 @@ bulkPay.controller('BusinessPensionsCtrl', ['$scope', '$rootScope', 'AuthSvc', '
     $http.put('/api/pensions/' + $scope.singlePension._id, $scope.singlePension).success(function (data) {
       getHistories(data._id);
       replaceInPensions(data);
-      swal("Success", 'Pension updated.", "success');
+      swal("Success", 'Pension updated.', 'success');
+    }).error(function (error) {
+      AuthSvc.handleError(error);
+    });
+  };
+
+
+
+
+
+
+
+
+
+
+  /*
+   * Single pension manager display
+   * */
+  $scope.singlePensionManagerView = false;
+
+  $scope.showPensionManager = function (pensionManager) {
+    $scope.singlePensionManagerView = true;
+    $scope.singlePensionManager = {};
+    $scope.oldPensionManager = {};
+    $scope.pensionManagerHistories = [];
+    angular.copy(pensionManager, $scope.singlePensionManager);
+    angular.copy(pensionManager, $scope.oldPensionManager);
+    getPensionManagerHistories($scope.singlePensionManager._id);
+  };
+
+  $scope.deletePensionManager = function () {
+    swal({
+      title: 'Are you sure?',
+      text: 'Deleting ' + $scope.singlePensionManager.name + ' is irreversible!',
+      type: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Delete!',
+      closeOnConfirm: false,
+      showLoaderOnConfirm: true
+    }, function () {
+      $http.delete('/api/pensionmanagers/' + $scope.singlePensionManager._id).success(function (data) {
+        swal('Deleted!', $scope.singlePensionManager.name + ' tax deleted.', 'success');
+        removeFromPensionManagers($scope.singlePensionManager._id);
+        $scope.closePensionManager();
+      }).error(function (error) {
+        swal('Error Occurred', error.message, 'warning');
+        AuthSvc.handleError(error);
+      });
+    });
+  };
+
+  $scope.closePensionManager = function () {
+    $scope.singlePensionManager = {};
+    $scope.oldPensionManager = {};
+    $scope.singlePensionManagerView = false;
+    $scope.pensionManagerHistories = [];
+  };
+
+  $scope.updatePensionManager = function () {
+    $http.put('/api/pensionmanagers/' + $scope.singlePensionManager._id, $scope.singlePensionManager).success(function (data) {
+      getPensionManagerHistories(data._id);
+      replaceInPensionManagers(data);
+      swal("Success", 'Pension Manager updated.', 'success');
     }).error(function (error) {
       AuthSvc.handleError(error);
     });

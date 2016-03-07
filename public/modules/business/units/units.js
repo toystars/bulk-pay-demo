@@ -39,7 +39,7 @@ bulkPay.controller('BusinessUnitsCtrl', ['$scope', '$rootScope', 'AuthSvc', 'Bus
   $scope.createBusinessUnit = function () {
     var requestObject = {
       name: $scope.unit.name,
-      parentId: $scope.unit.parentId,
+      parentId: $scope.unit.parentId || '',
       location: $scope.unit.location,
       parentName: getParentName($scope.unit.parentId),
       businessId: businessId
@@ -149,6 +149,7 @@ bulkPay.controller('BusinessUnitsCtrl', ['$scope', '$rootScope', 'AuthSvc', 'Bus
   * */
   $scope.singleView = false;
   $scope.histories = [];
+  $scope.filteredBusinessUnit = [];
 
   $scope.showUnit = function (unit) {
     $scope.singleView = true;
@@ -157,6 +158,7 @@ bulkPay.controller('BusinessUnitsCtrl', ['$scope', '$rootScope', 'AuthSvc', 'Bus
     angular.copy(unit, $scope.oldUnit);
     angular.copy(unit, $scope.singleUnit);
     getHistories($scope.singleUnit._id);
+    setPossibleParentUnits();
   };
 
   $scope.delete = function () {
@@ -188,6 +190,20 @@ bulkPay.controller('BusinessUnitsCtrl', ['$scope', '$rootScope', 'AuthSvc', 'Bus
     $scope.histories = [];
   };
 
+
+  var setPossibleParentUnits = function () {
+    var units = [];
+    for (var x = 0; x < $scope.businessUnits.length; x++) {
+      if ((!$scope.singleUnit.parentId || $scope.singleUnit.parentId === '') && $scope.businessUnits[x]._id !== $scope.singleUnit._id && $scope.businessUnits[x].parentId !== $scope.singleUnit._id) {
+        units.push($scope.businessUnits[x]);
+      } else if ($scope.businessUnits[x]._id !== $scope.singleUnit._id && $scope.businessUnits[x].parentId !== $scope.singleUnit._id) {
+        units.push($scope.businessUnits[x]);
+      }
+    }
+    $scope.filteredBusinessUnit = units;
+  };
+
+
   $scope.updateBusinessUnit = function () {
     $scope.singleUnit.parentName = getParentName($scope.singleUnit.parentId);
     $http.put('/api/businessunits/' + $scope.singleUnit._id, $scope.singleUnit).success(function (data) {
@@ -197,18 +213,6 @@ bulkPay.controller('BusinessUnitsCtrl', ['$scope', '$rootScope', 'AuthSvc', 'Bus
     }).error(function (error) {
       console.log(error);
     });
-  };
-
-  $scope.getValidUnits = function () {
-    var units = [];
-    for (var x = 0; x < $scope.businessUnits.length; x++) {
-      if ($scope.businessUnits[x]._id !== $scope.oldUnit._id) {
-        if ($scope.businessUnits[x].parentId !== $scope.oldUnit._id) {
-          units.push($scope.businessUnits[x]);
-        }
-      }
-    }
-    return units;
   };
 
 }]);

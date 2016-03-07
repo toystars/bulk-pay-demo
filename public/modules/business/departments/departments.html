@@ -69,7 +69,7 @@
         <div class="col-md-8">
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <h4 class="panel-title">Update - {{oldDivision.name}} Department</h4>
+                    <h4 class="panel-title">Update - {{oldDepartment.name}} Department</h4>
                 </div>
                 <div class="panel-body">
                     <div class="row">
@@ -83,10 +83,7 @@
                         <div class="col-sm-6">
                             <div class="form-group">
                                 <label class="control-label">Location</label>
-                                <select class="fancy-select" ng-model="singleDepartment.location" data-placeholder="Choose One" style="width:100%">
-                                    <option value="">Choose One</option>
-                                    <option ng-repeat="state in states" on-finish-render="ngRepeatFinished" value="{{state}}">{{state}}</option>
-                                </select>
+                                <select2 options="options" ng-model="singleDepartment.location" s2-options="state as state for state in states" style="width: 100%"></select2>
                             </div><!-- form-group -->
                         </div><!-- col-sm-6 -->
                     </div><!-- row -->
@@ -95,31 +92,21 @@
                         <div class="col-sm-6">
                             <div class="form-group">
                                 <label class="control-label">Generic</label>
-                                <select class="fancy-select" ng-model="singleDepartment.isGeneric" data-placeholder="Choose One" style="width:100%">
-                                    <option value="Yes">Yes</option>
-                                    <option value="No">No</option>
-                                </select>
+                                <select2 options="options" ng-model="singleDepartment.isGeneric" s2-options="choice as choice for choice in choices" style="width: 100%"></select2>
                             </div><!-- form-group -->
                         </div><!-- col-sm-6 -->
 
                         <div class="col-sm-6" ng-hide="singleDepartment.isGeneric === 'No'">
                             <div class="form-group">
                                 <label class="control-label">Divisions Served</label>
-                                <select class="fancy-select" ng-model="singleDepartment.divisionsServed" multiple="multiple" data-placeholder="Choose One" style="width:100%">
-                                    <option value="All">All</option>
-                                    <option ng-repeat="division in divisions" on-finish-render="ngRepeatFinished" value="{{division._id}}">{{division.name}}</option>
-                                </select>
+                                <select2 options="options" ng-model="singleDepartment.divisionsServed" multiple="multiple" s2-options="division._id as division.name for division in divisions" style="width: 100%"></select2>
                             </div><!-- form-group -->
                         </div><!-- col-sm-6 -->
 
                         <div class="col-sm-6" ng-hide="singleDepartment.isGeneric === 'Yes'">
                             <div class="form-group">
                                 <label class="control-label">Parent</label>
-                                <select class="fancy-select" ng-model="singleDepartment.isParent" ng-disabled="singleDepartment.isGeneric === 'Yes'" data-placeholder="Choose One" style="width:100%">
-                                    <option value="">Choose One</option>
-                                    <option value="Yes">Yes</option>
-                                    <option value="No">No</option>
-                                </select>
+                                <select2 options="options" ng-model="singleDepartment.isParent" ng-disabled="singleDepartment.isGeneric === 'Yes'" s2-options="choice as choice for choice in choices" style="width: 100%"></select2>
                             </div><!-- form-group -->
                         </div><!-- col-sm-6 -->
 
@@ -132,20 +119,14 @@
                             <div class="col-sm-12" ng-show="singleDepartment.isParent === 'Yes'">
                                 <div class="form-group">
                                     <label class="control-label">Division</label>
-                                    <select class="fancy-select" ng-disabled="singleDepartment.isGeneric === 'Yes'" ng-model="singleDepartment.divisionId" data-placeholder="Choose One" style="width:100%">
-                                        <option value="">Choose One</option>
-                                        <option ng-repeat="division in divisions" on-finish-render="ngRepeatFinished" value="{{division._id}}">{{division.name}}</option>
-                                    </select>
+                                    <select2 options="options" ng-model="singleDepartment.divisionId" ng-disabled="singleDepartment.isGeneric === 'Yes'" s2-options="division._id as division.name for division in divisions" style="width: 100%"></select2>
                                 </div><!-- form-group -->
                             </div><!-- col-sm-12 -->
 
                             <div class="col-sm-12" ng-hide="singleDepartment.isParent === 'Yes'">
                                 <div class="form-group">
                                     <label class="control-label">Parent Department</label>
-                                    <select class="fancy-select" ng-model="singleDepartment.parentId" data-placeholder="Choose One" style="width:100%">
-                                        <option value="">Choose One</option>
-                                        <option ng-repeat="department in getValidDepartments()" on-finish-render="ngRepeatFinished" value="{{department._id}}">{{department.name}}</option>
-                                    </select>
+                                    <select2 options="options" ng-model="singleDepartment.parentId" s2-options="department._id as department.name for department in filteredDepartments" style="width: 100%"></select2>
                                 </div><!-- form-group -->
                             </div><!-- col-sm-12 -->
                         </div>
@@ -153,11 +134,7 @@
                         <div class="col-sm-12">
                             <div class="form-group">
                                 <label class="control-label">Status</label>
-                                <select class="fancy-select" ng-model="singleDepartment.status" data-placeholder="Choose One" style="width:100%">
-                                    <option value="">Choose One</option>
-                                    <option value="Active">Active</option>
-                                    <option value="Inactive">Inactive</option>
-                                </select>
+                                <select2 options="options" ng-model="singleDepartment.status" s2-options="status as status for status in statuses" style="width: 100%"></select2>
                             </div><!-- form-group -->
                         </div><!-- col-sm-10 -->
 
@@ -230,10 +207,7 @@
                         <div class="col-sm-6">
                             <div class="form-group">
                                 <label class="control-label">Location</label>
-                                <select class="fancy-select" ng-model="department.location" data-placeholder="Choose One" style="width:100%">
-                                    <option value="">Choose One</option>
-                                    <option ng-repeat="state in states" on-finish-render="ngRepeatFinished" value="{{state}}">{{state}}</option>
-                                </select>
+                                <select2 options="options" ng-model="department.location" s2-options="state as state for state in states" style="width: 100%"></select2>
                             </div><!-- form-group -->
                         </div><!-- col-sm-6 -->
 
@@ -245,31 +219,21 @@
                         <div class="col-sm-6">
                             <div class="form-group">
                                 <label class="control-label">Generic</label>
-                                <select class="fancy-select" ng-model="department.isGeneric" data-placeholder="Choose One" style="width:100%">
-                                    <option value="Yes">Yes</option>
-                                    <option value="No">No</option>
-                                </select>
+                                <select2 options="options" ng-model="department.isGeneric" s2-options="choice as choice for choice in choices" style="width: 100%"></select2>
                             </div><!-- form-group -->
                         </div><!-- col-sm-6 -->
 
                         <div class="col-sm-6" ng-hide="department.isGeneric === 'No'">
                             <div class="form-group">
                                 <label class="control-label">Divisions Served</label>
-                                <select class="fancy-select" ng-model="department.divisionsServed" multiple="multiple" data-placeholder="Choose One" style="width:100%">
-                                    <option value="All">All</option>
-                                    <option ng-repeat="division in divisions" on-finish-render="ngRepeatFinished" value="{{division._id}}">{{division.name}}</option>
-                                </select>
+                                <select2 options="options" ng-model="department.divisionsServed" multiple="multiple" s2-options="division._id as division.name for division in divisions" style="width: 100%"></select2>
                             </div><!-- form-group -->
                         </div><!-- col-sm-6 -->
 
                         <div class="col-sm-6" ng-hide="department.isGeneric === 'Yes'">
                             <div class="form-group">
                                 <label class="control-label">Parent</label>
-                                <select class="fancy-select" ng-model="department.isParent" data-placeholder="Choose One" style="width:100%">
-                                    <option value="">Choose One</option>
-                                    <option value="Yes">Yes</option>
-                                    <option value="No">No</option>
-                                </select>
+                                <select2 options="options" ng-model="department.isParent" s2-options="choice as choice for choice in choices" style="width: 100%"></select2>
                             </div><!-- form-group -->
                         </div><!-- col-sm-6 -->
 
@@ -281,20 +245,14 @@
                         <div class="col-sm-12" ng-show="department.isParent === 'Yes'">
                             <div class="form-group">
                                 <label class="control-label">Division</label>
-                                <select class="fancy-select" ng-model="department.divisionId" data-placeholder="Choose One" style="width:100%">
-                                    <option value="">Choose One</option>
-                                    <option ng-repeat="division in divisions" on-finish-render="ngRepeatFinished" value="{{division._id}}">{{division.name}}</option>
-                                </select>
+                                <select2 options="options" ng-model="department.divisionId" s2-options="division._id as division.name for division in divisions" style="width: 100%"></select2>
                             </div><!-- form-group -->
                         </div><!-- col-sm-12 -->
 
                         <div class="col-sm-12" ng-hide="department.isParent === 'Yes'">
                             <div class="form-group">
                                 <label class="control-label">Parent Department</label>
-                                <select class="fancy-select" ng-model="department.parentId" data-placeholder="Choose One" style="width:100%">
-                                    <option value="">Choose One</option>
-                                    <option ng-repeat="department in departments" on-finish-render="ngRepeatFinished" value="{{department._id}}">{{department.name}}</option>
-                                </select>
+                                <select2 options="options" ng-model="department.parentId" s2-options="department._id as department.name for department in departments" style="width: 100%"></select2>
                             </div><!-- form-group -->
                         </div><!-- col-sm-12 -->
 

@@ -12,6 +12,9 @@ bulkPay.controller('BusinessDepartmentsCtrl', ['$scope', '$rootScope', 'AuthSvc'
   $scope.divisions = [];
   $scope.$parent.inView = 'Departments';
   var businessId = '';
+  $scope.options = {
+    placeholder: "Choose One"
+  };
 
   var resetDepartment = function () {
     $scope.department = {
@@ -39,6 +42,10 @@ bulkPay.controller('BusinessDepartmentsCtrl', ['$scope', '$rootScope', 'AuthSvc'
   var getBusinessDivisions = function (businessId) {
     $http.get('/api/divisions/business/' + businessId).success(function (data) {
       $scope.divisions = data;
+      $scope.divisions.unshift({
+        name: 'All',
+        _id: 'All'
+      });
     }).error(function (error) {
       console.log(error);
     })
@@ -60,10 +67,6 @@ bulkPay.controller('BusinessDepartmentsCtrl', ['$scope', '$rootScope', 'AuthSvc'
     businessId = args._id;
     getDepartments(businessId);
     getBusinessDivisions(businessId);
-  });
-
-  $scope.$on('ngRepeatFinished', function (ngRepeatFinishedEvent) {
-    triggerSelect();
   });
 
 
@@ -108,6 +111,9 @@ bulkPay.controller('BusinessDepartmentsCtrl', ['$scope', '$rootScope', 'AuthSvc'
   /*
    * Data
    * */
+  $scope.choices = ['Yes', 'No'];
+  $scope.statuses = ['Active', 'Inactive'];
+
   $scope.states = ['Abia State',
     'Adamawa State',
     'Akwa Ibom State',
@@ -197,6 +203,7 @@ bulkPay.controller('BusinessDepartmentsCtrl', ['$scope', '$rootScope', 'AuthSvc'
    * Single unit display
    * */
   $scope.singleView = false;
+  $scope.filteredDepartments = [];
 
   $scope.showDepartment = function (department) {
     $scope.singleView = true;
@@ -205,6 +212,7 @@ bulkPay.controller('BusinessDepartmentsCtrl', ['$scope', '$rootScope', 'AuthSvc'
     angular.copy(department, $scope.oldDepartment);
     angular.copy(department, $scope.singleDepartment);
     getHistories($scope.singleDepartment._id);
+    setParentsDepartments();
   };
 
   $scope.delete = function () {
@@ -261,16 +269,16 @@ bulkPay.controller('BusinessDepartmentsCtrl', ['$scope', '$rootScope', 'AuthSvc'
     });
   };
 
-  $scope.getValidDepartments = function () {
+  var setParentsDepartments = function () {
     var departments = [];
     for (var x = 0; x < $scope.departments.length; x++) {
-      if ($scope.departments[x]._id !== $scope.oldDepartment._id) {
-        if ($scope.departments[x].parentId !== $scope.oldDepartment._id) {
-          departments.push($scope.departments[x]);
-        }
+      if ((!$scope.singleDepartment.parentId || $scope.singleDepartment.parentId === '') && $scope.departments[x]._id !== $scope.singleDepartment._id && $scope.departments[x].parentId !== $scope.singleDepartment._id) {
+        departments.push($scope.departments[x]);
+      } else if ($scope.departments[x]._id !== $scope.singleDepartment._id && $scope.departments[x].parentId !== $scope.singleDepartment._id) {
+        departments.push($scope.departments[x]);
       }
     }
-    return departments;
+    $scope.filteredDepartments = departments;
   };
 
   $scope.getDivisions = function (singleDepartment) {
@@ -283,15 +291,6 @@ bulkPay.controller('BusinessDepartmentsCtrl', ['$scope', '$rootScope', 'AuthSvc'
     return singleDepartment.divisionsServed.length + division;
   };
 
-
-  /*
-   * jQuery
-   * */
-  var triggerSelect = function () {
-    jQuery('.fancy-select').select2({
-      minimumResultsForSearch: 0
-    });
-  };
 
 }]);
 

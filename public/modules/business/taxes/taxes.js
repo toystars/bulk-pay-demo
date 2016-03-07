@@ -18,6 +18,11 @@ bulkPay.controller('BusinessTaxesCtrl', ['$scope', '$rootScope', 'AuthSvc', 'Bus
       //compileForm();
     }
   };
+  $scope.options = {
+    placeholder: "Choose One"
+  };
+  $scope.statuses = ['Active', 'Inactive'];
+  $scope.ranges = [];
 
   if (!BusinessDataSvc.getBusinessId() || BusinessDataSvc.getBusinessId() !== $stateParams.businessId) {
     $cookies.put('currentBusiness', $stateParams.businessId);
@@ -53,11 +58,6 @@ bulkPay.controller('BusinessTaxesCtrl', ['$scope', '$rootScope', 'AuthSvc', 'Bus
     getTaxes(businessId);
     resetTax();
   });
-
-  $scope.$on('ngRepeatFinished', function (ngRepeatFinishedEvent) {
-    triggerSelect();
-  });
-
 
   $scope.createTax = function () {
     $http.post('/api/taxes/', $scope.tax).success(function (data) {
@@ -104,7 +104,7 @@ bulkPay.controller('BusinessTaxesCtrl', ['$scope', '$rootScope', 'AuthSvc', 'Bus
     });
   };
 
-  $scope.getRange = function () {
+  $scope.setRange = function () {
     var ranges = ['FIRST', 'NEXT', 'OVER'];
     if ($scope.singleTax) {
       if (_.find($scope.singleTax.rules, function (rule) { return rule.range === 'FIRST' })) {
@@ -114,7 +114,7 @@ bulkPay.controller('BusinessTaxesCtrl', ['$scope', '$rootScope', 'AuthSvc', 'Bus
         ranges.splice(ranges.indexOf('OVER'), 1);
       }
     }
-    return ranges;
+    $scope.ranges = ranges;
   };
 
   $scope.removeRule = function (index) {
@@ -192,16 +192,6 @@ bulkPay.controller('BusinessTaxesCtrl', ['$scope', '$rootScope', 'AuthSvc', 'Bus
       swal("Success", "Tax updated.", "success");
     }).error(function (error) {
       AuthSvc.handleError(error);
-    });
-  };
-
-
-  /*
-   * jQuery
-   * */
-  var triggerSelect = function () {
-    jQuery('#update-position-status').select2({
-      minimumResultsForSearch: 0
     });
   };
 

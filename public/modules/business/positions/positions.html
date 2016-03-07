@@ -238,59 +238,38 @@
                         </div><!-- col-sm-4 -->
                         <div class="col-sm-6">
                             <div class="form-group">
-                                <label for="update-position-status" class="control-label">Status</label>
-                                <select ng-model="singlePosition.status" id="update-position-status" data-placeholder="Choose One" class="form-control width100p">
-                                    <option value="">Choose One</option>
-                                    <option value="Active">Active</option>
-                                    <option value="Inactive">Inactive</option>
-                                </select>
+                                <label class="control-label">Status</label>
+                                <select2 options="options" ng-model="singlePosition.status" s2-options="status as status for status in statuses" style="width: 100%"></select2>
                             </div><!-- form-group -->
                         </div><!-- col-sm-6 -->
                         <div class="col-sm-6">
                             <div class="form-group">
-                                <label for="update-position-heading-section" class="control-label">Heading Section</label>
-                                <select ng-model="singlePosition.headingSection" id="update-position-heading-section" data-placeholder="Choose One" class="form-control width100p">
-                                    <option value="">Choose One</option>
-                                    <option value="Business Unit">Business Unit</option>
-                                    <option value="Division">Division</option>
-                                    <option value="Department">Department</option>
-                                </select>
+                                <label class="control-label">Heading Section</label>
+                                <select2 options="options" ng-model="singlePosition.headingSection" s2-options="headingSection as headingSection for headingSection in headingSections" style="width: 100%"></select2>
                             </div><!-- form-group -->
                         </div><!-- col-sm-6 -->
                         <div class="col-sm-6">
                             <div class="form-group">
-                                <label for="update-position-business-unit" class="control-label">Business Unit</label>
-                                <select ng-model="singlePosition.businessUnitId"  id="update-position-business-unit" class="form-control width100p" data-placeholder="Choose One">
-                                    <option value="">Choose One</option>
-                                    <option ng-repeat="businessUnit in businessUnits" on-finish-render="ngRepeatFinished" value="{{businessUnit._id}}">{{businessUnit.name}}</option>
-                                </select>
+                                <label class="control-label">Business Unit</label>
+                                <select2 options="options" ng-model="singlePosition.businessUnitId" s2-options="businessUnit._id as businessUnit.name for businessUnit in businessUnits" style="width: 100%"></select2>
                             </div><!-- form-group -->
                         </div><!-- col-sm-6 -->
                         <div class="col-sm-6">
                             <div class="form-group">
-                                <label for="update-position-division" class="control-label">Division</label>
-                                <select ng-disabled="disableUpdateDivision()" ng-model="singlePosition.divisionId" id="update-position-division" class="form-control width100p" data-placeholder="Choose One">
-                                    <option value="">Choose One</option>
-                                    <option ng-repeat="division in getDivisions()" on-finish-render="ngRepeatFinished" value="{{division._id}}">{{division.name}}</option>
-                                </select>
+                                <label class="control-label">Division</label>
+                                <select2 ng-disabled="disableUpdateDivision()" options="options" ng-model="singlePosition.divisionId" s2-options="division._id as division.name for division in filteredDivisions" style="width: 100%"></select2>
                             </div><!-- form-group -->
                         </div><!-- col-sm-6 -->
                         <div class="col-sm-6">
                             <div class="form-group">
-                                <label for="update-position-department" class="control-label">Department</label>
-                                <select ng-disabled="disableUpdateDepartment()" ng-model="singlePosition.departmentId"  id="update-position-department" class="form-control width100p" data-placeholder="Choose One">
-                                    <option value="">Choose One</option>
-                                    <option ng-repeat="department in getDepartments()" on-finish-render="ngRepeatFinished" value="{{department._id}}">{{department.name}}</option>
-                                </select>
+                                <label class="control-label">Department</label>
+                                <select2 ng-disabled="disableUpdateDepartment()" options="options" ng-model="singlePosition.departmentId" s2-options="department._id as department.name for department in filteredDepartments" style="width: 100%"></select2>
                             </div><!-- form-group -->
                         </div><!-- col-sm-6 -->
                         <div class="col-sm-6">
                             <div class="form-group">
-                                <label for="update-position-parent-position" class="control-label">Parent Position</label>
-                                <select ng-model="singlePosition.parentPositionId"  id="update-position-parent-position" class="form-control width100p" data-placeholder="Choose One">
-                                    <option value="">Choose One</option>
-                                    <option ng-repeat="position in getValidPositions()" on-finish-render="ngRepeatFinished" value="{{position._id}}">{{position.name}}</option>
-                                </select>
+                                <label class="control-label">Parent Position</label>
+                                <select2 options="options" ng-model="singlePosition.parentPositionId" s2-options="position._id as position.name for position in filteredPositions" style="width: 100%"></select2>
                             </div><!-- form-group -->
                         </div><!-- col-sm-6 -->
 
@@ -371,59 +350,38 @@
                         </div><!-- col-sm-6 -->
                         <div class="col-sm-6">
                             <div class="form-group">
-                                <label for="new-position-status" class="control-label">Status</label>
-                                <select ng-model="position.status"  id="new-position-status" style="width:100%" data-placeholder="Choose One">
-                                    <option value="">Choose One</option>
-                                    <option value="Active">Active</option>
-                                    <option value="Inactive">Inactive</option>
-                                </select>
+                                <label class="control-label">Status</label>
+                                <select2 options="options" ng-model="position.status" s2-options="status as status for status in statuses" style="width: 100%"></select2>
                             </div><!-- form-group -->
                         </div><!-- col-sm-6 -->
                         <div class="col-sm-6">
                             <div class="form-group">
-                                <label for="new-position-heading-section" class="control-label">Heading Section</label>
-                                <select ng-model="position.headingSection"  id="new-position-heading-section" style="width:100%" data-placeholder="Choose One">
-                                    <option value="">Choose One</option>
-                                    <option value="Business Unit">Business Unit</option>
-                                    <option value="Division">Division</option>
-                                    <option value="Department">Department</option>
-                                </select>
+                                <label class="control-label">Heading Section</label>
+                                <select2 options="options" ng-model="position.headingSection" s2-options="headingSection as headingSection for headingSection in headingSections" style="width: 100%"></select2>
                             </div><!-- form-group -->
                         </div><!-- col-sm-6 -->
                         <div class="col-sm-6">
                             <div class="form-group">
-                                <label for="new-position-business-unit" class="control-label">Business Unit</label>
-                                <select ng-model="position.businessUnitId"  id="new-position-business-unit" style="width:100%" data-placeholder="Choose One">
-                                    <option value="">Choose One</option>
-                                    <option ng-repeat="businessUnit in businessUnits" on-finish-render="ngRepeatFinished" value="{{businessUnit._id}}">{{businessUnit.name}}</option>
-                                </select>
+                                <label class="control-label">Business Unit</label>
+                                <select2 options="options" ng-model="position.businessUnitId" s2-options="businessUnit._id as businessUnit.name for businessUnit in businessUnits" style="width: 100%"></select2>
                             </div><!-- form-group -->
                         </div><!-- col-sm-6 -->
                         <div class="col-sm-6">
                             <div class="form-group">
-                                <label for="new-position-division" class="control-label">Division</label>
-                                <select ng-disabled="disableDivision()" ng-model="position.divisionId"  id="new-position-division" style="width:100%" data-placeholder="Choose One">
-                                    <option value="">Choose One</option>
-                                    <option ng-repeat="division in getDivisions()" on-finish-render="ngRepeatFinished" value="{{division._id}}">{{division.name}}</option>
-                                </select>
+                                <label class="control-label">Division</label>
+                                <select2 ng-disabled="disableDivision()" options="options" ng-model="position.divisionId" s2-options="division._id as division.name for division in filteredNewDivisions" style="width: 100%"></select2>
                             </div><!-- form-group -->
                         </div><!-- col-sm-6 -->
                         <div class="col-sm-6">
                             <div class="form-group">
-                                <label for="new-position-department" class="control-label">Department</label>
-                                <select ng-disabled="disableDepartment()" ng-model="position.departmentId"  id="new-position-department" style="width:100%" data-placeholder="Choose One">
-                                    <option value="">Choose One</option>
-                                    <option ng-repeat="department in getDepartments()" on-finish-render="ngRepeatFinished" value="{{department._id}}">{{department.name}}</option>
-                                </select>
+                                <label class="control-label">Department</label>
+                                <select2 ng-disabled="disableDepartment()" options="options" ng-model="position.departmentId" s2-options="department._id as department.name for department in filteredNewDepartments" style="width: 100%"></select2>
                             </div><!-- form-group -->
                         </div><!-- col-sm-6 -->
                         <div class="col-sm-6">
                             <div class="form-group">
-                                <label for="new-position-parent-position" class="control-label">Parent Position</label>
-                                <select ng-model="position.parentPositionId"  id="new-position-parent-position" style="width:100%" data-placeholder="Choose One">
-                                    <option value="">Choose One</option>
-                                    <option ng-repeat="position in positions" on-finish-render="ngRepeatFinished" value="{{position._id}}">{{position.name}}</option>
-                                </select>
+                                <label class="control-label">Parent Position</label>
+                                <select2 options="options" ng-model="position.parentPositionId" s2-options="position._id as position.name for position in positions" style="width: 100%"></select2>
                             </div><!-- form-group -->
                         </div><!-- col-sm-6 -->
 
