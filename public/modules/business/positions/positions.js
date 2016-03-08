@@ -18,6 +18,7 @@ bulkPay.controller('BusinessPositionsCtrl', ['$scope', '$rootScope', 'AuthSvc', 
     placeholder: "Choose One",
     allowClear: true
   };
+  $scope.dataFetched = false;
 
   if (!BusinessDataSvc.getBusinessId() || BusinessDataSvc.getBusinessId() !== $stateParams.businessId) {
     $cookies.put('currentBusiness', $stateParams.businessId);
@@ -29,6 +30,7 @@ bulkPay.controller('BusinessPositionsCtrl', ['$scope', '$rootScope', 'AuthSvc', 
   var getPositions = function (businessId) {
     $http.get('/api/positions/business/' + businessId).success(function (data) {
       $scope.positions = data;
+      $scope.dataFetched = true;
     }).error(function (error) {
       console.log(error);
     })

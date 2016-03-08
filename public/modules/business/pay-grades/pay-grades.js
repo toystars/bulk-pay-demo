@@ -10,9 +10,17 @@ bulkPay.controller('BusinessPayGradesCtrl', ['$scope', '$rootScope', '$timeout',
   $scope.payGrade = {};
   $scope.payGrades = [];
   $scope.payTypes = [];
+  $scope.taxes = [];
+  $scope.pensions = [];
   $scope.$parent.inView = 'Pay Grades';
   var payGroups = [];
   var businessId = '';
+  $scope.dataFetched = false;
+  $scope.activePayGroups = [];
+  $scope.options = {
+    placeholder: "Choose One"
+  };
+  $scope.statuses = ['Active', 'Inactive'];
 
   if (!BusinessDataSvc.getBusinessId() || BusinessDataSvc.getBusinessId() !== $stateParams.businessId) {
     $cookies.put('currentBusiness', $stateParams.businessId);
@@ -24,6 +32,7 @@ bulkPay.controller('BusinessPayGradesCtrl', ['$scope', '$rootScope', '$timeout',
   var getPayGrades = function (businessId) {
     $http.get('/api/paygrades/business/' + businessId).success(function (data) {
       $scope.payGrades = data;
+      $scope.dataFetched = true;
     }).error(function (error) {
       console.log(error);
     });
@@ -46,6 +55,22 @@ bulkPay.controller('BusinessPayGradesCtrl', ['$scope', '$rootScope', '$timeout',
     })
   };
 
+  var getTaxes = function (businessId) {
+    $http.get('/api/taxes/business/' + businessId).success(function (data) {
+      $scope.taxes = data;
+    }).error(function (error) {
+      AuthSvc.handleError(error);
+    })
+  };
+
+  var getPensions = function (businessId) {
+    $http.get('/api/pensions/business/' + businessId).success(function (data) {
+      $scope.pensions = data;
+    }).error(function (error) {
+      AuthSvc.handleError(error);
+    })
+  };
+
   var resetPayGrade = function () {
     $scope.payGrade = {
       code: '',
@@ -54,6 +79,7 @@ bulkPay.controller('BusinessPayGradesCtrl', ['$scope', '$rootScope', '$timeout',
       businessId: businessId,
       status: '',
       payGroupId: '',
+      taxRuleId: '',
       payTypes: []
     };
     insertBaseTypes();
@@ -87,23 +113,20 @@ bulkPay.controller('BusinessPayGradesCtrl', ['$scope', '$rootScope', '$timeout',
     getPayGrades(businessId);
     getPayGroups(businessId);
     getPayTypes(businessId);
-  });
-
-  $scope.$on('ngRepeatFinished', function (ngRepeatFinishedEvent) {
-    triggerSelect();
+    getTaxes(businessId);
+    getPensions(businessId);
   });
 
 
 
   $scope.createPayGrade = function () {
     $http.post('/api/paygrades/', $scope.payGrade).success(function (data) {
-      getPayGrades();
-      /*$timeout(function() {
+      $timeout(function() {
         $scope.payGrades.push(data);
-      }, 0);*/
-      resetPayGrade();
-      jQuery('#new-pay-grade-close').click();
-      swal('Success', ' Pay Grade created.', 'success');
+        resetPayGrade();
+        jQuery('#new-pay-grade-close').click();
+        swal('Success', ' Pay Grade created.', 'success');
+      });
     }).error(function (error) {
       console.log(error);
     });
@@ -118,6 +141,22 @@ bulkPay.controller('BusinessPayGradesCtrl', ['$scope', '$rootScope', '$timeout',
   /*
    * Helpers
    * */
+  $scope.getPension = function (id) {
+    for (var x = 0; x < $scope.pensions.length; x++) {
+      if ($scope.pensions[x]._id === id) {
+        return $scope.pensions[x].code + ' - ' + $scope.pensions[x].name;
+      }
+    }
+  };
+
+  $scope.getTaxRule = function (id) {
+    for (var x = 0; x < $scope.taxes.length; x++) {
+      if ($scope.taxes[x]._id === id) {
+        return $scope.taxes[x].code + ' - ' + $scope.taxes[x].name;
+      }
+    }
+  };
+
   $scope.getPayGroup = function (id) {
     for (var x = 0; x < payGroups.length; x++) {
       if (payGroups[x]._id === id) {
@@ -126,14 +165,14 @@ bulkPay.controller('BusinessPayGradesCtrl', ['$scope', '$rootScope', '$timeout',
     }
   };
 
-  $scope.getActivePayGroups = function () {
+  $scope.setActivePayGroups = function () {
     var activePayGroups = [];
     for (var x = 0; x < payGroups.length; x++) {
       if (payGroups[x].status === 'Active') {
         activePayGroups.push(payGroups[x]);
       }
     }
-    return activePayGroups;
+    $scope.activePayGroups = activePayGroups;
   };
 
   $scope.getPayTypes = function (type) {
@@ -189,6 +228,14 @@ bulkPay.controller('BusinessPayGradesCtrl', ['$scope', '$rootScope', '$timeout',
     }
   };
 
+  $scope.getTaxRuleDisplayName = function (tax) {
+    return tax.code + ' - ' + tax.name;
+  };
+
+  $scope.getPensionRuleDisplayName = function (pension) {
+    return pension.name;
+  };
+
   $scope.getLastHistory = function () {
     return $scope.histories[$scope.histories.length - 1];
   };
@@ -225,6 +272,7 @@ bulkPay.controller('BusinessPayGradesCtrl', ['$scope', '$rootScope', '$timeout',
     angular.copy(payGrade, $scope.oldPayGrade);
     angular.copy(payGrade, $scope.singlePayGrade);
     getHistories($scope.singlePayGrade._id);
+    $scope.setActivePayGroups();
   };
 
   $scope.edit = function () {
@@ -342,15 +390,6 @@ bulkPay.controller('BusinessPayGradesCtrl', ['$scope', '$rootScope', '$timeout',
       }
     }
     return randomId;
-  };
-
-  var triggerSelect = function () {
-    jQuery('#new-pay-grade-pay-group').select2({
-      minimumResultsForSearch: 0
-    });
-    jQuery('#new-pay-grade-status').select2({
-      minimumResultsForSearch: 0
-    });
   };
 
   // Progress Wizard With Disabled Tab Click

@@ -17,6 +17,7 @@ bulkPay.controller('BusinessPensionsCtrl', ['$scope', '$rootScope', 'AuthSvc', '
   $scope.inView = 'Pension Rules';
   $scope.histories = [];
   $scope.pensionManagerHistories = [];
+  $scope.dataFetched = false;
 
   if (!BusinessDataSvc.getBusinessId() || BusinessDataSvc.getBusinessId() !== $stateParams.businessId) {
     $cookies.put('currentBusiness', $stateParams.businessId);
@@ -28,6 +29,7 @@ bulkPay.controller('BusinessPensionsCtrl', ['$scope', '$rootScope', 'AuthSvc', '
   var getPensions = function (businessId) {
     $http.get('/api/pensions/business/' + businessId).success(function (data) {
       $scope.pensions = data;
+      $scope.dataFetched = true;
     }).error(function (error) {
       AuthSvc.handleError(error);
     })

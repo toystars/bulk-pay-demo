@@ -1,4 +1,4 @@
-bulkPay.controller('BusinessEmployeeCreateCtrl', ['$scope', '$rootScope', 'AuthSvc', 'BusinessDataSvc', '$stateParams', '$cookies', '$http', '$state', 'imageUploader', function ($scope, $rootScope, AuthSvc, BusinessDataSvc, $stateParams, $cookies, $http, $state, imageUploader) {
+bulkPay.controller('BusinessEmployeeCreateCtrl', ['$scope', '$rootScope', '$timeout', 'AuthSvc', 'BusinessDataSvc', '$stateParams', '$cookies', '$http', '$state', 'imageUploader', function ($scope, $rootScope, $timeout, AuthSvc, BusinessDataSvc, $stateParams, $cookies, $http, $state, imageUploader) {
 
   AuthSvc.isLoggedIn(function (status) {
     if (!status) {
@@ -23,11 +23,16 @@ bulkPay.controller('BusinessEmployeeCreateCtrl', ['$scope', '$rootScope', 'AuthS
   };
   $scope.fetchedPayTypes = [];
   $scope.message = '';
+  $scope.options = {
+    placeholder: "Choose One",
+    allowClear: true
+  };
 
   var businessId = '';
   $scope.employee = {};
   $scope.businessUnits = [];
   $scope.payGroups = [];
+  $scope.pensionManagers = [];
   var divisions = [];
   var departments = [];
   var positions = [];
@@ -43,42 +48,11 @@ bulkPay.controller('BusinessEmployeeCreateCtrl', ['$scope', '$rootScope', 'AuthS
     getDepartments(businessId);
     getPositions(businessId);
     getPayGroups(businessId);
+    getPensionManagers(businessId);
     // getLastCreatedEmployee(businessId);
     resetEmployee();
   });
 
-  $scope.$on('ngRepeatFinished', function (ngRepeatFinishedEvent) {
-    triggerSelect();
-  });
-
-  $scope.checkValidity = function () {
-    $scope.message = '';
-    var position = _.find(positions, function (currentPosition) {
-      return currentPosition._id === $scope.employee.positionId;
-    });
-    if (position) {
-      $http.get('/api/positions/' + position._id).success(function (data) {
-        position = data;
-        $http.get('/api/employees/position/' + position._id).success(function (data) {
-          if (data.length >= position.numberOfAllowedEmployees) {
-            $scope.employee.positionId = '';
-            $scope.message = 'Select another position.';
-            swal('Not Allowed', 'Already exceeded number of employees for ' + position.name + ' position. Contact admin if quota should be increased.', 'warning');
-          }
-        }).error(function (error) {
-          AuthSvc.handleError(error);
-        });
-      }).error(function (error) {
-        AuthSvc.handleError(error);
-      });
-    }
-  };
-
-  /*$scope.$watch('employee.positionId', function (newValue, oldValue) {
-    if (oldValue !== newValue) {
-
-    }
-  });*/
 
   $scope.changeView = function (view) {
     $scope.inView = view;
@@ -103,6 +77,7 @@ bulkPay.controller('BusinessEmployeeCreateCtrl', ['$scope', '$rootScope', 'AuthS
   var getBusinessDivisions = function (businessId) {
     $http.get('/api/divisions/business/' + businessId).success(function (data) {
       divisions = data;
+      $scope.filteredDivisions = data;
     }).error(function (error) {
       console.log(error);
     });
@@ -111,6 +86,7 @@ bulkPay.controller('BusinessEmployeeCreateCtrl', ['$scope', '$rootScope', 'AuthS
   var getDepartments = function (businessId) {
     $http.get('/api/departments/business/' + businessId).success(function (data) {
       departments = data;
+      $scope.filteredDepartments = data;
     }).error(function (error) {
       console.log(error);
     });
@@ -119,9 +95,18 @@ bulkPay.controller('BusinessEmployeeCreateCtrl', ['$scope', '$rootScope', 'AuthS
   var getPositions = function (businessId) {
     $http.get('/api/positions/business/' + businessId).success(function (data) {
       positions = data;
+      $scope.filteredPositions = data;
     }).error(function (error) {
       console.log(error);
     });
+  };
+
+  var getPensionManagers = function (businessId) {
+    $http.get('/api/pensionmanagers/business/' + businessId).success(function (data) {
+      $scope.pensionManagers = data;
+    }).error(function (error) {
+      AuthSvc.handleError(error);
+    })
   };
 
   var getLastCreatedEmployee = function (businessId) {
@@ -166,7 +151,9 @@ bulkPay.controller('BusinessEmployeeCreateCtrl', ['$scope', '$rootScope', 'AuthS
       paymentDetails: {
         paymentMethod: '',
         bank: '',
-        accountName: ''
+        accountName: '',
+        pensionManager: '',
+        RSAPin: ''
       },
       guarantor: {
         fullName: '',
@@ -181,6 +168,11 @@ bulkPay.controller('BusinessEmployeeCreateCtrl', ['$scope', '$rootScope', 'AuthS
   /*
    * Data
    * */
+  $scope.genders = ['Male', 'Female'];
+  $scope.maritalStatus = ['Single', 'Married', 'Divorced', 'Widowed'];
+  $scope.statuses = ['Active', 'Inactive'];
+  $scope.paymentMethods = ['Bank Transfer', 'Cheque', 'Cash'];
+  $scope.banks = ['Stanbic IBTC Bank', 'UBA', 'Zenith Bank', 'First Bank', 'Union Bank', 'Sterling Bank', 'Access Bank', 'GTB', 'Skye Bank'];
   $scope.states = ['Abia State',
     'Adamawa State',
     'Akwa Ibom State',
@@ -223,50 +215,82 @@ bulkPay.controller('BusinessEmployeeCreateCtrl', ['$scope', '$rootScope', 'AuthS
   /*
    * Main controller logic
    * */
-
-  $scope.getDivisions = function () {
-    var newDivisions = [];
-    var businessUnitId = $scope.employee.businessUnitId;
-    if (businessUnitId && businessUnitId !== '') {
-      _.each(divisions, function (division) {
-        if (division.businessUnitId === businessUnitId) {
-          newDivisions.push(division);
-        }
-      })
-    } else {
-      newDivisions = divisions;
+  $scope.$watch('employee.businessUnitId', function (newValue, oldValue) {
+    if (newValue !== oldValue) {
+      $scope.employee.divisionId = '';
+      var newDivisions = [];
+      if (!newValue) {
+        newDivisions = divisions;
+      } else if (newValue && newValue !== '') {
+        _.each(divisions, function (division) {
+          if (division.businessUnitId === newValue) {
+            newDivisions.push(division);
+          }
+        });
+      }
+      $scope.filteredDivisions = newDivisions;
     }
-    return newDivisions;
-  };
+  });
 
-  $scope.getDepartments = function () {
-    var newDepartments = [];
-    var divisionId = $scope.employee.divisionId;
-    if (divisionId && divisionId !== '') {
-      _.each(departments, function (department) {
-        if (department.divisionId === divisionId) {
-          newDepartments.push(department);
-        }
-      })
-    } else {
-      newDepartments = departments;
+  $scope.$watch('employee.divisionId', function (newValue, oldValue) {
+    if (newValue !== oldValue) {
+      $scope.employee.departmentId = '';
+      var newDepartments = [];
+      if (!newValue) {
+        newDepartments = departments;
+      } else if (newValue && newValue !== '') {
+        _.each(departments, function (department) {
+          if (_.find(department.divisionsServed, function (divisionServed) { return divisionServed === 'All'; }) ||
+            _.find(department.divisionsServed, function (divisionServed) { return divisionServed === newValue; }) ||
+            department.divisionId === newValue) {
+            newDepartments.push(department);
+          }
+        });
+      }
+      $scope.filteredDepartments = newDepartments;
     }
-    return newDepartments;
-  };
+  });
 
-  $scope.getPositions = function () {
-    var newPositions = [];
-    var departmentId = $scope.employee.departmentId;
-    if (departmentId && departmentId !== '') {
-      _.each(positions, function (position) {
-        if (position.departmentId === departmentId) {
-          newPositions.push(position);
-        }
-      })
-    } else {
-      newPositions = positions;
+  $scope.$watch('employee.departmentId', function (newValue, oldValue) {
+    if (newValue !== oldValue) {
+      $scope.employee.positionId = '';
+      var newPositions = [];
+      if (!newValue) {
+        newPositions = positions;
+      } else if (newValue && newValue !== '') {
+        _.each(positions, function (position) {
+          if (position.departmentId === newValue) {
+            newPositions.push(position);
+          }
+        });
+      }
+      $scope.filteredPositions = newPositions;
     }
-    return newPositions;
+  });
+
+  $scope.checkValidity = function () {
+    $scope.message = '';
+    var position = _.find(positions, function (currentPosition) {
+      return currentPosition._id === $scope.employee.positionId;
+    });
+    if (position) {
+      $http.get('/api/positions/' + position._id).success(function (data) {
+        position = data;
+        $http.get('/api/employees/position/' + position._id).success(function (data) {
+          if (data.length >= position.numberOfAllowedEmployees) {
+            $timeout(function() {
+              $scope.employee.positionId = '';
+              $scope.message = 'Select another position.';
+              swal('Not Allowed', 'Already exceeded number of employees for ' + position.name + ' position. Contact admin if quota should be increased.', 'warning');
+            });
+          }
+        }).error(function (error) {
+          AuthSvc.handleError(error);
+        });
+      }).error(function (error) {
+        AuthSvc.handleError(error);
+      });
+    }
   };
 
   $scope.copyStatus = function () {
@@ -442,8 +466,129 @@ bulkPay.controller('BusinessEmployeeCreateCtrl', ['$scope', '$rootScope', 'AuthS
     }
   };
 
+
+
+
+
+
+
+
+
+  /*
+  * Function to handle individual employee payment calculation
+  * */
+  var PayRollCalculation = function (employeePayTypes, employeeTaxRule, employeePensionRule) {
+
+    // initializing variables
+    var payTypes = employeePayTypes;
+    var taxRule = employeeTaxRule;
+    var pensionRule = employeePensionRule;
+
+    var calculateGrossPay = function () {
+      var grossPay = 0;
+      _.each(payTypes, function (type) {
+        if (type.type !== 'Deduction' && type.taxable === 'Yes') {
+          grossPay += type.value;
+        }
+      });
+      return grossPay;
+    };
+
+    var getOtherNonTaxableTypes = function () {
+      return 0;
+    };
+
+    var calculateTaxableIncome = function () {
+      return calculateGrossPay() - (calculateFlatTaxRelief() + calculatePercentageTaxRelief() + calculatePensionRelief() + getOtherNonTaxableTypes());
+    };
+
+    var calculatePercentageTaxRelief = function () {
+      return taxRule.grossIncomeRelief * ( calculateGrossPay() / 100 );
+    };
+
+    var calculateFlatTaxRelief = function () {
+      return (calculateGrossPay() > 20000000) ? calculateGrossPay() / 100 : 200000;
+    };
+
+    var calculatePensionRelief = function () {
+      var sum = 0;
+      _.each(pensionRule.payTypes, function (payTypeId) {
+        var type = _.find(payTypes, function (element) { return element.payTypeId === payTypeId; });
+        if (type) {
+          sum += type.value;
+        }
+      });
+      return pensionRule.employeeContributionRate * ( sum / 100 );
+    };
+
+    var calculateTax = function () {
+      var totalTaxable = calculateTaxableIncome();
+      var tax = 0;
+      var rules = taxRule.rules;
+      for (var x = 0; x < rules.length; x++) {
+        if (totalTaxable > rules[x].upperLimitValue) {
+          tax += rules[x].rate * ( rules[x].upperLimitValue / 100 );
+          totalTaxable -= rules[x].upperLimitValue
+        } else {
+          tax += rules[x].rate * ( totalTaxable / 100 );
+          break;
+        }
+      }
+
+      return tax;
+    };
+
+    var calculate = function () {
+      return {
+        grossIncome: calculateGrossPay(),
+        percentageGrossIncomeRelief: {
+          rate: taxRule.grossIncomeRelief,
+          value: calculatePercentageTaxRelief()
+        },
+        consolidatedRelief: calculateFlatTaxRelief(),
+        pensionRelief: calculatePensionRelief(),
+        totalTaxableIncome: calculateTaxableIncome(),
+        tax: calculateTax(),
+        totalDeductions: 0
+      };
+    };
+
+    return {
+      calculate: calculate
+    };
+  };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   $scope.prepareSummary = function () {
     var concatenatedPayTypes = $scope.currentPayGrade.payTypes.concat($scope.employee.customPayTypes);
+    $http.get('/api/taxes/' + $scope.currentPayGrade.taxRuleId).success(function (tax) {
+      $http.get('/api/pensions/' + $scope.currentPayGrade.pensionRuleId).success(function (pension) {
+        var calculator = new PayRollCalculation(concatenatedPayTypes, tax, pension);
+        console.log(calculator.calculate());
+      }).error(function (error) {
+        AuthSvc.handleError(error);
+      });
+    }).error(function (error) {
+      AuthSvc.handleError(error);
+    });
+    return;
     $scope.newPayTypes = [];
     _.each(concatenatedPayTypes, function (payType, index) {
       _.each($scope.employee.editablePayTypes, function (type) {
@@ -458,6 +603,8 @@ bulkPay.controller('BusinessEmployeeCreateCtrl', ['$scope', '$rootScope', 'AuthS
       }
     });
   };
+
+
 
   $scope.resetSummary = function () {
     $scope.newPayTypes = [];
@@ -572,115 +719,6 @@ bulkPay.controller('BusinessEmployeeCreateCtrl', ['$scope', '$rootScope', 'AuthS
   $scope.resetNewEmployee = function () {
     resetEmployee();
   };
-
-
-
-  /*
-   * jQuery
-   * */
-  /*jQuery.ig.loader({
-   scriptPath: "http://cdn-na.infragistics.com/igniteui/latest/js/",
-   resources: 'modules/infragistics.util.js,' + 'modules/infragistics.documents.core.js,' + 'modules/infragistics.excel.js'
-   });
-
-   var calculate = function () {
-   var workbook = new $.ig.excel.Workbook($.ig.excel.WorkbookFormat.excel2007);
-   var sheet = workbook.worksheets().add('Sheet1');
-   sheet.columns(0).setWidth(180, $.ig.excel.WorksheetColumnWidthUnit.pixel);
-   sheet.columns(1).setWidth(116, $.ig.excel.WorksheetColumnWidthUnit.pixel);
-   sheet.columns(2).setWidth(124, $.ig.excel.WorksheetColumnWidthUnit.pixel);
-   // loop through all payTypes to get the derived ones
-   _.each($scope.payGrade.payTypes, function (element) {
-   if (element.derived === 'Fixed') {
-   if (element.value) {
-   sheet.getCell(element.cellId).value(element.value);
-   }
-   } else {
-   sheet.getCell(element.cellId).applyFormula(mapCellIds(element.derivative));
-   element.value = sheet.getCell(element.cellId).value();
-   }
-   });
-   };
-
-   var mapCellIds = function (formula) {
-   for (var x = 0; x < $scope.payGrade.payTypes.length; x++) {
-   if (formula.indexOf($scope.payGrade.payTypes[x].code) !== -1) {
-   var regex = new RegExp($scope.payGrade.payTypes[x].code, "g");
-   formula = formula.replace(regex, $scope.payGrade.payTypes[x].cellId);
-   }
-   }
-   return formula;
-   };
-
-   var generateCellId = function (collection) {
-   var text = "";
-   var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-   var randomNumber = Math.floor(Math.random() * (9 - 1)) + 1;
-   for (var i = 0; i < 2; i++) {
-   text += possible.charAt(Math.floor(Math.random() * possible.length));
-   }
-   var randomId = text + randomNumber;
-   for (var x = 0; x < collection.length; x++) {
-   if (collection[x].cellId === randomId) {
-   generateCellId();
-   }
-   }
-   return randomId;
-   };*/
-
-  var triggerSelect = function () {
-
-    // select2
-    jQuery('#employee-business-unit').select2({
-      minimumResultsForSearch: 0
-    });
-    jQuery('#employee-division').select2({
-      minimumResultsForSearch: 0
-    });
-    jQuery('#employee-department').select2({
-      minimumResultsForSearch: 0
-    });
-    jQuery('#employee-position').select2({
-      minimumResultsForSearch: 0
-    });
-    jQuery('#employee-gender').select2({
-      minimumResultsForSearch: 0
-    });
-    jQuery('#employee-marital-status').select2({
-      minimumResultsForSearch: 0
-    });
-    jQuery('#employee-state').select2({
-      minimumResultsForSearch: 0
-    });
-    jQuery('#employee-location').select2({
-      minimumResultsForSearch: 0
-    });
-    jQuery('#employee-status').select2({
-      minimumResultsForSearch: 0
-    });
-    jQuery('#employee-kin-state').select2({
-      minimumResultsForSearch: 0
-    });
-    jQuery('#employee-payment-method').select2({
-      minimumResultsForSearch: 0
-    });
-    jQuery('#employee-bank').select2({
-      minimumResultsForSearch: 0
-    });
-    jQuery('#employee-pay-group').select2({
-      minimumResultsForSearch: 0
-    });
-    jQuery('#employee-copy-from').select2({
-      minimumResultsForSearch: 0
-    });
-
-    // date pickers
-    jQuery('.datepicker-multiple').datepicker({
-      changeMonth: true,
-      changeYear: true
-    });
-  };
-
 
 }]);
 

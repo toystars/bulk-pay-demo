@@ -25,12 +25,15 @@
     </div>
 
     <div class="row" ng-show="!singleView">
-        <div class="col-md-12" ng-if="taxes.length === 0">
+        <div class="col-md-12 text-center" ng-if="!dataFetched">
+            <img alt="" src="images/loaders/loader10.gif">
+        </div>
+        <div class="col-md-12" ng-if="taxes.length === 0 && dataFetched">
             <div class="alert alert-danger text-center">
                 <p>No Tax available</p>
             </div>
         </div>
-        <div class="col-md-12" ng-if="taxes.length > 0">
+        <div class="col-md-12" ng-if="taxes.length > 0 && dataFetched">
             <div class="table-responsive">
                 <table class="table table-primary mb60 table-hover">
                     <thead>
@@ -38,6 +41,8 @@
                         <th>#</th>
                         <th>Code</th>
                         <th>Name</th>
+                        <th>Gross Income Relief (%)</th>
+                        <th>Consolidated Relief (Annual)</th>
                         <th>Status</th>
                     </tr>
                     </thead>
@@ -46,6 +51,8 @@
                         <td>{{$index + 1}}</td>
                         <td>{{tax.code}}</td>
                         <td>{{tax.name}}</td>
+                        <td>{{tax.grossIncomeRelief + '%'}}</td>
+                        <td>{{tax.consolidatedRelief | currency:" ₦ "}}</td>
                         <td>
                             <span ng-if="tax.status === 'Active'" class="label label-success">{{tax.status}}</span>
                             <span ng-if="tax.status === 'Inactive'" class="label label-danger">{{tax.status}}</span>
@@ -73,17 +80,38 @@
                     <div class="row">
                         <div class="col-sm-6">
                             <div class="form-group">
-                                <label for="update-pay-group-code" class="control-label">Code (alphanumeric)</label>
-                                <input type="text" id="update-pay-group-code" class="form-control" placeholder="PAYE" ng-model="singleTax.code" />
+                                <label for="update-tax-code" class="control-label">Code (alphanumeric)</label>
+                                <input type="text" id="update-tax-code" class="form-control" placeholder="PAYE" ng-model="singleTax.code" />
                             </div><!-- form-group -->
                         </div><!-- col-sm-6 -->
 
                         <div class="col-sm-6">
                             <div class="form-group">
-                                <label for="update-pay-group-name" class="control-label">Name</label>
-                                <input type="text" id="update-pay-group-name" class="form-control" placeholder="Pay as you earn" ng-model="singleTax.name"/>
+                                <label for="update-tax-name" class="control-label">Name</label>
+                                <input type="text" id="update-tax-name" class="form-control" placeholder="Pay as you earn" ng-model="singleTax.name"/>
                             </div><!-- form-group -->
                         </div><!-- col-sm-6 -->
+
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label for="update-tax-gross-income-relief" class="control-label">Gross Income Relief (%)</label>
+                                <input type="number" id="update-tax-gross-income-relief" class="form-control" placeholder="20" ng-model="singleTax.grossIncomeRelief"/>
+                            </div><!-- form-group -->
+                        </div><!-- col-sm-6 -->
+
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label for="update-tax-consolidated-relief" class="control-label">Consolidated Relief</label>
+                                <input type="number" id="update-tax-consolidated-relief" class="form-control" placeholder="200000" ng-model="singleTax.consolidatedRelief"/>
+                            </div><!-- form-group -->
+                        </div><!-- col-sm-6 -->
+
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label class="control-label">Pay Types</label>
+                                <select2 ng-model="singleTax.payTypes" multiple="multiple" s2-options="types._id as types.title for types in payTypes" style="width: 100%"></select2>
+                            </div><!-- form-group -->
+                        </div><!-- col-sm-12 -->
 
                         <div class="col-sm-12">
                             <div class="form-group">
@@ -205,6 +233,20 @@
                             <div class="form-group">
                                 <label for="tax-name" class="control-label">Name</label>
                                 <input type="text" id="tax-name" class="form-control" placeholder="Pay as you earn" ng-model="tax.name"/>
+                            </div><!-- form-group -->
+                        </div><!-- col-sm-6 -->
+
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label for="tax-gross-income-relief" class="control-label">Gross Income Relief (%)</label>
+                                <input type="number" id="tax-gross-income-relief" class="form-control" placeholder="20" ng-model="tax.grossIncomeRelief"/>
+                            </div><!-- form-group -->
+                        </div><!-- col-sm-6 -->
+
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label for="tax-consolidated-relief" class="control-label">Consolidated Relief</label>
+                                <input type="number" id="tax-consolidated-relief" class="form-control" placeholder="200000" ng-model="tax.consolidatedRelief"/>
                             </div><!-- form-group -->
                         </div><!-- col-sm-6 -->
 

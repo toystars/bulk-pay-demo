@@ -55,7 +55,9 @@ var employeesSchema = new Schema({
     accountName: String,
     accountNumber: String,
     bank: String,
-    paymentMethod: String
+    paymentMethod: String,
+    pensionManager: String,
+    RSAPin: String
   },
   phone: String,
   positionId: String,

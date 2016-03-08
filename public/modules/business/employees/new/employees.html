@@ -96,7 +96,7 @@
                                     </div>
 
 
-                                    <div class="form-group" ng-hide="dataReady()">
+                                    <div class="form-group">
                                         <label class="col-sm-4 control-label">Date of Birth</label>
                                         <div class="input-group col-sm-4" style="padding-left:10px;padding-right:10px">
                                             <input ng-model="employee.dateOfBirth" type="text" class="form-control datepicker-multiple" placeholder="mm/dd/yyyy">
@@ -108,14 +108,10 @@
                                     </div>
 
 
-                                    <div class="form-group" ng-hide="dataReady()">
-                                        <label for="employee-gender" class="col-sm-4 control-label">Gender</label>
+                                    <div class="form-group">
+                                        <label class="col-sm-4 control-label">Gender</label>
                                         <div class="col-sm-4">
-                                            <select ng-model="employee.gender" id="employee-gender" data-placeholder="Choose One" style="width:100%">
-                                                <option value="">Choose One</option>
-                                                <option value="Male">Male</option>
-                                                <option value="Female">Female</option>
-                                            </select>
+                                            <select2 ng-model="employee.gender" options="options" s2-options="gender as gender for gender in genders" style="width: 100%"></select2>
                                         </div>
                                         <div class="col-sm-4">
                                             &nbsp;
@@ -123,17 +119,11 @@
                                     </div>
 
 
-                                    <div class="form-group" ng-hide="dataReady()">
-                                        <label for="employee-marital-status" class="col-sm-4 control-label">Marital
+                                    <div class="form-group">
+                                        <label class="col-sm-4 control-label">Marital
                                             Status</label>
                                         <div class="col-sm-4">
-                                            <select ng-model="employee.maritalStatus" id="employee-marital-status" data-placeholder="Choose One" style="width:100%">
-                                                <option value="">Choose One</option>
-                                                <option value="Single">Single</option>
-                                                <option value="Married">Married</option>
-                                                <option value="Divorced">Divorced</option>
-                                                <option value="Widowed">Widowed</option>
-                                            </select>
+                                            <select2 ng-model="employee.maritalStatus" options="options" s2-options="status as status for status in maritalStatus" style="width: 100%"></select2>
                                         </div>
                                         <div class="col-sm-4">
                                             &nbsp;
@@ -183,14 +173,10 @@
                                         </div>
                                     </div>
 
-                                    <div class="form-group" ng-hide="dataReady()">
-                                        <label for="employee-state" class="col-sm-4 control-label">State</label>
+                                    <div class="form-group">
+                                        <label class="col-sm-4 control-label">State</label>
                                         <div class="col-sm-4">
-                                            <select ng-model="employee.state" id="employee-state" data-placeholder="Choose One" style="width:100%">
-                                                <option value="">Choose One</option>
-                                                <option ng-repeat="state in states" on-finish-render="ngRepeatFinished" value="{{state}}">{{state}}
-                                                </option>
-                                            </select>
+                                            <select2 ng-model="employee.state" options="options" s2-options="state as state for state in states" style="width: 100%"></select2>
                                         </div>
                                         <div class="col-sm-4">
                                             &nbsp;
@@ -257,13 +243,10 @@
                                         </div>
                                     </div>
 
-                                    <div class="form-group" ng-hide="dataReady()">
-                                        <label for="employee-kin-state" class="col-sm-4 control-label">State</label>
+                                    <div class="form-group">
+                                        <label class="col-sm-4 control-label">State</label>
                                         <div class="col-sm-4">
-                                            <select ng-model="employee.guarantor.state" id="employee-kin-state" data-placeholder="Choose One" style="width:100%">
-                                                <option value="">Choose One</option>
-                                                <option ng-repeat="state in states" on-finish-render="ngRepeatFinished" value="{{state}}">{{state}}</option>
-                                            </select>
+                                            <select2 ng-model="employee.guarantor.state" options="options" s2-options="state as state for state in states" style="width: 100%"></select2>
                                         </div>
                                         <div class="col-sm-4">
                                             &nbsp;
@@ -282,66 +265,50 @@
                             <div class="panel-body nopadding">
                                 <form class="form-horizontal form-bordered">
 
-                                    <div class="form-group" ng-hide="dataReady()">
-                                        <label for="employee-location" class="col-sm-4 control-label">Location</label>
+                                    <div class="form-group">
+                                        <label class="col-sm-4 control-label">Location</label>
                                         <div class="col-sm-4">
-                                            <select ng-model="employee.location" id="employee-location" data-placeholder="Choose One" style="width:100%">
-                                                <option value="">Choose One</option>
-                                                <option ng-repeat="state in states" on-finish-render="ngRepeatFinished" value="{{state}}">{{state}}
-                                                </option>
-                                            </select>
+                                            <select2 ng-model="employee.location" options="options" s2-options="state as state for state in states" style="width: 100%"></select2>
                                         </div>
                                         <div class="col-sm-4">
                                             &nbsp;
                                         </div>
                                     </div>
 
-                                    <div class="form-group" ng-hide="dataReady()">
-                                        <label for="employee-business-unit" class="col-sm-4 control-label">Business Unit</label>
+                                    <div class="form-group">
+                                        <label class="col-sm-4 control-label">Business Unit</label>
                                         <div class="col-sm-4">
-                                            <select ng-model="employee.businessUnitId" id="employee-business-unit" data-placeholder="Choose One" style="width:100%">
-                                                <option value="">Choose One</option>
-                                                <option ng-repeat="businessUnit in businessUnits" on-finish-render="ngRepeatFinished" value="{{businessUnit._id}}">{{businessUnit.name}}</option>
-                                            </select>
+                                            <select2 ng-model="employee.businessUnitId" options="options" s2-options="businessUnit._id as businessUnit.name for businessUnit in businessUnits" style="width: 100%"></select2>
                                         </div>
                                         <div class="col-sm-4">
                                             &nbsp;
                                         </div>
                                     </div>
 
-                                    <div class="form-group" ng-hide="dataReady()">
-                                        <label for="employee-division" class="col-sm-4 control-label">Division</label>
+                                    <div class="form-group">
+                                        <label class="col-sm-4 control-label">Division</label>
                                         <div class="col-sm-4">
-                                            <select ng-model="employee.divisionId" id="employee-division" data-placeholder="Choose One" style="width:100%">
-                                                <option value="">Choose One</option>
-                                                <option ng-repeat="division in getDivisions()" on-finish-render="ngRepeatFinished" value="{{division._id}}">{{division.name}}</option>
-                                            </select>
+                                            <select2 ng-model="employee.divisionId" options="options" s2-options="division._id as division.name for division in filteredDivisions" style="width: 100%"></select2>
                                         </div>
                                         <div class="col-sm-4">
                                             &nbsp;
                                         </div>
                                     </div>
 
-                                    <div class="form-group" ng-hide="dataReady()">
-                                        <label for="employee-department" class="col-sm-4 control-label">Department</label>
+                                    <div class="form-group">
+                                        <label class="col-sm-4 control-label">Department</label>
                                         <div class="col-sm-4">
-                                            <select ng-model="employee.departmentId" id="employee-department" data-placeholder="Choose One" style="width:100%">
-                                                <option value="">Choose One</option>
-                                                <option ng-repeat="department in getDepartments()" on-finish-render="ngRepeatFinished" value="{{department._id}}">{{department.name}}</option>
-                                            </select>
+                                            <select2 ng-model="employee.departmentId" options="options" s2-options="department._id as department.name for department in filteredDepartments" style="width: 100%"></select2>
                                         </div>
                                         <div class="col-sm-4">
                                             &nbsp;
                                         </div>
                                     </div>
 
-                                    <div class="form-group" ng-hide="dataReady()">
-                                        <label for="employee-position" class="col-sm-4 control-label">Position</label>
+                                    <div class="form-group">
+                                        <label class="col-sm-4 control-label">Position</label>
                                         <div class="col-sm-4">
-                                            <select ng-change="checkValidity()" ng-model="employee.positionId" id="employee-position" data-placeholder="Choose One" style="width:100%">
-                                                <option value="">Choose One</option>
-                                                <option ng-repeat="position in getPositions()" on-finish-render="ngRepeatFinished" value="{{position._id}}">{{position.name}}</option>
-                                            </select>
+                                            <select2 ng-change="checkValidity()" ng-model="employee.positionId" options="options" s2-options="position._id as position.name for position in filteredPositions" style="width: 100%"></select2>
                                         </div>
                                         <div class="col-sm-4">
                                             <div>
@@ -372,14 +339,10 @@
                                         </div>
                                     </div>
 
-                                    <div class="form-group" ng-hide="dataReady()">
-                                        <label for="employee-status" class="col-sm-4 control-label">Status</label>
+                                    <div class="form-group">
+                                        <label class="col-sm-4 control-label">Status</label>
                                         <div class="col-sm-4">
-                                            <select ng-model="employee.status" id="employee-status" data-placeholder="Choose One" style="width:100%">
-                                                <option value="">Choose One</option>
-                                                <option value="Active">Active</option>
-                                                <option value="Inactive">Inactive</option>
-                                            </select>
+                                            <select2 ng-model="employee.status" options="options" s2-options="status as status for status in statuses" style="width: 100%"></select2>
                                         </div>
                                         <div class="col-sm-4">
                                             &nbsp;
@@ -410,14 +373,9 @@
                                 <form class="form-horizontal form-bordered">
 
                                     <div class="form-group">
-                                        <label for="employee-payment-method" class="col-sm-4 control-label">Payment Method</label>
+                                        <label class="col-sm-4 control-label">Payment Method</label>
                                         <div class="col-sm-4">
-                                            <select ng-model="employee.paymentDetails.paymentMethod" id="employee-payment-method" data-placeholder="Choose One" style="width:100%">
-                                                <option value="">Choose One</option>
-                                                <option value="Bank Transfer">Bank Transfer</option>
-                                                <option value="Cheque">Cheque</option>
-                                                <option value="Cash">Cash</option>
-                                            </select>
+                                            <select2 ng-model="employee.paymentDetails.paymentMethod" options="options" s2-options="method as method for method in paymentMethods" style="width: 100%"></select2>
                                         </div>
                                         <div class="col-sm-4">
                                             &nbsp;
@@ -425,20 +383,9 @@
                                     </div>
 
                                     <div class="form-group">
-                                        <label for="employee-bank" class="col-sm-4 control-label">Bank</label>
+                                        <label class="col-sm-4 control-label">Bank</label>
                                         <div class="col-sm-4">
-                                            <select ng-model="employee.paymentDetails.bank" id="employee-bank" data-placeholder="Choose One" style="width:100%">
-                                                <option value="">Choose One</option>
-                                                <option value="Stanbic IBTC Bank">Stanbic IBTC Bank</option>
-                                                <option value="UBA">UBA</option>
-                                                <option value="Zenith Bank">Zenith Bank</option>
-                                                <option value="First Bank">First Bank</option>
-                                                <option value="Union Bank">Union Bank</option>
-                                                <option value="Sterling Bank">Sterling Bank</option>
-                                                <option value="Access Bank">Access Bank</option>
-                                                <option value="GTB">GTB</option>
-                                                <option value="Skye Bank">Skye Bank</option>
-                                            </select>
+                                            <select2 ng-model="employee.paymentDetails.bank" options="options" s2-options="bank as bank for bank in banks" style="width: 100%"></select2>
                                         </div>
                                         <div class="col-sm-4">
                                             &nbsp;
@@ -458,8 +405,27 @@
                                     <div class="form-group">
                                         <label class="col-sm-4 control-label">Bank Account Name</label>
                                         <div class="col-sm-4">
-                                            <!--<input type="text" placeholder="" class="form-control" readonly="readonly"/>-->
                                             <input ng-model="employee.paymentDetails.accountName" type="text" placeholder="Account Name" class="form-control"/>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            &nbsp;
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="col-sm-4 control-label">Pension Manager</label>
+                                        <div class="col-sm-4">
+                                            <select2 ng-model="employee.paymentDetails.pensionManager" options="options" s2-options="manager._id as manager.name for manager in pensionManagers" style="width: 100%"></select2>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            &nbsp;
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="col-sm-4 control-label">RSA Pin</label>
+                                        <div class="col-sm-4">
+                                            <input ng-model="employee.paymentDetails.RSAPin" type="text" placeholder="RSA Pin" class="form-control"/>
                                         </div>
                                         <div class="col-sm-4">
                                             &nbsp;
@@ -473,12 +439,9 @@
                                     </div>
 
                                     <div class="form-group">
-                                        <label for="employee-pay-group" class="col-sm-4 control-label">Pay Group</label>
+                                        <label class="col-sm-4 control-label">Pay Group</label>
                                         <div class="col-sm-4">
-                                            <select ng-model="employee.payGroupId" id="employee-pay-group" data-placeholder="Choose One" style="width:100%">
-                                                <option value="">Choose One</option>
-                                                <option ng-repeat="payGroup in payGroups" on-finish-render="ngRepeatFinished" value="{{payGroup._id}}">{{payGroup.name}}</option>
-                                            </select>
+                                            <select2 ng-model="employee.payGroupId" options="options" s2-options="payGroup._id as payGroup.name for payGroup in payGroups" style="width: 100%"></select2>
                                         </div>
                                         <div class="col-sm-4">
                                             &nbsp;
@@ -496,12 +459,7 @@
                                                     <li><a style="cursor: pointer;" ng-click="setSource('Payroll Template')">Payroll Template</a></li>
                                                 </ul>
                                             </div>
-                                            <select ng-disabled="sourceStatus" ng-model="sourceId" id="employee-copy-from" data-placeholder="Choose One" style="width:100%">
-                                                <option value="">Choose One</option>
-                                                <option ng-repeat="source in copySource" on-finish-render="ngRepeatFinished" value="{{source.displayId}}">{{source.display}}
-                                                </option>
-                                            </select>
-                                            <!--<input type="text" class="payroll-search form-control" placeholder="Search..."/>-->
+                                            <select2 ng-disabled="sourceStatus" ng-model="sourceId" options="options" s2-options="source.displayId as source.display for source in copySource" style="width: 100%"></select2>
                                             <span class="input-group-btn">
                                                 <button ng-disabled="!copyStatus()" type="button" class="btn btn-default" ng-click="copy()">Copy</button>
                                             </span>

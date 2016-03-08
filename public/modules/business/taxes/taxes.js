@@ -9,6 +9,7 @@ bulkPay.controller('BusinessTaxesCtrl', ['$scope', '$rootScope', 'AuthSvc', 'Bus
 
   $scope.tax = {};
   $scope.taxes = [];
+  $scope.payTypes = [];
   $scope.$parent.inView = 'Taxes';
   var businessId = '';
   $scope.payTypeSortConfig = {
@@ -23,6 +24,7 @@ bulkPay.controller('BusinessTaxesCtrl', ['$scope', '$rootScope', 'AuthSvc', 'Bus
   };
   $scope.statuses = ['Active', 'Inactive'];
   $scope.ranges = [];
+  $scope.dataFetched = false;
 
   if (!BusinessDataSvc.getBusinessId() || BusinessDataSvc.getBusinessId() !== $stateParams.businessId) {
     $cookies.put('currentBusiness', $stateParams.businessId);
@@ -34,8 +36,17 @@ bulkPay.controller('BusinessTaxesCtrl', ['$scope', '$rootScope', 'AuthSvc', 'Bus
   var getTaxes = function (businessId) {
     $http.get('/api/taxes/business/' + businessId).success(function (data) {
       $scope.taxes = data;
+      $scope.dataFetched = true;
     }).error(function (error) {
       AuthSvc.handleError(error);
+    })
+  };
+
+  var getPayTypes = function (businessId) {
+    $http.get('/api/paytypes/business/' + businessId).success(function (data) {
+      $scope.payTypes = data;
+    }).error(function (error) {
+      console.log(error);
     })
   };
 
@@ -44,6 +55,9 @@ bulkPay.controller('BusinessTaxesCtrl', ['$scope', '$rootScope', 'AuthSvc', 'Bus
       businessId: businessId,
       code: '',
       name: '',
+      grossIncomeRelief: 20,
+      consolidatedRelief: 200000,
+      payTypes: [],
       rules: []
     };
   };
@@ -56,6 +70,7 @@ bulkPay.controller('BusinessTaxesCtrl', ['$scope', '$rootScope', 'AuthSvc', 'Bus
     $scope.business = args;
     businessId = args._id;
     getTaxes(businessId);
+    getPayTypes(businessId);
     resetTax();
   });
 

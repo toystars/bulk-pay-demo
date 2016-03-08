@@ -19,6 +19,7 @@ bulkPay.controller('BusinessPayTypesCtrl', ['$scope', '$rootScope', 'AuthSvc', '
   $scope.types = ['Wage', 'Benefit', 'Deduction'];
   $scope.derivatives = ['Fixed', 'Formula'];
   $scope.frequencies = ['Monthly', 'Quarterly', 'Bi-Annually', 'Annually'];
+  $scope.dataFetched = false;
 
   if (!BusinessDataSvc.getBusinessId() || BusinessDataSvc.getBusinessId() !== $stateParams.businessId) {
     $cookies.put('currentBusiness', $stateParams.businessId);
@@ -30,6 +31,7 @@ bulkPay.controller('BusinessPayTypesCtrl', ['$scope', '$rootScope', 'AuthSvc', '
   var getPayTypes = function (businessId) {
     $http.get('/api/paytypes/business/' + businessId).success(function (data) {
       $scope.payTypes = data;
+      $scope.dataFetched = true;
     }).error(function (error) {
       console.log(error);
     })

@@ -15,6 +15,7 @@ bulkPay.controller('BusinessDepartmentsCtrl', ['$scope', '$rootScope', 'AuthSvc'
   $scope.options = {
     placeholder: "Choose One"
   };
+  $scope.dataFetched = false;
 
   var resetDepartment = function () {
     $scope.department = {
@@ -54,6 +55,7 @@ bulkPay.controller('BusinessDepartmentsCtrl', ['$scope', '$rootScope', 'AuthSvc'
   var getDepartments = function (businessId) {
     $http.get('/api/departments/business/' + businessId).success(function (data) {
       $scope.departments = data;
+      $scope.dataFetched = true;
     }).error(function (error) {
       console.log(error);
     })

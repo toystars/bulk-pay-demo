@@ -11,6 +11,7 @@ bulkPay.controller('BusinessUnitsCtrl', ['$scope', '$rootScope', 'AuthSvc', 'Bus
   $scope.businessUnits = [];
   $scope.$parent.inView = 'Business Units';
   var businessId = '';
+  $scope.dataFetched = false;
 
   if (!BusinessDataSvc.getBusinessId() || BusinessDataSvc.getBusinessId() !== $stateParams.businessId) {
     $cookies.put('currentBusiness', $stateParams.businessId);
@@ -22,6 +23,7 @@ bulkPay.controller('BusinessUnitsCtrl', ['$scope', '$rootScope', 'AuthSvc', 'Bus
   var getBusinessUnits = function (businessId) {
     $http.get('/api/businessunits/business/' + businessId).success(function (data) {
       $scope.businessUnits = data;
+      $scope.dataFetched = true;
     }).error(function (error) {
       console.log(error);
     })

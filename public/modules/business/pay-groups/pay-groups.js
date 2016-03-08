@@ -15,6 +15,7 @@ bulkPay.controller('BusinessPayGroupsCtrl', ['$scope', '$rootScope', 'AuthSvc', 
     placeholder: "Choose One"
   };
   $scope.statuses = ['Active', 'Inactive'];
+  $scope.dataFetched = false;
 
   if (!BusinessDataSvc.getBusinessId() || BusinessDataSvc.getBusinessId() !== $stateParams.businessId) {
     $cookies.put('currentBusiness', $stateParams.businessId);
@@ -26,6 +27,7 @@ bulkPay.controller('BusinessPayGroupsCtrl', ['$scope', '$rootScope', 'AuthSvc', 
   var getPayGroups = function (businessId) {
     $http.get('/api/paygroups/business/' + businessId).success(function (data) {
       $scope.payGroups = data;
+      $scope.dataFetched = true;
     }).error(function (error) {
       console.log(error);
     })
