@@ -783,10 +783,6 @@
                                         <td>...</td>
                                         <td>...</td>
                                     </tr>
-                                    <tr>
-                                        <td>{{getTax().title}}</td>
-                                        <td>{{getTax().value | currency:""}}</td>
-                                    </tr>
                                     <tr ng-repeat="payType in getDeductions()">
                                         <td>{{payType.title}}</td>
                                         <td>{{payType.value | currency:""}}</td>
@@ -801,7 +797,7 @@
                                     </tr>
                                     <tr>
                                         <td><b>Net Pay: </b></td>
-                                        <td><b>{{getPaymentGross() - getTotalDeductions() | currency:""}}</b></td>
+                                        <td><b>{{getNetPayment() | currency:""}}</b></td>
                                     </tr>
                                     </tbody>
                                 </table>

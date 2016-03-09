@@ -466,130 +466,16 @@ bulkPay.controller('BusinessEmployeeCreateCtrl', ['$scope', '$rootScope', '$time
     }
   };
 
-
-
-
-
-
-
-
-
-  /*
-  * Function to handle individual employee payment calculation
-  * */
-  var PayRollCalculation = function (employeePayTypes, employeeTaxRule, employeePensionRule) {
-
-    // initializing variables
-    var payTypes = employeePayTypes;
-    var taxRule = employeeTaxRule;
-    var pensionRule = employeePensionRule;
-
-    var calculateGrossPay = function () {
-      var grossPay = 0;
-      _.each(payTypes, function (type) {
-        if (type.type !== 'Deduction' && type.taxable === 'Yes') {
-          grossPay += type.value;
-        }
-      });
-      return grossPay;
-    };
-
-    var getOtherNonTaxableTypes = function () {
-      return 0;
-    };
-
-    var calculateTaxableIncome = function () {
-      return calculateGrossPay() - (calculateFlatTaxRelief() + calculatePercentageTaxRelief() + calculatePensionRelief() + getOtherNonTaxableTypes());
-    };
-
-    var calculatePercentageTaxRelief = function () {
-      return taxRule.grossIncomeRelief * ( calculateGrossPay() / 100 );
-    };
-
-    var calculateFlatTaxRelief = function () {
-      return (calculateGrossPay() > 20000000) ? calculateGrossPay() / 100 : 200000;
-    };
-
-    var calculatePensionRelief = function () {
-      var sum = 0;
-      _.each(pensionRule.payTypes, function (payTypeId) {
-        var type = _.find(payTypes, function (element) { return element.payTypeId === payTypeId; });
-        if (type) {
-          sum += type.value;
-        }
-      });
-      return pensionRule.employeeContributionRate * ( sum / 100 );
-    };
-
-    var calculateTax = function () {
-      var totalTaxable = calculateTaxableIncome();
-      var tax = 0;
-      var rules = taxRule.rules;
-      for (var x = 0; x < rules.length; x++) {
-        if (totalTaxable > rules[x].upperLimitValue) {
-          tax += rules[x].rate * ( rules[x].upperLimitValue / 100 );
-          totalTaxable -= rules[x].upperLimitValue
-        } else {
-          tax += rules[x].rate * ( totalTaxable / 100 );
-          break;
-        }
-      }
-
-      return tax;
-    };
-
-    var calculate = function () {
-      return {
-        grossIncome: calculateGrossPay(),
-        percentageGrossIncomeRelief: {
-          rate: taxRule.grossIncomeRelief,
-          value: calculatePercentageTaxRelief()
-        },
-        consolidatedRelief: calculateFlatTaxRelief(),
-        pensionRelief: calculatePensionRelief(),
-        totalTaxableIncome: calculateTaxableIncome(),
-        tax: calculateTax(),
-        totalDeductions: 0
-      };
-    };
-
-    return {
-      calculate: calculate
-    };
+  $scope.payrollInformation = {
+    payBreakDown: {
+      wages: [],
+      benefits: [],
+      deductions: []
+    }
   };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   $scope.prepareSummary = function () {
     var concatenatedPayTypes = $scope.currentPayGrade.payTypes.concat($scope.employee.customPayTypes);
-    $http.get('/api/taxes/' + $scope.currentPayGrade.taxRuleId).success(function (tax) {
-      $http.get('/api/pensions/' + $scope.currentPayGrade.pensionRuleId).success(function (pension) {
-        var calculator = new PayRollCalculation(concatenatedPayTypes, tax, pension);
-        console.log(calculator.calculate());
-      }).error(function (error) {
-        AuthSvc.handleError(error);
-      });
-    }).error(function (error) {
-      AuthSvc.handleError(error);
-    });
-    return;
-    $scope.newPayTypes = [];
+    var newPayTypes = [];
     _.each(concatenatedPayTypes, function (payType, index) {
       _.each($scope.employee.editablePayTypes, function (type) {
         if (payType.code === type.code) {
@@ -599,35 +485,36 @@ bulkPay.controller('BusinessEmployeeCreateCtrl', ['$scope', '$rootScope', '$time
       if (!_.find($scope.employee.exemptedPayTypes, function (exType) {
           return exType.code === payType.code
         })) {
-        $scope.newPayTypes.push(payType);
+        newPayTypes.push(payType);
       }
+    });
+    $http.get('/api/taxes/' + $scope.currentPayGrade.taxRuleId).success(function (tax) {
+      $http.get('/api/pensions/' + $scope.currentPayGrade.pensionRuleId).success(function (pension) {
+        var calculator = new PayRollCalculation(newPayTypes, tax, pension);
+        $scope.payrollInformation = calculator.calculate();
+        console.log($scope.payrollInformation);
+      }).error(function (error) {
+        AuthSvc.handleError(error);
+      });
+    }).error(function (error) {
+      AuthSvc.handleError(error);
     });
   };
 
 
 
   $scope.resetSummary = function () {
-    $scope.newPayTypes = [];
+    $scope.payrollInformation = {
+      payBreakDown: {
+        wages: [],
+        benefits: [],
+        deductions: []
+      }
+    };
   };
 
   $scope.getNonDeductions = function () {
-    var type = [];
-    _.each($scope.newPayTypes, function (payType) {
-      if (payType.type !== 'Deduction') {
-        type.push(payType);
-      }
-    });
-    return type;
-  };
-
-  $scope.getDeductions = function () {
-    var type = [];
-    _.each($scope.newPayTypes, function (payType) {
-      if (payType.type === 'Deduction') {
-        type.push(payType);
-      }
-    });
-    return type;
+    return $scope.payrollInformation.payBreakDown.wages.concat($scope.payrollInformation.payBreakDown.benefits);
   };
 
   $scope.getPaymentGross = function () {
@@ -638,30 +525,20 @@ bulkPay.controller('BusinessEmployeeCreateCtrl', ['$scope', '$rootScope', '$time
     return sum;
   };
 
-  var getNonTaxableDeductionsSum = function () {
-    var sum = 0;
-    _.each($scope.newPayTypes, function (payType) {
-      if (payType.type === 'Deduction' && payType.taxable === 'No') {
-        sum += payType.value;
-      }
-    });
-    return sum;
-  };
-
-  $scope.getTax = function () {
-    return {
-      title: 'PAYE Tax',
-      value: $scope.currentPayGrade.taxRate * (($scope.getPaymentGross() - getNonTaxableDeductionsSum()) / 100)
-    };
+  $scope.getDeductions = function () {
+    return $scope.payrollInformation.payBreakDown.deductions;
   };
 
   $scope.getTotalDeductions = function () {
-    var deductions = 0;
-    _.each($scope.getDeductions(), function (deduction) {
-      deductions += deduction.value;
-    });
-    return $scope.getTax().value + deductions;
+    return $scope.payrollInformation.totalDeductions;
   };
+
+  $scope.getNetPayment = function () {
+    return $scope.payrollInformation.netPay;
+  };
+
+
+  // totalDeductions
 
   $scope.restore = function (payType) {
     var matchedIndex = -1;
