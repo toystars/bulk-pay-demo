@@ -136,7 +136,6 @@
                                                 <th>Range</th>
                                                 <th>Upper Limit Value</th>
                                                 <th>Rate %</th>
-                                                <th>Max Value</th>
                                                 <th></th>
                                             </tr>
                                             </thead>
@@ -146,7 +145,6 @@
                                                 <td>{{rule.range}}</td>
                                                 <td><a class="pointer" editable-number="rule.upperLimitValue" buttons="no">{{ rule.upperLimitValue }}</a></td>
                                                 <td><a class="pointer" editable-number="rule.rate" buttons="no">{{ rule.rate }}</a></td>
-                                                <td><a class="pointer" editable-number="rule.maxValue" buttons="no">{{ rule.maxValue }}</a></td>
                                                 <td><a class="pointer" ng-click="removeRule($index)"><i class="fa fa-trash"></i></a></td>
                                             </tr>
                                             </tbody>
@@ -291,19 +289,12 @@
 
                     <div class="row">
 
-                        <div class="col-sm-6">
+                        <div class="col-sm-12">
                             <div class="form-group">
                                 <label for="rule-rate" class="control-label">Rate</label>
                                 <input type="number" id="rule-rate" class="form-control" placeholder="7.5" ng-model="taxRule.rate"/>
                             </div><!-- form-group -->
-                        </div><!-- col-sm-6 -->
-
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <label for="rule-maximum-value" class="control-label">Maximum Value</label>
-                                <input type="number" id="rule-maximum-value" class="form-control" placeholder="15000" ng-model="taxRule.maxValue"/>
-                            </div><!-- form-group -->
-                        </div><!-- col-sm-6 -->
+                        </div><!-- col-sm-12 -->
 
                     </div><!-- row -->
                     <p class="text-center error" ng-show="errorOccur">{{errorMessage}}</p>

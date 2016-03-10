@@ -31,7 +31,8 @@
     </li>
     <li ng-class="{active: inView === 'Employees'}" class="parent" ng-click="toggleActive('Employees')"><a href=""><i class="fa fa-users"></i> <span>Employees</span></a>
         <ul class="children">
-            <li><a ui-sref="business.newemployee">New Employee</a></li>
+            <li ng-class="{active: inView === 'Manage Employees'}" ng-click="toggleActive('Manage Employees')"><a ui-sref="business.manageemployees">Manage Employees</a></li>
+            <li ng-class="{active: inView === 'New Employee'}" ng-click="toggleActive('New Employee')"><a ui-sref="business.newemployee">New Employee</a></li>
         </ul>
     </li>
     <li ng-class="{active: inView === 'Leave'}" ng-click="toggleActive('Leave')"><a><i class="fa fa-paper-plane-o"></i> <span>Leave</span></a></li>

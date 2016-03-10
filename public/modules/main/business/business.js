@@ -28,6 +28,10 @@ bulkPay.controller('CreateBusinessCtrl', ['$scope', 'AuthSvc', '$cookies', '$sta
       creator: userId
     };
   };
+  $scope.options = {
+    placeholder: "Choose One",
+    allowClear: true
+  };
 
 
   /*
@@ -131,30 +135,5 @@ bulkPay.controller('CreateBusinessCtrl', ['$scope', 'AuthSvc', '$cookies', '$sta
     'Video Game',
     'Web Services'
   ];
-
-
-  /*
-   * JQuery
-   * */
-
-  jQuery('#new-business-state').change(function () {
-    $scope.$apply(function () {
-      $scope.newBusiness.state = jQuery('#new-business-state').val();
-    });
-  });
-  jQuery('#new-business-industry').change(function () {
-    $scope.$apply(function () {
-      $scope.newBusiness.industry = jQuery('#new-business-industry').val();
-    });
-  });
-
-  var triggerSelect = function () {
-    jQuery('#new-business-state').select2({
-      minimumResultsForSearch: 0
-    });
-    jQuery('#new-business-industry').select2({
-      minimumResultsForSearch: 0
-    });
-  };
 
 }]);

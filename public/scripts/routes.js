@@ -143,43 +143,32 @@ bulkPay.config(['$stateProvider', '$urlRouterProvider', '$locationProvider', 'to
 
       .state('business.newemployee', {
         url: '/employee/new',
-        templateUrl: 'modules/business/employees/new/employees.html',
+        templateUrl: 'modules/business/employees/new/new-employee.html',
         controller: 'BusinessEmployeeCreateCtrl',
         data: {
           pageTitle: 'New Employee | BulkPay'
         }
       })
 
-
-
-      /*
-
-      .state('home.deduction', {
-        url: 'rules/deductions',
-        templateUrl: 'components/payrules/deduction/deduction.html',
-        controller: 'DeductionCtrl',
+      .state('business.manageemployees', {
+        url: '/employees',
+        templateUrl: 'modules/business/employees/manage/manage-employees.html',
+        controller: 'BusinessEmployeesManagerCtrl',
         data: {
-          pageTitle: 'Deductions | BulkPay'
+          pageTitle: 'Manage Employees | BulkPay'
         }
       })
 
-      .state('home.payscale', {
-        url: 'rules/payscales',
-        templateUrl: 'components/payrules/payscale/payscale.html',
-        controller: 'PayScaleCtrl',
+      .state('business.employee', {
+        url: '/employee/:employeeId',
+        templateUrl: 'modules/business/employees/manage/manage-employees.html',
+        controller: 'BusinessSingleEmployeeCtrl',
         data: {
-          pageTitle: 'Pay Scales | BulkPay'
+          pageTitle: 'Profile | BulkPay'
         }
       })
 
-      .state('home.newemployee', {
-        url: 'employee/new',
-        templateUrl: 'components/employee/new/employee.create.html',
-        controller: 'EmployeeCreateCtrl',
-        data: {
-          pageTitle: 'New Employee | BulkPay'
-        }
-      })*/
+
 
 
       .state('login', {

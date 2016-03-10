@@ -22,8 +22,19 @@ var bulkPay = angular.module('bulkPay', [
   'ngTouch',
   'angularFileUpload',
   'xeditable',
-  'rt.select2'
+  'rt.select2',
+  'ADM-dateTimePicker',
+  'angularUtils.directives.dirPagination'
 ]);
+
+bulkPay.config(['ADMdtpProvider', function(ADMdtp) {
+  ADMdtp.setOptions({
+    calType: 'gregorian',
+    format: 'YYYY-MM-DD',
+    default: 'today',
+    autoClose: true
+  });
+}]);
 
 bulkPay.run(function (select2Config) {
   select2Config.minimumResultsForSearch = 1;
@@ -87,19 +98,6 @@ bulkPay.config(function ($httpProvider) {
   $httpProvider.interceptors.push('authInterceptor');
 });
 
-bulkPay.directive('onFinishRender', function ($timeout) {
-  return {
-    restrict: 'A',
-    link: function (scope, element, attr) {
-      if (scope.$last === true) {
-        $timeout(function () {
-          scope.$emit('ngRepeatFinished');
-        });
-      }
-    }
-  }
-});
-
 bulkPay.directive('updateTitle', ['$rootScope', '$timeout', function ($rootScope, $timeout) {
   return {
     link: function (scope, element) {
@@ -116,6 +114,23 @@ bulkPay.directive('updateTitle', ['$rootScope', '$timeout', function ($rootScope
     }
   };
 }]);
+
+bulkPay.filter('filterEmployees', function () {
+  return function (input, filter) {
+    var out = [];
+    if (input instanceof Array && input.length > 0) {
+      _.each(input, function (employee) {
+        var nameTest = new RegExp(filter.name, "ig").test(employee.firstName + ' ' + employee.otherNames + ' ' + employee.lastName);
+        if (nameTest) {
+          out.push(employee);
+        }
+      });
+    } else {
+      out = input;
+    }
+    return out;
+  };
+});
 
 bulkPay.filter('filterInput', function () {
   return function (input, filerObject) {
@@ -136,7 +151,7 @@ bulkPay.filter('filterInput', function () {
       out = input;
     }
     return out;
-  }
+  };
 });
 
 bulkPay.filter('customTypesFilter', function () {
@@ -148,7 +163,7 @@ bulkPay.filter('customTypesFilter', function () {
       }
     });
     return out;
-  }
+  };
 });
 
 bulkPay.filter('prettifyActivity', function () {
@@ -157,6 +172,6 @@ bulkPay.filter('prettifyActivity', function () {
       case 'changed':
         return filterObject.event + ' ' + filterObject.referenceKey + ' ' + 'from ' + filterObject.oldValue + ' to ' + filterObject.newValue;
     }
-  }
+  };
 });
 

@@ -1,10 +1,26 @@
 /*
  * Function to handle individual employee payment calculation
  * */
-var PayRollCalculation = function (employeePayTypes, employeeTaxRule, employeePensionRule) {
+var PayRollCalculation = function (employee, payGradeTypes, employeeTaxRule, employeePensionRule) {
+
+  /*
+  * Clean up parameters and sort employee-modified
+  * pay components and employee-exempted components
+  * */
+  var concatenatedPayTypes = payGradeTypes.concat(employee.customPayTypes);
+  var newPayTypes = [];
+  _.each(concatenatedPayTypes, function (payType) {
+    var type = _.find(employee.editablePayTypes, function (editablePayType) { return editablePayType.code === payType.code });
+    if (type) {
+      payType = type;
+    }
+    if (!_.find(employee.exemptedPayTypes, function (exType) { return exType.code === payType.code })) {
+      newPayTypes.push(payType);
+    }
+  });
 
   // initializing variables
-  var payTypes = employeePayTypes;
+  var payTypes = newPayTypes;
   var taxRule = employeeTaxRule;
   var pensionRule = employeePensionRule;
 

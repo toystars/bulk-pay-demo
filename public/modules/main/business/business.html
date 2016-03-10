@@ -54,11 +54,8 @@
                                 </div><!-- col-sm-12 -->
                                 <div class="col-sm-12">
                                     <div class="form-group">
-                                        <label for="new-business-state" class="control-label">State</label>
-                                        <select id="new-business-state" data-placeholder="Choose One" style="width:100%">
-                                            <option value="">Choose One</option>
-                                            <option ng-repeat="state in states" on-finish-render="ngRepeatFinished" value="{{state}}">{{state}}</option>
-                                        </select>
+                                        <label class="control-label">State</label>
+                                        <select2 options="options" ng-model="newBusiness.state" s2-options="state as state for state in states" style="width: 100%"></select2>
                                     </div><!-- form-group -->
                                 </div><!-- col-sm-12 -->
                                 <div class="col-sm-12">
@@ -75,11 +72,8 @@
                             <div class="row">
                                 <div class="col-sm-12">
                                     <div class="form-group">
-                                        <label for="new-business-industry" class="control-label">Industry</label>
-                                        <select id="new-business-industry" data-placeholder="Choose One" style="width:100%">
-                                            <option value="">Choose One</option>
-                                            <option ng-repeat="industry in industries" on-finish-render="ngRepeatFinished" value="{{industry}}">{{industry}}</option>
-                                        </select>
+                                        <label class="control-label">Industry</label>
+                                        <select2 options="options" ng-model="newBusiness.industry" s2-options="industry as industry for industry in industries" style="width: 100%"></select2>
                                     </div><!-- form-group -->
                                 </div><!-- col-sm-12 -->
                                 <div class="col-sm-12">
@@ -114,7 +108,7 @@
                 </div><!-- panel-body -->
                 <div class="panel-footer">
                     <button class="btn btn-primary mr5" ng-click="save()">Save</button>
-                    <button type="reset" class="btn btn-default">Cancel</button>
+                    <a ui-sref="home.overview" class="btn btn-danger">Cancel</a>
                 </div><!-- panel-footer -->
             </div><!-- panel -->
 

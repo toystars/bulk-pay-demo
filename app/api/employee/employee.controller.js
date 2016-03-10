@@ -60,6 +60,43 @@ exports.employees = function (req, res) {
 };
 
 /*
+* Get filtered employees
+* */
+exports.filteredEmployees = function (req, res) {
+  var orArray = [];
+  var filterObject = req.body;
+  var keys = Object.keys(filterObject);
+  if (keys.length > 0) {
+    for (var x = 0; x < keys.length; x++) {
+      if (filterObject.hasOwnProperty(keys[x])) {
+        if (filterObject[keys[x]] && filterObject[keys[x]] !== '') {
+          var object = {};
+          object[keys[x]] = filterObject[keys[x]];
+          orArray.push(object);
+        }
+      }
+    }
+  } else {
+    orArray.push({});
+  }
+  var selector = {
+    $and: [{
+      businessId: req.params.id
+    }, {
+      $or:orArray
+    }]
+  };
+  Employee.find(selector, function (error, employees) {
+    if (error) {
+      crudHelper.handleError(res, null, error);
+    }
+    if (employees) {
+      crudHelper.respondWithResult(res, null, employees);
+    }
+  });
+};
+
+/*
  * Create new employee
  * */
 exports.create = function (req, res) {

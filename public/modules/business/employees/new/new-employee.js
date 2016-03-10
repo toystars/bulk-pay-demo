@@ -162,6 +162,9 @@ bulkPay.controller('BusinessEmployeeCreateCtrl', ['$scope', '$rootScope', '$time
         address: ''
       }
     };
+    $scope.currentPayGrade = {
+      payTypes: []
+    };
   };
 
 
@@ -325,7 +328,7 @@ bulkPay.controller('BusinessEmployeeCreateCtrl', ['$scope', '$rootScope', '$time
           $scope.copySource = data;
           _.each($scope.copySource, function (employee) {
             employee.display = employee.firstName + ' ' + employee.lastName;
-            employee.displayId = employee.payGradeId;
+            employee.displayId = employee._id;
           });
           $scope.sourceStatus = false;
         });
@@ -356,24 +359,48 @@ bulkPay.controller('BusinessEmployeeCreateCtrl', ['$scope', '$rootScope', '$time
       }
     } else {
       // get from employee using id as well...
+      var copiedEmployee = _.find($scope.copySource, function (element) {
+        return element._id === $scope.sourceId;
+      });
+      if (copiedEmployee) {
+        // fetch payGrade
+        $http.get('/api/paygrades/' + copiedEmployee.payGradeId).success(function (data) {
+          $scope.currentPayGrade = data;
+          $scope.employee.payGradeId = data._id;
+          $scope.employee.editablePayTypes = copiedEmployee.editablePayTypes;
+          $scope.employee.customPayTypes = copiedEmployee.customPayTypes;
+          $scope.employee.exemptedPayTypes = copiedEmployee.exemptedPayTypes;
+        }).error(function (error) {
+          AuthSvc.handleError(error);
+        });
+      }
     }
   };
 
   $scope.getTypes = function (type) {
     var types = [];
+    var foundType = {};
     $scope.employee.customPayTypes = $scope.employee.customPayTypes || [];
     $scope.employee.exemptedPayTypes = $scope.employee.exemptedPayTypes || [];
     var concatenatedPayTypes = $scope.currentPayGrade.payTypes.concat($scope.employee.customPayTypes);
     _.each(concatenatedPayTypes, function (payType) {
       if ($scope.employee.exemptedPayTypes.length === 0) {
         if (payType.type === type) {
-          types.push(payType);
+          foundType = _.find($scope.employee.editablePayTypes, function (editableType) {return editableType.code === payType.code});
+          if (foundType) {
+            types.push(foundType);
+          } else {
+            types.push(payType);
+          }
         }
       } else {
-        if (!_.find($scope.employee.exemptedPayTypes, function (exType) {
-            return exType.code === payType.code
-          }) && payType.type === type) {
-          types.push(payType);
+        if (!_.find($scope.employee.exemptedPayTypes, function (exType) {return exType.code === payType.code}) && payType.type === type) {
+          foundType = _.find($scope.employee.editablePayTypes, function (editableType) {return editableType.code === payType.code});
+          if (foundType) {
+            types.push(foundType);
+          } else {
+            types.push(payType);
+          }
         }
       }
     });
@@ -474,25 +501,10 @@ bulkPay.controller('BusinessEmployeeCreateCtrl', ['$scope', '$rootScope', '$time
     }
   };
   $scope.prepareSummary = function () {
-    var concatenatedPayTypes = $scope.currentPayGrade.payTypes.concat($scope.employee.customPayTypes);
-    var newPayTypes = [];
-    _.each(concatenatedPayTypes, function (payType, index) {
-      _.each($scope.employee.editablePayTypes, function (type) {
-        if (payType.code === type.code) {
-          concatenatedPayTypes[index] = type;
-        }
-      });
-      if (!_.find($scope.employee.exemptedPayTypes, function (exType) {
-          return exType.code === payType.code
-        })) {
-        newPayTypes.push(payType);
-      }
-    });
     $http.get('/api/taxes/' + $scope.currentPayGrade.taxRuleId).success(function (tax) {
       $http.get('/api/pensions/' + $scope.currentPayGrade.pensionRuleId).success(function (pension) {
-        var calculator = new PayRollCalculation(newPayTypes, tax, pension);
+        var calculator = new PayRollCalculation($scope.employee, $scope.currentPayGrade.payTypes, tax, pension);
         $scope.payrollInformation = calculator.calculate();
-        console.log($scope.payrollInformation);
       }).error(function (error) {
         AuthSvc.handleError(error);
       });
@@ -537,8 +549,6 @@ bulkPay.controller('BusinessEmployeeCreateCtrl', ['$scope', '$rootScope', '$time
     return $scope.payrollInformation.netPay;
   };
 
-
-  // totalDeductions
 
   $scope.restore = function (payType) {
     var matchedIndex = -1;

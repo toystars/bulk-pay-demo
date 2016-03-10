@@ -6,6 +6,7 @@
         <div class="media-body">
             <ul class="breadcrumb">
                 <li><a href=""><i class="glyphicon glyphicon-home"></i></a></li>
+                <li><a ui-sref="business.overview">Business</a></li>
                 <li><a href="">Employees</a></li>
                 <li>New</li>
             </ul>
@@ -99,8 +100,7 @@
                                     <div class="form-group">
                                         <label class="col-sm-4 control-label">Date of Birth</label>
                                         <div class="input-group col-sm-4" style="padding-left:10px;padding-right:10px">
-                                            <input ng-model="employee.dateOfBirth" type="text" class="form-control datepicker-multiple" placeholder="mm/dd/yyyy">
-                                            <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                                            <adm-dtp ng-model="employee.dateOfBirth"></adm-dtp>
                                         </div>
                                         <div class="col-sm-4">
                                             &nbsp;
@@ -320,8 +320,7 @@
                                     <div class="form-group">
                                         <label class="col-sm-4 control-label">Hire Date</label>
                                         <div class="input-group col-sm-4" style="padding-left:10px;padding-right:10px">
-                                            <input ng-model="employee.employmentDate" type="text" class="form-control datepicker-multiple" placeholder="mm/dd/yyyy">
-                                            <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                                            <adm-dtp ng-model="employee.employmentDate"></adm-dtp>
                                         </div>
                                         <div class="col-sm-4">
                                             &nbsp;
@@ -331,8 +330,7 @@
                                     <div class="form-group">
                                         <label class="col-sm-4 control-label">Confirmation Date</label>
                                         <div class="input-group col-sm-4" style="padding-left:10px;padding-right:10px">
-                                            <input ng-model="employee.confirmationDate" type="text" class="form-control datepicker-multiple" placeholder="mm/dd/yyyy">
-                                            <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                                            <adm-dtp ng-model="employee.confirmationDate"></adm-dtp>
                                         </div>
                                         <div class="col-sm-4">
                                             &nbsp;
@@ -352,8 +350,7 @@
                                     <div class="form-group">
                                         <label class="col-sm-4 control-label">Termination/Resignation Date</label>
                                         <div class="input-group col-sm-4" style="padding-left:10px;padding-right:10px">
-                                            <input ng-model="employee.terminationDate" type="text" class="form-control datepicker-multiple" placeholder="mm/dd/yyyy">
-                                            <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                                            <adm-dtp ng-model="employee.terminationDate"></adm-dtp>
                                         </div>
                                         <div class="col-sm-4">
                                             &nbsp;

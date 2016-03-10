@@ -63,6 +63,11 @@
     position: relative;
     overflow: hidden;
 }
+
+.employee-filter {
+    margin-bottom: 15px;
+}
+
 .btn-file input[type=file] {
     position: absolute;
     top: 0;
@@ -77,6 +82,10 @@
     background: white;
     cursor: inherit;
     display: block;
+}
+
+ul {
+    list-style-type: none;
 }
 
 

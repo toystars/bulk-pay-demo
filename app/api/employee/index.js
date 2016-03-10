@@ -12,6 +12,7 @@ module.exports = function (app) {
   router.post('/', auth.isAuthenticated, auth.isSuperAdmin, controller.create);
   router.post('/photo', auth.isAuthenticated, auth.isSuperAdmin, controller.savePhoto);
   router.get('/business/:id', auth.isAuthenticated, controller.employees);
+  router.post('/business/:id/filtered', auth.isAuthenticated, controller.filteredEmployees);
   router.get('/position/:positionId', auth.isAuthenticated, controller.getPositionEmployees);
   router.get('/:id', auth.isAuthenticated, controller.show);
   router.get('/paygroup/:payGroupId', auth.isAuthenticated, controller.getByPayGroup);
