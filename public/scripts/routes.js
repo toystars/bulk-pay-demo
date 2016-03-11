@@ -3,7 +3,7 @@
 bulkPay.config(['$stateProvider', '$urlRouterProvider', '$locationProvider', 'toastrConfig',
   function($stateProvider, $urlRouterProvider, $locationProvider, toastrConfig) {
 
-    $urlRouterProvider.otherwise('/dashboard');
+    $urlRouterProvider.otherwise('/home');
 
     angular.extend(toastrConfig, {
       timeOut: 2000
@@ -18,12 +18,12 @@ bulkPay.config(['$stateProvider', '$urlRouterProvider', '$locationProvider', 'to
       })
 
       .state('home.overview', {
-        url: 'dashboard',
+        url: 'home',
         templateUrl: 'modules/main/overview/overview.html',
         controller: 'OverviewCtrl',
         authenticate: true,
         data: {
-          pageTitle: 'Dashboard | BulkPay'
+          pageTitle: 'Home | BulkPay'
         }
       })
 
@@ -161,10 +161,28 @@ bulkPay.config(['$stateProvider', '$urlRouterProvider', '$locationProvider', 'to
 
       .state('business.employee', {
         url: '/employee/:employeeId',
-        templateUrl: 'modules/business/employees/manage/manage-employees.html',
+        templateUrl: 'modules/business/employees/single/single-employee.html',
         controller: 'BusinessSingleEmployeeCtrl',
         data: {
           pageTitle: 'Profile | BulkPay'
+        }
+      })
+
+      .state('business.payruns', {
+        url: '/payruns',
+        templateUrl: 'modules/business/payruns/manage/manage-payruns.html',
+        controller: 'BusinessPayRunsManagerCtrl',
+        data: {
+          pageTitle: 'Pay Runs | BulkPay'
+        }
+      })
+
+      .state('business.newpayrun', {
+        url: '/payrun/new',
+        templateUrl: 'modules/business/payruns/new/new-payrun.html',
+        controller: 'BusinessNewPayRunCtrl',
+        data: {
+          pageTitle: 'New Pay Runs | BulkPay'
         }
       })
 

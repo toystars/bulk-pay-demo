@@ -10,8 +10,11 @@
 'use strict';
 
 require('./employee.model.js');
+require('../pay-grade/pay-grade.model.js');
 var mongoose = require('mongoose'),
   Employee = mongoose.model('Employee'),
+  PayGrade = mongoose.model('PayGrade'),
+  _ = require('underscore'),
   crudHelper = require('../../helpers/crud.js');
 
 
@@ -34,7 +37,7 @@ exports.index = function (req, res) {
  * Get last employee created
  */
 exports.getLast = function (req, res) {
-  Employee.findOne({ businessId: req.params.id }, function (error, employee) {
+  Employee.findOne({businessId: req.params.id}, function (error, employee) {
     if (error) {
       crudHelper.handleError(res, null, error);
     }
@@ -49,7 +52,7 @@ exports.getLast = function (req, res) {
  * Get all employees per business
  */
 exports.employees = function (req, res) {
-  Employee.find({ businessId: req.params.id }, function (error, employees) {
+  Employee.find({businessId: req.params.id}, function (error, employees) {
     if (error) {
       crudHelper.handleError(res, null, error);
     }
@@ -59,9 +62,39 @@ exports.employees = function (req, res) {
   });
 };
 
+
+/**
+ * Get employees for pay run
+ */
+exports.getPayRunEmployees = function (req, res) {
+  Employee.find({businessId: req.params.businessId, status: 'Active'}, function (error, employees) {
+    if (error) {
+      crudHelper.handleError(res, null, error);
+    }
+    if (employees) {
+      PayGrade.find({businessId: req.params.businessId}, function (error, payGrades) {
+        if (payGrades) {
+          _.each(employees, function (employee) {
+            var payGrade = _.find(payGrades, function (payGrade) {
+              return employee.payGradeId === payGrade.toObject()._id.toString();
+            });
+            if (payGrade) {
+              employee.payGrade = payGrade;
+            }
+          });
+          crudHelper.respondWithResult(res, null, employees);
+        } else {
+          crudHelper.handleError(res, null, error);
+        }
+      });
+    }
+  });
+};
+
+
 /*
-* Get filtered employees
-* */
+ * Get filtered employees
+ * */
 exports.filteredEmployees = function (req, res) {
   var orArray = [];
   var filterObject = req.body;
@@ -83,7 +116,7 @@ exports.filteredEmployees = function (req, res) {
     $and: [{
       businessId: req.params.id
     }, {
-      $or:orArray
+      $or: orArray
     }]
   };
   Employee.find(selector, function (error, employees) {
@@ -114,13 +147,13 @@ exports.create = function (req, res) {
  * Fetch an employee
  * */
 exports.show = function (req, res) {
-  Employee.findOne({ _id: req.params.id }, function (error, employee) {
+  Employee.findOne({_id: req.params.id}, function (error, employee) {
     if (error) {
       crudHelper.handleError(res, null, error);
     } else if (employee) {
       crudHelper.respondWithResult(res, null, employee);
     } else {
-      crudHelper.handleError(res, null, { message: 'Employee not found!' });
+      crudHelper.handleError(res, null, {message: 'Employee not found!'});
     }
   });
 };
@@ -130,13 +163,13 @@ exports.show = function (req, res) {
  * Fetch by pay group id
  * */
 exports.getByPayGroup = function (req, res) {
-  Employee.find({ payGroupId: req.params.payGroupId }, function (error, employees) {
+  Employee.find({payGroupId: req.params.payGroupId}, function (error, employees) {
     if (error) {
       crudHelper.handleError(res, null, error);
     } else if (employees) {
       crudHelper.respondWithResult(res, null, employees);
     } else {
-      crudHelper.handleError(res, null, { message: 'No employee found!' });
+      crudHelper.handleError(res, null, {message: 'No employee found!'});
     }
   });
 };
@@ -146,20 +179,20 @@ exports.getByPayGroup = function (req, res) {
  * Fetch by position
  * */
 exports.getPositionEmployees = function (req, res) {
-  Employee.find({ positionId: req.params.positionId }, function (error, employees) {
+  Employee.find({positionId: req.params.positionId}, function (error, employees) {
     if (error) {
       crudHelper.handleError(res, null, error);
     } else if (employees) {
       crudHelper.respondWithResult(res, null, employees);
     } else {
-      crudHelper.handleError(res, null, { message: 'No employee found!' });
+      crudHelper.handleError(res, null, {message: 'No employee found!'});
     }
   });
 };
 
 /*
-* Save employee photo
-* */
+ * Save employee photo
+ * */
 exports.savePhoto = function (req, res) {
   res.status(200).json(req.files.file);
 };
@@ -168,7 +201,7 @@ exports.savePhoto = function (req, res) {
  * Update single employee
  * */
 exports.updateEmployee = function (req, res) {
-  Employee.findOne({ _id: req.params.id }, function (error, employee) {
+  Employee.findOne({_id: req.params.id}, function (error, employee) {
     if (error) {
       crudHelper.handleError(res, 400, error);
     } else {

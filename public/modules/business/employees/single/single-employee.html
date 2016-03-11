@@ -1,0 +1,97 @@
+<div class="pageheader">
+    <div class="media">
+        <div class="pageicon pull-left">
+            <i class="fa fa-user"></i>
+        </div>
+        <div class="media-body">
+            <ul class="breadcrumb">
+                <li><a href=""><i class="glyphicon glyphicon-home"></i></a></li>
+                <li><a ui-sref="business.overview">Business</a></li>
+                <li>{{business.name}}</li>
+                <li>Employee</li>
+            </ul>
+            <h4>Employee - {{employee.fullName}}</h4>
+        </div>
+    </div><!-- media -->
+</div><!-- pageheader -->
+
+<div class="contentpanel">
+
+    <div class="row">
+        <div class="col-md-9">
+            <div class="row">
+                <!-- Nav tabs -->
+                <div class="col-md-12">
+                    <ul class="nav nav-tabs">
+                        <li ng-class="{active: inView === 'Profile Info'}">
+                            <a ng-click="changeView('Profile Info')" style="cursor: pointer;">Profile Info</a>
+                        </li>
+                        <li ng-class="{active: inView === 'Bio Data'}">
+                            <a ng-click="changeView('Bio Data')" style="cursor: pointer;">Bio Data</a>
+                        </li>
+                        <li ng-class="{active: inView === 'Qualification'}">
+                            <a ng-click="changeView('Qualification')" style="cursor: pointer;">Qualification(s)</a>
+                        </li>
+                        <li ng-class="{active: inView === 'Job Experience'}">
+                            <a ng-click="changeView('Job Experience')" style="cursor: pointer;">Job Experience(s)</a>
+                        </li>
+                    </ul>
+                </div><!-- col-md-12 -->
+
+                <div class="col-md-12">
+                    <div class="tab-pane active" id="activities">
+                        <div class="row" style="margin-top: 25px; margin-left: 10px; margin-right: 10px;">
+                        </div>
+
+                        <div class="row" ng-if="!dataFetched">
+                            <div class="col-md-12 text-center">
+                                <img alt="" src="images/loaders/loader10.gif">
+                            </div>
+                        </div>
+
+                        <div class="row big-font" ng-if="dataFetched" style="margin-left: 10px; margin-right: 10px;">
+                            <div class="col-md-3">
+                                <div class="text-center">
+                                    <img ng-src="uploads/{{employee.currentProfilePicture}}" id="profile-img" class="img-thumbnail img-offline img-responsive img-profile" alt=""/>
+                                </div>
+                            </div>
+
+                            <div class="col-md-9" ng-show="inView === 'Profile Info'">
+                                <b>Employee Id: </b> {{employee.employeeId}}<br>
+                                <b>Full Name: </b> {{employee.fullName}}<br>
+                                <b>Address: </b> {{employee.address}}<br>
+                                <b>Phone: </b> {{employee.phone}}<br>
+                                <b>Email: </b> {{employee.email}}<br><br><br>
+
+                                <span class="sub-header"><b>Work Information</b></span><br>
+                                <b>Business Unit: </b> {{employee.businessUnitName}}<br>
+                                <b>Division: </b> {{employee.divisionName}}<br>
+                                <b>Department: </b> {{employee.departmentName}}<br>
+                                <b>Position: </b> {{employee.positionName}}<br>
+                                <b>Pay Group: </b> {{employee.payGroupName}}<br>
+                                <b>Pay Grade: </b> {{employee.payGradeName}}<br>
+                                <b>Supervisor: </b> <a class="pointer" ui-sref="business.employee({ employeeId: employee.supervisor.id })">{{employee.supervisor.name}}</a><br>
+                                <b>Location: </b> {{employee.location}}<br>
+                                <b>Date Employed: </b> {{employee.employmentDate | date:"dd/MM/yyyy"}}<br>
+                                <b>Status: </b> {{employee.status}}<br>
+                            </div>
+                        </div><!-- row -->
+                    </div><!-- tab-pane -->
+                </div>
+
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <div class="panel-btns"></div><!-- panel-btns -->
+                    <h3 class="panel-title">Actions</h3>
+                </div>
+                <div class="panel-body">
+                    Panel content
+                </div>
+            </div><!-- panel -->
+        </div>
+    </div>
+
+</div><!-- contentpanel -->

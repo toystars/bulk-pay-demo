@@ -1,34 +1,35 @@
 <div class="pageheader">
     <div class="media">
         <div class="pageicon pull-left">
-            <i class="fa fa-users"></i>
+            <i class="fa fa-refresh"></i>
         </div>
         <div class="media-body">
             <ul class="breadcrumb">
                 <li><a href=""><i class="glyphicon glyphicon-home"></i></a></li>
                 <li><a ui-sref="business.overview">Business</a></li>
                 <li>{{business.name}}</li>
-                <li>Employees</li>
+                <li>Pay Runs</li>
             </ul>
-            <h4>Employees</h4>
+            <h4>Pay Runs</h4>
         </div>
     </div><!-- media -->
 </div><!-- pageheader -->
 
 <div class="contentpanel">
 
+
     <div class="row">
         <div class="col-md-12">
-            <h5 class="lg-title mb5">Employees List</h5>
-            <p class="mb20 pull-right"><a class="btn btn-primary" ui-sref="business.newemployee">New Employee Profile</a></p>
+            <h5 class="lg-title mb5">Pay Runs</h5>
+            <p class="mb20 pull-right"><a class="btn btn-primary" ui-sref="business.newpayrun">New Pay Run</a></p>
         </div>
     </div>
 
     <div class="row">
-        <div class="col-md-12 text-center" ng-if="!dataFetched">
+        <!--<div class="col-md-12 text-center" ng-if="!dataFetched">
             <img alt="" src="images/loaders/loader10.gif">
-        </div>
-        <div class="col-md-12 employee-filter" ng-if="dataFetched">
+        </div>-->
+        <div class="col-md-12 employee-filter">
             <div class="row">
                 <div class="col-md-4">
                     <div class="form-group">
@@ -62,12 +63,12 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-12" ng-if="employees.length === 0 && dataFetched">
+        <div class="col-md-12" <!--ng-if="employees.length === 0 && dataFetched"-->>
             <div class="alert alert-danger text-center">
                 <p>No Employee available</p>
             </div>
         </div>
-        <div class="col-md-12" ng-if="employees.length > 0 && dataFetched">
+        <div class="col-md-12" <!--ng-if="employees.length > 0 && dataFetched"-->>
             <div class="table-responsive">
                 <table class="table table-primary mb60 table-hover">
                     <thead>
@@ -110,5 +111,7 @@
             <dir-pagination-controls boundary-links="true" on-page-change="pageChangeHandler(newPageNumber)" template-url="bower_components/angularUtils-pagination/dirPagination.tpl.html"></dir-pagination-controls>
         </div>
     </div><!-- row -->
+
+
 
 </div><!-- contentpanel -->

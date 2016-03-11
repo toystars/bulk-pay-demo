@@ -7,6 +7,10 @@ var employeesSchema = new Schema({
   address: String,
   businessId: String,
   businessUnitId: String,
+  payGrade: {
+    type: Schema.Types.Mixed,
+    default: {}
+  },
   city: String,
   confirmationDate: Date,
   customPayTypes: [ { type: Schema.Types.Mixed } ],
