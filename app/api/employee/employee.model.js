@@ -11,6 +11,14 @@ var employeesSchema = new Schema({
     type: Schema.Types.Mixed,
     default: {}
   },
+  taxRule: {
+    type: Schema.Types.Mixed,
+    default: {}
+  },
+  pensionRule: {
+    type: Schema.Types.Mixed,
+    default: {}
+  },
   city: String,
   confirmationDate: Date,
   customPayTypes: [ { type: Schema.Types.Mixed } ],
@@ -56,7 +64,7 @@ var employeesSchema = new Schema({
 });
 
 employeesSchema.virtual('fullName').get(function () {
-    return this.firstName + ' ' + this.lastName;
+    return  this.lastName + ' ' + this.firstName + ' ' + this.otherNames;
 });
 
 module.exports = mongoose.model('Employee', employeesSchema);

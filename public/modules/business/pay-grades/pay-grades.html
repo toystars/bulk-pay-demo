@@ -110,8 +110,8 @@
                                     <span class="compute-value">Type:</span> {{type.type}} <br/>
                                     <span class="compute-value">Formula:</span> {{type.derivative}} <br/>
                                     <span class="compute-value">Value:</span> {{type.value | currency:" ₦ "}} <br/>
-                                    <span class="compute-value">Frequency:</span> {{getPaymentFromId(type.id).frequency}} <br/>
-                                    <span class="compute-value">Taxable:</span> {{getPaymentFromId(type.id).taxable}} <br/>
+                                    <span class="compute-value">Frequency:</span> {{type.frequency}} <br/>
+                                    <span class="compute-value">Taxable:</span> {{type.taxable}} <br/>
                                     <span class="compute-value">Derivative:</span> {{type.derived}}
                                 </div>
                             </div>

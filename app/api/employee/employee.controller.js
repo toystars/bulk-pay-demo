@@ -11,9 +11,15 @@
 
 require('./employee.model.js');
 require('../pay-grade/pay-grade.model.js');
+require('../pay-group/pay-group.model.js');
+require('../tax/tax.model.js');
+require('../pension/pension.model.js');
 var mongoose = require('mongoose'),
   Employee = mongoose.model('Employee'),
   PayGrade = mongoose.model('PayGrade'),
+  PayGroup = mongoose.model('PayGroup'),
+  Tax = mongoose.model('Tax'),
+  Pension = mongoose.model('Pension'),
   _ = require('underscore'),
   crudHelper = require('../../helpers/crud.js');
 
@@ -82,7 +88,46 @@ exports.getPayRunEmployees = function (req, res) {
               employee.payGrade = payGrade;
             }
           });
-          crudHelper.respondWithResult(res, null, employees);
+          Tax.find({ businessId: req.params.businessId }, function (error, taxes) {
+            if (taxes) {
+              _.each(employees, function (employee) {
+                var taxRule = _.find(taxes, function (tax) {
+                  return employee.payGrade.taxRuleId === tax.toObject()._id.toString();
+                });
+                console.log(taxRule);
+                if (taxRule) {
+                  employee.taxRule = taxRule;
+                }
+              });
+              Pension.find({ businessId: req.params.businessId }, function (error, pensions) {
+                if (pensions) {
+                  _.each(employees, function (employee) {
+                    var pension = _.find(pensions, function (pension) {
+                      return employee.payGrade.pensionRuleId === pension.toObject()._id.toString();
+                    });
+                    console.log(pension);
+                    if (pension) {
+                      employee.pensionRule = pension;
+                    }
+                  });
+                  PayGroup.find({ businessId: req.params.businessId }, function (error, payGroups) {
+                    if (payGroups) {
+                      crudHelper.respondWithResult(res, null, {
+                        employees: employees,
+                        payGroups: payGroups
+                      });
+                    } else {
+                      crudHelper.handleError(res, null, error);
+                    }
+                  });
+                } else {
+                  crudHelper.handleError(res, null, error);
+                }
+              });
+            } else {
+              crudHelper.handleError(res, null, error);
+            }
+          });
         } else {
           crudHelper.handleError(res, null, error);
         }

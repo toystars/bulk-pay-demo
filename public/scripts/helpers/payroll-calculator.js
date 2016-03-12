@@ -19,6 +19,8 @@ var PayRollCalculation = function (employee, payGradeTypes, employeeTaxRule, emp
     }
   });
 
+  console.log(newPayTypes);
+
   // initializing variables
   var payTypes = newPayTypes;
   var taxRule = employeeTaxRule;

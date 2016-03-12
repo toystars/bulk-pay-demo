@@ -17,4 +17,147 @@
 
 <div class="contentpanel">
 
+
+    <div class="row">
+        <div class="col-md-12">
+            <h5 class="lg-title mb5">Pay Runs</h5>
+        </div>
+    </div>
+
+    <div class="row" style="margin-top: 25px;">
+        <!--<div class="col-md-12 text-center" ng-if="!dataFetched">
+            <img alt="" src="images/loaders/loader10.gif">
+        </div>-->
+        <div class="col-md-12 employee-filter">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label class="control-label">Pay Groups</label>
+                        <select2 ng-change="changeGroup(payGroupId)"  ng-model="payGroupId" s2-options="group._id as group.name for group in payGroups" style="width: 100%"></select2>
+                    </div><!-- form-group -->
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12">
+            <div class="alert alert-danger text-center" ng-if="filteredEmployees.length === 0">
+                <p>No Employee available</p>
+            </div>
+        </div>
+        <div class="col-md-12" ng-if="filteredEmployees.length > 0">
+            <div class="table-responsive">
+                <table class="table table-primary mb60 table-hover">
+                    <thead>
+                    <tr>
+                        <th>Sel</th>
+                        <th>Employee Id</th>
+                        <th>Full Name</th>
+                        <th>Pay Grade</th>
+                        <th>Gross Pay</th>
+                        <th>PAYE</th>
+                        <th>Total Deductions</th>
+                        <th>Net Pay</th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr class="pointer" dir-paginate="employee in filteredEmployees | itemsPerPage: pageSize" current-page="currentPage">
+                        <td>
+                            <div class="ckbox ckbox-success">
+                                <input ng-model="employee.selected" ng-checked="employee.selected" type="checkbox" id="{{'em' + employee._id}}" checked="checked" />
+                                <label for="{{'em' + employee._id}}"></label>
+                            </div>
+                        </td>
+                        <td>{{employee.employeeId}}</td>
+                        <td>{{employee.fullName}}</td>
+                        <td>{{employee.payGrade.name}}</td>
+                        <td>{{employee.paymentInformation.grossIncome | currency:""}}</td>
+                        <td>{{employee.paymentInformation.tax | currency:""}}</td>
+                        <td>{{employee.paymentInformation.totalDeductions | currency:""}}</td>
+                        <td>{{employee.paymentInformation.netPay | currency:""}}</td>
+                        <td><a href="" data-toggle="modal" data-target=".payroll-summary" ng-click="showPayDetails(employee)">View Pay Details</a></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div><!-- table-responsive -->
+            <div class="col-md-12 text-left">
+                <dir-pagination-controls boundary-links="true" on-page-change="pageChangeHandler(newPageNumber)"
+                                         template-url="bower_components/angularUtils-pagination/dirPagination.tpl.html"></dir-pagination-controls>
+        </div>
+
+        </div>
+        <div class="col-md-12 text-right">
+            <div class="form-group">
+                <label class="control-label">.</label>
+                <button class="btn btn-success btn-sm" ng-click="initiatePayRun()">One Touch Run</button>
+            </div><!-- form-group -->
+        </div>
+    </div><!-- row -->
+
+
 </div><!-- contentpanel -->
+
+
+
+
+<div class="modal fade payroll-summary" tabindex="-1" role="dialog" data-backdrop="static">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Summary</h3>
+                </div>
+                <div class="panel-body big-font">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h5 class="lg-title mb5 text-center">{{business.name}}</h5>
+                            <p class="mb20 text-center">Payroll Summary</p>
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-primary mb30">
+                                    <thead>
+                                    <tr>
+                                        <th>Pay Components</th>
+                                        <th>Amount ( ₦  )</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr ng-repeat="payType in singleEmployee.paymentInformation.payBreakDown.wages.concat(singleEmployee.paymentInformation.payBreakDown.benefits)">
+                                        <td>{{payType.title}}</td>
+                                        <td>{{payType.value / 12 | currency:""}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>Gross Pay: </b></td>
+                                        <td><b>{{singleEmployee.paymentInformation.grossIncome / 12 | currency:""}}</b></td>
+                                    </tr>
+                                    <tr>
+                                        <td>...</td>
+                                        <td>...</td>
+                                    </tr>
+                                    <tr ng-repeat="payType in singleEmployee.paymentInformation.payBreakDown.deductions">
+                                        <td>{{payType.title}}</td>
+                                        <td>{{payType.value / 12 | currency:""}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>Total Deductions: </b></td>
+                                        <td><b>{{singleEmployee.paymentInformation.totalDeductions / 12 | currency:""}}</b></td>
+                                    </tr>
+                                    <tr>
+                                        <td>...</td>
+                                        <td>...</td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>Net Pay: </b></td>
+                                        <td><b>{{singleEmployee.paymentInformation.netPay / 12 | currency:""}}</b></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div><!-- table-responsive -->
+                        </div><!-- col-md-12 -->
+                    </div><!-- row -->
+                </div>
+                <div class="panel-footer">
+                    <button type="reset" ng-click="resetSummary()" class="btn btn-danger" id="payroll-summary-close" data-dismiss="modal">Close</button>
+                </div><!-- panel-footer -->
+            </div>
+        </div>
+    </div>
+</div>
