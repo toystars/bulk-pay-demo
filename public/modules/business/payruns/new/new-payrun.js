@@ -29,6 +29,17 @@ bulkPay.controller('BusinessNewPayRunCtrl', ['$scope', '$rootScope', '$timeout',
   $scope.pageSize = 25;
   $scope.filteredEmployees = [];
   $scope.singleEmploye = {};
+  $scope.authorizeView = false;
+  $scope.payRun = {
+    paymentDate: new Date(),
+    businessId: businessId
+  };
+  $scope.todayDate = new Date();
+  $scope.payRunReportsView = false;
+  $scope.payRolls = [];
+  $scope.settings = {
+    selected: false
+  };
 
 
   /*
@@ -80,6 +91,137 @@ bulkPay.controller('BusinessNewPayRunCtrl', ['$scope', '$rootScope', '$timeout',
 
   $scope.resetSummary = function () {
     $scope.singleEmployee = {};
+  };
+
+
+  /*
+   * Pay run processing
+   * */
+  $scope.initiatePayRun = function () {
+    console.log($scope.filteredEmployees);
+    $scope.authorizeView = true;
+  };
+
+  $scope.confirmPayRun = function () {
+    swal({
+      title: 'Are you sure?',
+      text: 'Action is irreversible!',
+      type: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Confirm',
+      closeOnConfirm: false,
+      showLoaderOnConfirm: true
+    }, function () {
+      $scope.payRun.numberOfEmployees = $scope.filteredEmployees.length;
+      $scope.payRun.payGroup = $scope.getPayGroup();
+      $scope.payRun.totalAmountPaid = $scope.getTotalAmountToBePaid();
+      $scope.payRun.taxPaid = $scope.getTotalTaxToBePaid();
+      $scope.payRun.pensionPaid = $scope.getTotalPensionToBePaid();
+      $http.post('/api/payruns/', $scope.payRun).success(function (payRun) {
+        var stage = 0;
+        var payRolls = [];
+        _.each($scope.filteredEmployees, function (employee) {
+          $http.post('/api/payrolls', {
+            businessId: businessId,
+            payRunId: payRun._id,
+            employee: employee._id,
+            grossPay: employee.paymentInformation.grossIncome / 12,
+            tax: employee.paymentInformation.tax / 12,
+            pension: employee.paymentInformation.pension / 12,
+            totalDeduction: employee.paymentInformation.totalDeductions / 12,
+            netPay: employee.paymentInformation.netPay / 12,
+            payTypes: convertPayTypes(employee.paymentInformation.payBreakDown.wages.concat(employee.paymentInformation.payBreakDown.benefits, employee.paymentInformation.payBreakDown.deductions)),
+            paymentDetails: employee.paymentDetails
+          }).success(function (payRoll) {
+            payRolls.push(payRoll);
+            stage++;
+            if (stage === $scope.filteredEmployees.length) {
+              console.log('Done!');
+              console.log(payRolls);
+              $scope.payRolls = payRolls;
+              $scope.payRunReportsView = true;
+              swal('Success!', 'Pay Run successful. View Report to take more actions.', 'success');
+            }
+          }).error(function (error) {
+            console.log(error);
+            AuthSvc.handleError(error);
+          });
+        });
+      }).error(function (error) {
+        console.log(error);
+        AuthSvc.handleError(error);
+      });
+    });
+  };
+
+  var convertPayTypes = function (payTypes) {
+    var types = payTypes;
+    _.each(types, function (payType) {
+      payType.monthlyValue = payType.value / 12;
+    });
+    return types;
+  };
+
+  $scope.back = function () {
+    $scope.authorizeView = false;
+  };
+
+  $scope.getPayGroup = function () {
+    return $scope.payGroupId === 'all' ? 'All' : _.find($scope.payGroups, function (payGroup) {
+      return payGroup._id === $scope.payGroupId;
+    }).name;
+  };
+
+  $scope.getTotalAmountToBePaid = function () {
+    var sum = 0;
+    _.each($scope.filteredEmployees, function (employee) {
+      sum += employee.paymentInformation.netPay / 12;
+    });
+    return sum;
+  };
+
+  $scope.getTotalTaxToBePaid = function () {
+    var tax = 0;
+    _.each($scope.filteredEmployees, function (employee) {
+      tax += employee.paymentInformation.tax / 12;
+    });
+    return tax;
+  };
+
+  $scope.getTotalPensionToBePaid = function () {
+    var pension = 0;
+    _.each($scope.filteredEmployees, function (employee) {
+      pension += employee.paymentInformation.pension / 12;
+    });
+    return pension;
+  };
+
+  $scope.selectAll = function () {
+    _.each($scope.payRolls, function (payRoll) {
+      payRoll.selected = $scope.settings.selected;
+    });
+  };
+
+  $scope.mailPaySlips = function () {
+    var payRolls = [];
+    _.each($scope.payRolls, function (payRoll) {
+      if (payRoll.selected) {
+        payRolls.push(payRoll);
+      }
+    });
+    if (payRolls.length > 0) {
+      swal('Pay Slip', 'Pay slips sent.', 'success');
+      $state.go('business.payruns');
+    } else {
+      swal('Pay Slip', 'Select at least one employee.', 'warning');
+    }
+  };
+
+  $scope.mailLater = function () {
+    swal('Pay Slip', 'Pay slips can still be sent from pay run report information page.', 'success');
+    $state.go('business.payruns');
   };
 
 }]);

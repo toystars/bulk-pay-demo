@@ -47,6 +47,10 @@
     font-size: 15px;
 }
 
+.bigger-font {
+    font-size: 17px;
+}
+
 .sub-header {
     font-size: 18px;
 }
@@ -86,6 +90,14 @@
 
 ul {
     list-style-type: none;
+}
+
+.action-div {
+    margin-top: 25px;
+}
+
+.pay-info {
+    margin-top: 15px;
 }
 
 

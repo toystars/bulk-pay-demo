@@ -94,7 +94,6 @@ exports.getPayRunEmployees = function (req, res) {
                 var taxRule = _.find(taxes, function (tax) {
                   return employee.payGrade.taxRuleId === tax.toObject()._id.toString();
                 });
-                console.log(taxRule);
                 if (taxRule) {
                   employee.taxRule = taxRule;
                 }
@@ -105,7 +104,6 @@ exports.getPayRunEmployees = function (req, res) {
                     var pension = _.find(pensions, function (pension) {
                       return employee.payGrade.pensionRuleId === pension.toObject()._id.toString();
                     });
-                    console.log(pension);
                     if (pension) {
                       employee.pensionRule = pension;
                     }
