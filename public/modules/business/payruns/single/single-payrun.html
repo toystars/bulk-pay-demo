@@ -1,0 +1,82 @@
+<div class="pageheader">
+    <div class="media">
+        <div class="pageicon pull-left">
+            <i class="fa fa-refresh"></i>
+        </div>
+        <div class="media-body">
+            <ul class="breadcrumb">
+                <li><a href=""><i class="glyphicon glyphicon-home"></i></a></li>
+                <li><a ui-sref="business.overview">Business</a></li>
+                <li>{{business.name}}</li>
+                <li>Pay Run</li>
+            </ul>
+            <h4>Pay Run</h4>
+        </div>
+    </div><!-- media -->
+</div><!-- pageheader -->
+
+<div class="contentpanel">
+
+    <div class="row" ng-if="dataFetched">
+        <div class="col-md-12">
+            <span class="compute-value">Pay Group:</span> {{payRun.payGroup}}<br/>
+            <span class="compute-value">Payment Date:</span> {{payRun.paymentDate | date:"yyyy-MM-dd"}}<br/>
+            <span class="compute-value">Payment Period:</span> {{payRun.paymentPeriod.month}}, {{payRun.paymentPeriod.year}}<br/>
+        </div>
+    </div><!-- row -->
+    <div class="row">
+        <hr/>
+    </div>
+    <div class="row" ng-if="!dataFetched">
+        <div class="col-md-12 text-center">
+            <img alt="" src="images/loaders/loader10.gif">
+        </div>
+    </div>
+    <div class="row pay-runs-header" ng-if="payRolls.length > 0">
+        <div class="col-md-12">
+            <span class="compute-value">Payroll Information: </span><br/>
+        </div>
+    </div>
+    <div class="row" ng-if="payRolls.length > 0">
+        <div class="col-md-12" ng-if="dataFetched">
+            <div class="table-responsive">
+                <table class="table table-primary mb60 table-hover">
+                    <thead>
+                    <tr>
+                        <th>Employee Id</th>
+                        <th>Full Name</th>
+                        <th>Position</th>
+                        <th>Pay Group</th>
+                        <th>Pension Manager</th>
+                        <th>Gross Pay ( ₦ )</th>
+                        <th>Deductions ( ₦ )</th>
+                        <th>Net Pay ( ₦ )</th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr class="pointer" dir-paginate="payRoll in payRolls | itemsPerPage: pageSize"
+                        current-page="currentPage">
+                        <td>{{payRoll.employee.employeeId}}</td>
+                        <td>{{payRoll.employee.fullName}}</td>
+                        <td>{{payRoll.position.name}}</td>
+                        <td>{{payRoll.payGroup.name}}</td>
+                        <td>{{payRoll.pensionManager.name}}</td>
+                        <td>{{payRoll.grossPay | currency:""}}</td>
+                        <td>{{payRoll.totalDeduction | currency:""}}</td>
+                        <td>{{payRoll.netPay | currency:""}}</td>
+                        <td><a class="pointer" ng-click="viewPaySlip(payRoll)">View Pay Slip</a></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div><!-- table-responsive -->
+            <div class="col-md-12 text-left">
+                <dir-pagination-controls boundary-links="true" on-page-change="pageChangeHandler(newPageNumber)"
+                                         template-url="bower_components/angularUtils-pagination/dirPagination.tpl.html"></dir-pagination-controls>
+            </div>
+        </div>
+
+    </div>
+
+
+</div><!-- contentpanel -->

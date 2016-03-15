@@ -115,6 +115,22 @@ bulkPay.directive('updateTitle', ['$rootScope', '$timeout', function ($rootScope
   };
 }]);
 
+bulkPay.filter('filterPayRuns', function () {
+  return function (input, filterObject) {
+    var out = [];
+    if (input instanceof Array && input.length > 0) {
+      _.each(input, function (payRoll) {
+        if (payRoll.paymentDate >= filterObject.startDate && payRoll.paymentDate >= filterObject.endDate) {
+          out.push(payRoll);
+        }
+      });
+    } else {
+      out = input;
+    }
+    return out;
+  };
+});
+
 bulkPay.filter('filterEmployees', function () {
   return function (input, filter) {
     var out = [];

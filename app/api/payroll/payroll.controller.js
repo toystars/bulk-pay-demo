@@ -35,7 +35,7 @@ exports.index = function (req, res) {
  */
 exports.payrolls = function (req, res) {
 
-  PayRoll.find({ payRunId: req.params.payRunId }).populate('employee').exec(function (error, docs) {
+  PayRoll.find({ payRunId: req.params.payRunId }).populate('employee payGroup position pensionManager').exec(function (error, docs) {
     if (error) {
       crudHelper.handleError(res, null, error);
     }
@@ -54,7 +54,7 @@ exports.create = function (req, res) {
     if (error) {
       crudHelper.handleError(res, 400, error);
     } else {
-      PayRoll.findOne({ _id: doc._id }).populate('employee').exec(function (error, payRoll) {
+      PayRoll.findOne({ _id: doc._id }).populate('employee payGroup position pensionManager').exec(function (error, payRoll) {
         if (error) {
           crudHelper.handleError(res, null, error);
         }

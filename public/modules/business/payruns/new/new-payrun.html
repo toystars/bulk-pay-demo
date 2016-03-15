@@ -17,7 +17,60 @@
 
 <div class="contentpanel">
 
-    <div class="row" style="margin-top: 25px;" ng-show="!authorizeView">
+    <div class="row">
+        <div class="col-md-12" ng-if="preSelect">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <div class="panel-btns"></div><!-- panel-btns -->
+                    <h4 class="panel-title">Payroll Calculator</h4>
+                </div><!-- panel-heading -->
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-md-12 text-center">
+                            <p>
+                                <b>This option allows you to pay a list of selected employees from a pay group by selecting the month and year.</b>
+                            </p>
+                        </div>
+                        <div class="col-md-12 text-center">
+                            <p class="text-danger">
+                                Note: Before using this option for a new month payment, make sure salary settings for the month is complete.
+                            </p>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="row">
+                                <div class="col-md-2"></div>
+                                <div class="col-md-8">
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading">
+                                            <div class="row">
+                                                <div class="col-md-3 text-right"><b>Compute payment for:</b></div>
+                                                <div class="col-md-3">
+                                                    <div class="form-group">
+                                                        <select2 ng-model="paymentPeriod.month" s2-options="month as month for month in months" style="width: 100%"></select2>
+                                                    </div><!-- form-group -->
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <div class="form-group">
+                                                        <select2 ng-model="paymentPeriod.year" s2-options="year as year for year in years" style="width: 100%"></select2>
+                                                    </div><!-- form-group -->
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <button class="btn btn-primary" ng-click="startProcessing()">Process Payrun</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div><!-- panel -->
+                                </div>
+                                <div class="col-md-2"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div><!-- panel -->
+        </div>
+    </div>
+
+    <div class="row" style="margin-top: 25px;" ng-show="!authorizeView && !preSelect">
         <div class="col-md-12 employee-filter">
             <div class="row">
                 <div class="col-md-4">
@@ -41,7 +94,12 @@
                 <table class="table table-primary mb60 table-hover">
                     <thead>
                     <tr>
-                        <th>Sel</th>
+                        <th>
+                            <div class="ckbox ckbox-success">
+                                <input ng-model="settings.preSelected" ng-change="selectAllEmployees()" ng-checked="settings.preSelected" type="checkbox" id="preSelected-all" />
+                                <label for="preSelected-all"></label>
+                            </div>
+                        </th>
                         <th>Employee Id</th>
                         <th>Full Name</th>
                         <th>Pay Grade</th>
@@ -82,7 +140,8 @@
         <div class="col-md-12 text-left" ng-if="filteredEmployees.length > 0">
             <div class="form-group">
                 <label class="control-label">.</label>
-                <button class="btn btn-success" ng-click="initiatePayRun()">Start Pay Run</button>
+                <button class="btn btn-primary" ng-click="initiatePayRun()">Start Pay Run</button>
+                <button class="btn btn-warning" ng-click="goBack()">Back</button>
             </div><!-- form-group -->
         </div>
     </div><!-- row -->
@@ -101,7 +160,7 @@
         <div class="col-md-12 action-div">
             <div class="row">
                 <div class="col-md-3">Number of Employees:</div>
-                <div class="col-md-9">{{filteredEmployees.length}}</div>
+                <div class="col-md-9">{{payRunEmployees.length}}</div>
             </div>
             <div class="row">
                 <div class="col-md-3">Pay Group:</div>
@@ -218,6 +277,7 @@
                     <div class="row">
                         <div class="col-md-12">
                             <h5 class="lg-title mb5 text-center">{{business.name}}</h5>
+                            <h5 class="mb20 text-center">{{singleEmployee.fullName}}</h5>
                             <p class="mb20 text-center">Payroll Summary</p>
                             <div class="table-responsive">
                                 <table class="table table-bordered table-primary mb30">

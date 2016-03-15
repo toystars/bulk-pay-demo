@@ -26,89 +26,60 @@
     </div>
 
     <div class="row">
-        <!--<div class="col-md-12 text-center" ng-if="!dataFetched">
-            <img alt="" src="images/loaders/loader10.gif">
-        </div>-->
         <div class="col-md-12 employee-filter">
             <div class="row">
-                <div class="col-md-4">
+                <div class="col-md-2">
                     <div class="form-group">
-                        <label for="employee-name-filter" class="control-label">Name</label>
-                        <input ng-model="nameFilter.name" type="text" id="employee-name-filter" class="form-control" placeholder="Name" />
+                        <label class="control-label">Start Date</label>
+                        <adm-dtp ng-model="filter.startDate" maxdate="{{filter.endDate_detail.unix}}"></adm-dtp>
                     </div><!-- form-group -->
                 </div>
                 <div class="col-md-2">
                     <div class="form-group">
-                        <label class="control-label">Business Unit</label>
-                        <select2 ng-change="alterFilter()" options="options" ng-model="filter.businessUnitId" s2-options="businessUnit._id as businessUnit.name for businessUnit in businessUnits" style="width: 100%"></select2>
-                    </div><!-- form-group -->
-                </div>
-                <div class="col-md-2">
-                    <div class="form-group">
-                        <label class="control-label">Division</label>
-                        <select2 ng-change="alterFilter()" options="options" ng-model="filter.divisionId" s2-options="division._id as division.name for division in divisions" style="width: 100%"></select2>
-                    </div><!-- form-group -->
-                </div>
-                <div class="col-md-2">
-                    <div class="form-group">
-                        <label class="control-label">Department</label>
-                        <select2 ng-change="alterFilter()" options="options" ng-model="filter.departmentId" s2-options="department._id as department.name for department in departments" style="width: 100%"></select2>
-                    </div><!-- form-group -->
-                </div>
-                <div class="col-md-2">
-                    <div class="form-group">
-                        <label class="control-label">Position</label>
-                        <select2 ng-change="alterFilter()" options="options" ng-model="filter.positionId" s2-options="position._id as position.name for position in positions" style="width: 100%"></select2>
+                        <label class="control-label">End Date</label>
+                        <adm-dtp ng-model="filter.endDate" full-data="filter.endDate_detail"></adm-dtp>
                     </div><!-- form-group -->
                 </div>
             </div>
         </div>
-        <div class="col-md-12" <!--ng-if="employees.length === 0 && dataFetched"-->>
+        <div class="col-md-12 text-center" ng-if="!dataFetched">
+            <img alt="" src="images/loaders/loader10.gif">
+        </div>
+        <div class="col-md-12" ng-if="dataFetched && payRuns.length === 0">
             <div class="alert alert-danger text-center">
-                <p>No Employee available</p>
+                <p>No Payrun available</p>
             </div>
         </div>
-        <div class="col-md-12" <!--ng-if="employees.length > 0 && dataFetched"-->>
+        <div class="col-md-12" ng-if="dataFetched && payRuns.length > 0">
             <div class="table-responsive">
                 <table class="table table-primary mb60 table-hover">
                     <thead>
                     <tr>
                         <th>#</th>
-                        <th>Employee Id</th>
-                        <th>Surname</th>
-                        <th>First Name</th>
-                        <th>Other Names</th>
-                        <th>Business Unit</th>
-                        <th>Division</th>
-                        <th>Department</th>
-                        <th>Position</th>
-                        <th>Date Employed</th>
-                        <th>Status</th>
+                        <th>Pay Group</th>
+                        <th>Number of Employees</th>
+                        <th>Payment Date</th>
+                        <th>Tax Paid</th>
+                        <th>Pension Paid</th>
+                        <th>Total Amount Paid</th>
                     </tr>
                     </thead>
                     <tbody>
-                    <tr class="pointer" ui-sref="business.employee({ employeeId: employee._id })" dir-paginate="employee in employees | filterEmployees:nameFilter | itemsPerPage: pageSize" current-page="currentPage">
+                    <tr class="pointer" ui-sref="business.payrun({ payRunId: payRun._id })" dir-paginate="payRun in payRuns | filterPayRuns:filter | itemsPerPage: pageSize" current-page="currentPage">
                         <td>{{$index + 1}}</td>
-                        <td>{{employee.employeeId}}</td>
-                        <td>{{employee.lastName}}</td>
-                        <td>{{employee.firstName}}</td>
-                        <td>{{employee.otherNames}}</td>
-                        <td>{{getBusinessUnit(employee.businessUnitId).name}}</td>
-                        <td>{{getDivision(employee.divisionId).name}}</td>
-                        <td>{{getDepartment(employee.departmentId).name}}</td>
-                        <td>{{getPosition(employee.positionId).name}}</td>
-                        <td>{{employee.employmentDate | date:'dd-MM-yyyy'}}</td>
-                        <td>
-                            <span ng-if="employee.status === 'Active'" class="label label-success">{{employee.status}}</span>
-                            <span ng-if="employee.status === 'Inactive'" class="label label-danger">{{employee.status}}</span>
-                        </td>
+                        <td>{{payRun.payGroup}}</td>
+                        <td>{{payRun.numberOfEmployees}}</td>
+                        <td>{{payRun.paymentDate | date:"yyyy-MM-dd"}}</td>
+                        <td>{{payRun.taxPaid | currency:""}}</td>
+                        <td>{{payRun.pensionPaid | currency:""}}</td>
+                        <td>{{payRun.totalAmountPaid | currency:""}}</td>
                     </tr>
                     </tbody>
                 </table>
             </div><!-- table-responsive -->
-        </div>
-        <div class="col-md-12 text-left">
-            <dir-pagination-controls boundary-links="true" on-page-change="pageChangeHandler(newPageNumber)" template-url="bower_components/angularUtils-pagination/dirPagination.tpl.html"></dir-pagination-controls>
+            <div class="col-md-12 text-left">
+                <dir-pagination-controls boundary-links="true" on-page-change="pageChangeHandler(newPageNumber)" template-url="bower_components/angularUtils-pagination/dirPagination.tpl.html"></dir-pagination-controls>
+            </div>
         </div>
     </div><!-- row -->
 

@@ -10,6 +10,18 @@ var payRollSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'Employee'
   },
+  payGroup: {
+    type: Schema.Types.ObjectId,
+    ref: 'PayGroup'
+  },
+  position: {
+    type: Schema.Types.ObjectId,
+    ref: 'Position'
+  },
+  pensionManager: {
+    type: Schema.Types.ObjectId,
+    ref: 'PensionManager'
+  },
   grossPay: Number,
   tax: Number,
   pension: Number,

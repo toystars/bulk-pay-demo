@@ -12,6 +12,7 @@ var payRunSchema = new Schema({
     default: Date.now
   },
   totalAmountPaid: Number,
+  paymentPeriod: { type: Schema.Types.Mixed },
   taxPaid: Number,
   pensionPaid: Number,
   createdAt: {

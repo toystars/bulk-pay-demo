@@ -20,6 +20,12 @@ bulkPay.controller('BusinessPayRunsManagerCtrl', ['$scope', '$rootScope', '$time
   };
   var businessId = '';
   $scope.dataFetched = false;
+  $scope.currentPage = 1;
+  $scope.pageSize = 25;
+  $scope.filter = {
+    startDate: new Date(new Date().getFullYear(), 0, 1),
+    endDate: new Date()
+  };
 
   /*
    * Event Listeners

@@ -186,6 +186,15 @@ bulkPay.config(['$stateProvider', '$urlRouterProvider', '$locationProvider', 'to
         }
       })
 
+      .state('business.payrun', {
+        url: '/payrun/single/:payRunId',
+        templateUrl: 'modules/business/payruns/single/single-payrun.html',
+        controller: 'BusinessSinglePayRunCtrl',
+        data: {
+          pageTitle: 'Pay Run | BulkPay'
+        }
+      })
+
 
 
 
