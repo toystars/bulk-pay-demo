@@ -11,6 +11,24 @@ bulkPay.config(['$stateProvider', '$urlRouterProvider', '$locationProvider', 'to
 
     $stateProvider
 
+      .state('login', {
+        url: '/login',
+        templateUrl: 'modules/auth/login/login.html',
+        controller: 'loginCtrl',
+        data: {
+          pageTitle: 'Login | BulkPay'
+        }
+      })
+
+      .state('signup', {
+        url: '/signup',
+        templateUrl: 'modules/auth/signup/signup.html',
+        controller: 'signUpCtrl',
+        data: {
+          pageTitle: 'Sign Up | BulkPay'
+        }
+      })
+
       .state('home', {
         url: '/',
         templateUrl: 'modules/main/home/home.html',
@@ -195,24 +213,12 @@ bulkPay.config(['$stateProvider', '$urlRouterProvider', '$locationProvider', 'to
         }
       })
 
-
-
-
-      .state('login', {
-        url: '/login',
-        templateUrl: 'modules/auth/login/login.html',
-        controller: 'loginCtrl',
+      .state('business.newloan', {
+        url: '/loan/new',
+        templateUrl: 'modules/business/loans/new/new-loan.html',
+        controller: 'BusinessNewLoanCtrl',
         data: {
-          pageTitle: 'Login | BulkPay'
-        }
-      })
-
-      .state('signup', {
-        url: '/signup',
-        templateUrl: 'modules/auth/signup/signup.html',
-        controller: 'signUpCtrl',
-        data: {
-          pageTitle: 'Sign Up | BulkPay'
+          pageTitle: 'New Loan | BulkPay'
         }
       })
 

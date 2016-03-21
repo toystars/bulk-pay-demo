@@ -121,14 +121,6 @@ bulkPay.controller('BusinessPayGradesCtrl', ['$scope', '$rootScope', '$timeout',
    * Helpers
    * */
 
-  $scope.getTaxRule = function (id) {
-    for (var x = 0; x < $scope.taxes.length; x++) {
-      if ($scope.taxes[x]._id === id) {
-        return $scope.taxes[x].code + ' - ' + $scope.taxes[x].name;
-      }
-    }
-  };
-
   $scope.getPayGroup = function (id) {
     for (var x = 0; x < payGroups.length; x++) {
       if (payGroups[x]._id === id) {

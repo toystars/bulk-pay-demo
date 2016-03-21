@@ -42,7 +42,6 @@
                         <th>#</th>
                         <th>Name</th>
                         <th>Location</th>
-                        <th>Generic</th>
                         <th>Division</th>
                         <th>Parent</th>
                         <th>Status</th>
@@ -53,9 +52,8 @@
                         <td>{{$index + 1}}</td>
                         <td>{{singleDepartment.name}}</td>
                         <td>{{singleDepartment.location}}</td>
-                        <td>{{singleDepartment.isGeneric}}</td>
-                        <td>{{getDivisions(singleDepartment)}}</td>
-                        <td>{{singleDepartment.parentName}}</td>
+                        <td>{{singleDepartment.division.name}}</td>
+                        <td>{{singleDepartment.parent.name}}</td>
                         <td>
                             <span ng-if="singleDepartment.status === 'Active'" class="label label-success">{{singleDepartment.status}}</span>
                             <span ng-if="singleDepartment.status === 'Inactive'" class="label label-danger">{{singleDepartment.status}}</span>
@@ -92,47 +90,31 @@
                     </div><!-- row -->
 
                     <div class="row">
+
                         <div class="col-sm-6">
                             <div class="form-group">
-                                <label class="control-label">Generic</label>
-                                <select2 options="options" ng-model="singleDepartment.isGeneric" s2-options="choice as choice for choice in choices" style="width: 100%"></select2>
-                            </div><!-- form-group -->
-                        </div><!-- col-sm-6 -->
-
-                        <div class="col-sm-6" ng-hide="singleDepartment.isGeneric === 'No'">
-                            <div class="form-group">
-                                <label class="control-label">Divisions Served</label>
-                                <select2 options="options" ng-model="singleDepartment.divisionsServed" multiple="multiple" s2-options="division._id as division.name for division in divisions" style="width: 100%"></select2>
-                            </div><!-- form-group -->
-                        </div><!-- col-sm-6 -->
-
-                        <div class="col-sm-6" ng-hide="singleDepartment.isGeneric === 'Yes'">
-                            <div class="form-group">
                                 <label class="control-label">Parent</label>
-                                <select2 options="options" ng-model="singleDepartment.isParent" ng-disabled="singleDepartment.isGeneric === 'Yes'" s2-options="choice as choice for choice in choices" style="width: 100%"></select2>
+                                <select2 options="options" ng-model="singleDepartment.isParent" s2-options="choice as choice for choice in choices" style="width: 100%"></select2>
+                            </div><!-- form-group -->
+                        </div><!-- col-sm-12 -->
+
+                        <div class="col-sm-6" ng-show="singleDepartment.isParent === 'Yes'">
+                            <div class="form-group">
+                                <label class="control-label">Division</label>
+                                <select2 options="options" ng-model="singleDepartment.divisionId" s2-options="division._id as division.name for division in divisions" style="width: 100%"></select2>
                             </div><!-- form-group -->
                         </div><!-- col-sm-6 -->
 
+                        <div class="col-sm-6" ng-hide="singleDepartment.isParent === 'Yes'">
+                            <div class="form-group">
+                                <label class="control-label">Parent Department</label>
+                                <select2 options="options" ng-model="singleDepartment.parentId" s2-options="department._id as department.name for department in filteredDepartments" style="width: 100%"></select2>
+                            </div><!-- form-group -->
+                        </div><!-- col-sm-6 -->
 
                     </div>
 
                     <div class="row">
-
-                        <div ng-hide="singleDepartment.isGeneric === 'Yes'">
-                            <div class="col-sm-12" ng-show="singleDepartment.isParent === 'Yes'">
-                                <div class="form-group">
-                                    <label class="control-label">Division</label>
-                                    <select2 options="options" ng-model="singleDepartment.divisionId" ng-disabled="singleDepartment.isGeneric === 'Yes'" s2-options="division._id as division.name for division in divisions" style="width: 100%"></select2>
-                                </div><!-- form-group -->
-                            </div><!-- col-sm-12 -->
-
-                            <div class="col-sm-12" ng-hide="singleDepartment.isParent === 'Yes'">
-                                <div class="form-group">
-                                    <label class="control-label">Parent Department</label>
-                                    <select2 options="options" ng-model="singleDepartment.parentId" s2-options="department._id as department.name for department in filteredDepartments" style="width: 100%"></select2>
-                                </div><!-- form-group -->
-                            </div><!-- col-sm-12 -->
-                        </div>
 
                         <div class="col-sm-12">
                             <div class="form-group">
@@ -219,43 +201,29 @@
 
                     <div class="row">
 
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <label class="control-label">Generic</label>
-                                <select2 options="options" ng-model="department.isGeneric" s2-options="choice as choice for choice in choices" style="width: 100%"></select2>
-                            </div><!-- form-group -->
-                        </div><!-- col-sm-6 -->
-
-                        <div class="col-sm-6" ng-hide="department.isGeneric === 'No'">
-                            <div class="form-group">
-                                <label class="control-label">Divisions Served</label>
-                                <select2 options="options" ng-model="department.divisionsServed" multiple="multiple" s2-options="division._id as division.name for division in divisions" style="width: 100%"></select2>
-                            </div><!-- form-group -->
-                        </div><!-- col-sm-6 -->
-
-                        <div class="col-sm-6" ng-hide="department.isGeneric === 'Yes'">
+                        <div class="col-sm-12">
                             <div class="form-group">
                                 <label class="control-label">Parent</label>
                                 <select2 options="options" ng-model="department.isParent" s2-options="choice as choice for choice in choices" style="width: 100%"></select2>
                             </div><!-- form-group -->
-                        </div><!-- col-sm-6 -->
+                        </div><!-- col-sm-12 -->
 
 
                     </div>
 
-                    <div class="row" ng-hide="department.isGeneric === 'Yes'">
+                    <div class="row" >
 
                         <div class="col-sm-12" ng-show="department.isParent === 'Yes'">
                             <div class="form-group">
                                 <label class="control-label">Division</label>
-                                <select2 options="options" ng-model="department.divisionId" s2-options="division._id as division.name for division in divisions" style="width: 100%"></select2>
+                                <select2 options="options" ng-model="department.division" s2-options="division._id as division.name for division in divisions" style="width: 100%"></select2>
                             </div><!-- form-group -->
                         </div><!-- col-sm-12 -->
 
                         <div class="col-sm-12" ng-hide="department.isParent === 'Yes'">
                             <div class="form-group">
                                 <label class="control-label">Parent Department</label>
-                                <select2 options="options" ng-model="department.parentId" s2-options="department._id as department.name for department in departments" style="width: 100%"></select2>
+                                <select2 options="options" ng-model="department.parent" s2-options="department._id as department.name for department in departments" style="width: 100%"></select2>
                             </div><!-- form-group -->
                         </div><!-- col-sm-12 -->
 
@@ -263,7 +231,7 @@
                 </div>
                 <div class="panel-footer">
                     <button class="btn btn-primary mr5" ng-click="createDepartment()">Save</button>
-                    <button type="reset" class="btn btn-danger" id="new-division-close" data-dismiss="modal">Cancel</button>
+                    <button type="reset" class="btn btn-danger" id="new-department-close" data-dismiss="modal">Cancel</button>
                 </div><!-- panel-footer -->
             </div>
         </div>

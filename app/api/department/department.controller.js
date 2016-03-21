@@ -35,7 +35,7 @@ exports.index = function (req, res) {
  * Get all divisions per business
  */
 exports.departments = function (req, res) {
-  Department.find({ businessId: req.params.id }, function (error, departments) {
+  Department.find({ businessId: req.params.id }).populate('parent division').exec(function (error, departments) {
     if (error) {
       crudHelper.handleError(res, null, error);
     }
@@ -49,12 +49,20 @@ exports.departments = function (req, res) {
  * Create new division
  * */
 exports.create = function (req, res) {
+  console.log(req.body);
   var newDepartment = new Department(req.body);
   newDepartment.save(function (error, department) {
     if (error) {
       crudHelper.handleError(res, 400, error);
     } else {
-      crudHelper.respondWithResult(res, 201, department);
+      Department.findOne({ _id: department._id }).populate('parent division').exec(function (error, department) {
+        if (error) {
+          crudHelper.handleError(res, null, error);
+        }
+        if (department) {
+          crudHelper.respondWithResult(res, 201, department);
+        }
+      });
     }
   });
 };
@@ -63,7 +71,7 @@ exports.create = function (req, res) {
  * Fetch a division
  * */
 exports.show = function (req, res) {
-  Department.findOne({ _id: req.params.id }, function (error, department) {
+  Department.findOne({ _id: req.params.id }).populate('parent division').exec(function (error, department) {
     if (error) {
       crudHelper.handleError(res, null, error);
     } else if (department) {
@@ -82,7 +90,7 @@ exports.updateDepartment = function (req, res) {
     if (error) {
       crudHelper.handleError(res, 400, error);
     } else {
-      crudHelper.handleEntityNotFound(req, res, department, true);
+      crudHelper.handleDepartmentUpdate(req, res, department, Department);
     }
   });
 };

@@ -41,12 +41,10 @@
                 <!-- Nav tabs -->
                 <div class="col-md-12">
                     <ul class="nav nav-tabs">
-                        <li ng-class="{active: inView === 'Personal Details'}"><a ng-click="changeView('Personal Details')" style="cursor: pointer;">Personal Details </a>
-                        </li>
-                        <li ng-class="{active: inView === 'Employment Details'}"><a ng-click="changeView('Employment Details')" style="cursor: pointer;">Employment
-                            Details </a></li>
-                        <li ng-class="{active: inView === 'Payment Details'}"><a ng-click="changeView('Payment Details')" style="cursor: pointer;">Payment Details </a>
-                        </li>
+                        <li ng-class="{active: inView === 'Personal Details'}"><a ng-click="changeView('Personal Details')" style="cursor: pointer;">Personal Details </a></li>
+                        <li ng-class="{active: inView === 'Employment Details'}"><a ng-click="changeView('Employment Details')" style="cursor: pointer;">Employment Details </a></li>
+                        <li ng-class="{active: inView === 'Payment Details'}"><a ng-click="changeView('Payment Details')" style="cursor: pointer;">Payment Details </a></li>
+                        <li ng-class="{active: inView === 'Payroll Details'}"><a ng-click="changeView('Payroll Details')" style="cursor: pointer;">Payroll Details </a></li>
                     </ul>
                 </div><!-- col-md-12 -->
 
@@ -428,6 +426,19 @@
                                             &nbsp;
                                         </div>
                                     </div>
+
+                                </form>
+                            </div><!-- panel-body -->
+                        </div><!-- panel -->
+                    </div><!-- tab-pane -->
+                </div>
+
+                <div class="col-md-12" ng-show="inView === 'Payroll Details'">
+                    <div class="tab-pane" id="following">
+                        <div class="panel panel-default">
+
+                            <div class="panel-body nopadding">
+                                <form class="form-horizontal form-bordered">
 
                                     <div class="form-group">
                                         <div class="col-sm-12">

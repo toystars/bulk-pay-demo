@@ -43,7 +43,6 @@
                         <th>Name</th>
                         <th>Description</th>
                         <th>Pay Group</th>
-                        <th>Tax Rule</th>
                         <th>Status</th>
                     </tr>
                     </thead>
@@ -54,7 +53,6 @@
                         <td>{{payGrade.name}}</td>
                         <td>{{payGrade.description}}</td>
                         <td>{{getPayGroup(payGrade.payGroupId).name}}</td>
-                        <td>{{getTaxRule(payGrade.taxRuleId)}}</td>
                         <td>
                             <span ng-if="payGrade.status === 'Active'" class="label label-success">{{payGrade.status}}</span>
                             <span ng-if="payGrade.status === 'Inactive'" class="label label-danger">{{payGrade.status}}</span>

@@ -8,20 +8,19 @@ var departmentSchema = new Schema({
     type: String,
     required: "Please, enter title"
   },
-  isGeneric: {
-    type: String,
-    default: 'No'
-  },
   isParent: {
     type: String,
     default: 'Yes'
   },
-  divisionsServed: [ { type: Schema.Types.Mixed } ],
   location: String,
-  parentId: String,
-  parentName: String,
-  divisionId: String,
-  divisionName: String,
+  parent: {
+    type: Schema.Types.ObjectId,
+    ref: 'Department'
+  },
+  division: {
+    type: Schema.Types.ObjectId,
+    ref: 'Division'
+  },
   businessId: String,
   status: {
     type: String,

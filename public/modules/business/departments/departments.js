@@ -19,18 +19,14 @@ bulkPay.controller('BusinessDepartmentsCtrl', ['$scope', '$rootScope', 'AuthSvc'
 
   var resetDepartment = function () {
     $scope.department = {
-      isGeneric: 'No',
+      name: '',
       isParent: 'Yes',
-      divisionsServed: [],
-      parentId: '',
-      divisionId: ''
+      location: $scope.business.state,
+      businessId: businessId,
+      parent: '',
+      division: ''
     };
   };
-
-  /*
-   * Reset department object on controller load
-   * */
-  resetDepartment();
 
 
   if (!BusinessDataSvc.getBusinessId() || BusinessDataSvc.getBusinessId() !== $stateParams.businessId) {
@@ -43,10 +39,6 @@ bulkPay.controller('BusinessDepartmentsCtrl', ['$scope', '$rootScope', 'AuthSvc'
   var getBusinessDivisions = function (businessId) {
     $http.get('/api/divisions/business/' + businessId).success(function (data) {
       $scope.divisions = data;
-      $scope.divisions.unshift({
-        name: 'All',
-        _id: 'All'
-      });
     }).error(function (error) {
       console.log(error);
     })
@@ -69,42 +61,23 @@ bulkPay.controller('BusinessDepartmentsCtrl', ['$scope', '$rootScope', 'AuthSvc'
     businessId = args._id;
     getDepartments(businessId);
     getBusinessDivisions(businessId);
+    resetDepartment();
   });
 
 
   $scope.createDepartment = function () {
-
-    var requestObject = {
-      name: $scope.department.name,
-      businessId: businessId,
-      isParent: $scope.department.isParent,
-      isGeneric: $scope.department.isGeneric,
-      location: $scope.department.location,
-      divisionsServed: $scope.department.divisionsServed,
-      divisionId: $scope.department.divisionId,
-      divisionName: (!$scope.department.divisionId || $scope.department.divisionId === '') ? '' : getDivisionName($scope.department.divisionId),
-      parentId: $scope.department.parentId,
-      parentName: (!$scope.department.parentId || $scope.department.parentId === '') ? '' : getParentName($scope.department.parentId)
-    };
-    requestObject.divisionId = (requestObject.isParent === 'Yes') ? requestObject.divisionId : '';
-    requestObject.divisionName = (requestObject.isParent === 'Yes') ? requestObject.divisionName : '';
-
-    if (requestObject.isGeneric === 'Yes') {
-      requestObject.isParent = 'Yes';
-      requestObject.divisionId = '';
-      requestObject.divisionName = '';
-      requestObject.parentId = '';
-      requestObject.parentName = '';
+    if ($scope.department.isParent === 'Yes') {
+      delete $scope.department.parent;
     } else {
-      requestObject.divisionsServed = [];
+      delete $scope.department.division;
     }
-
-    $http.post('/api/departments/', requestObject).success(function (data) {
+    $http.post('/api/departments/', $scope.department).success(function (data) {
       $scope.departments.push(data);
       resetDepartment();
-      jQuery('#new-division-close').click();
+      jQuery('#new-department-close').click();
       swal("Success", "Department created.", "success");
     }).error(function (error) {
+      console.log(error);
       AuthSvc.handleError(error);
     });
   };
@@ -158,23 +131,6 @@ bulkPay.controller('BusinessDepartmentsCtrl', ['$scope', '$rootScope', 'AuthSvc'
   /*
    * Helpers
    * */
-  var getParentName = function (parentId) {
-    for (var x = 0; x < $scope.departments.length; x++) {
-      if ($scope.departments[x]._id === parentId) {
-        return $scope.departments[x].name;
-      }
-    }
-    return '';
-  };
-
-  var getDivisionName = function (id) {
-    for (var x = 0; x < $scope.divisions.length; x++) {
-      if ($scope.divisions[x]._id === id) {
-        return $scope.divisions[x].name;
-      }
-    }
-    return '';
-  };
 
   var replace = function (data) {
     for (var x = 0; x < $scope.departments.length; x++) {
@@ -213,6 +169,8 @@ bulkPay.controller('BusinessDepartmentsCtrl', ['$scope', '$rootScope', 'AuthSvc'
     $scope.oldDepartment = {};
     angular.copy(department, $scope.oldDepartment);
     angular.copy(department, $scope.singleDepartment);
+    $scope.singleDepartment.parentId = $scope.singleDepartment.parent ? $scope.singleDepartment.parent._id : '';
+    $scope.singleDepartment.divisionId = $scope.singleDepartment.division ? $scope.singleDepartment.division._id : '';
     getHistories($scope.singleDepartment._id);
     setParentsDepartments();
   };
@@ -247,26 +205,19 @@ bulkPay.controller('BusinessDepartmentsCtrl', ['$scope', '$rootScope', 'AuthSvc'
   };
 
   $scope.updateDepartment = function () {
-
-    $scope.singleDepartment.divisionName = (!$scope.singleDepartment.divisionId || $scope.singleDepartment.divisionId === '') ? '' : getDivisionName($scope.singleDepartment.divisionId);
-    $scope.singleDepartment.parentName = (!$scope.singleDepartment.parentId || $scope.singleDepartment.parentId === '') ? '' : getParentName($scope.singleDepartment.parentId);
-    $scope.singleDepartment.divisionId = ($scope.singleDepartment.isParent === 'Yes') ? $scope.singleDepartment.divisionId : '';
-    $scope.singleDepartment.divisionName = ($scope.singleDepartment.isParent === 'Yes') ? $scope.singleDepartment.divisionName : '';
-    if ($scope.singleDepartment.isGeneric === 'Yes') {
-      $scope.singleDepartment.isParent = 'Yes';
-      $scope.singleDepartment.divisionId = '';
-      $scope.singleDepartment.divisionName = '';
-      $scope.singleDepartment.parentId = '';
-      $scope.singleDepartment.parentName = '';
+    if ($scope.singleDepartment.isParent === 'Yes') {
+      $scope.singleDepartment.parent = '';
+      $scope.singleDepartment.division = $scope.singleDepartment.divisionId;
     } else {
-      $scope.singleDepartment.divisionsServed = [];
+      $scope.singleDepartment.division = '';
+      $scope.singleDepartment.parent = $scope.singleDepartment.parentId;
     }
-
     $http.put('/api/departments/' + $scope.singleDepartment._id, $scope.singleDepartment).success(function (data) {
       getHistories(data._id);
       replace(data);
       swal("Success", "Department updated.", "success");
     }).error(function (error) {
+      console.log(error);
       AuthSvc.handleError(error);
     });
   };
@@ -281,16 +232,6 @@ bulkPay.controller('BusinessDepartmentsCtrl', ['$scope', '$rootScope', 'AuthSvc'
       }
     }
     $scope.filteredDepartments = departments;
-  };
-
-  $scope.getDivisions = function (singleDepartment) {
-    if (singleDepartment.divisionsServed.length === 0) {
-      return singleDepartment.divisionName;
-    } else if (singleDepartment.divisionsServed.length === 1 && singleDepartment.divisionsServed[0] === 'All') {
-      return 'All divisions';
-    }
-    var division = singleDepartment.divisionsServed.length === 1 ? ' division' : ' divisions';
-    return singleDepartment.divisionsServed.length + division;
   };
 
 

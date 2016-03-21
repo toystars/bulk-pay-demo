@@ -1,6 +1,7 @@
 /*
 * Crud helper functions
 * */
+
 require('../api/history/history.model.js');
 var _ = require('underscore'),
   mongoose = require('mongoose'),
@@ -38,6 +39,47 @@ var handleEntityNotFound = function (req, res, entity, flag) {
   }
 };
 exports.handleEntityNotFound = handleEntityNotFound;
+
+var handleDepartmentUpdate = function (req, res, entity, model) {
+  if (!entity) {
+    handleError(res, null, {message: 'Not found'});
+  } else {
+    var changes = audit.diff(entity._doc, req.body);
+    if (changes.length) {
+      var updated = _.extend(entity, req.body);
+      if (updated.isParent === 'Yes') {
+        updated.parent = null;
+      } else {
+        updated.division = null;
+      }
+      updated.save(function (error, update) {
+        if (error) {
+          handleError(res, null, error);
+        } else {
+          var doc = {
+            objectId: update._id,
+            userId: req.user._id,
+            activities: changes,
+            user: req.user._id
+          };
+          var newHistory = new History(doc);
+          newHistory.save(function (error, history) {
+            model.findOne({ _id: update.id }).populate('parent division').exec(function (error, department) {
+              if (error) {
+                handleError(res, null, error);
+              } else {
+                respondWithResult(res, null, department);
+              }
+            });
+          });
+        }
+      });
+    } else {
+      respondWithResult(res, null, req.body);
+    }
+  }
+};
+exports.handleDepartmentUpdate = handleDepartmentUpdate;
 
 var saveUpdates = function (req, res, entity) {
   var changes = audit.diff(entity._doc, req.body);

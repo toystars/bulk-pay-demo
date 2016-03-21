@@ -31,17 +31,24 @@
     </li>
     <li ng-class="{active: inView === 'Employees'}" class="parent" ng-click="toggleActive('Employees')"><a href=""><i class="fa fa-users"></i> <span>Employees</span></a>
         <ul class="children">
-            <li ng-class="{active: inView === 'Manage Employees'}" ng-click="toggleActive('Manage Employees')"><a ui-sref="business.manageemployees">Manage Employees</a></li>
             <li ng-class="{active: inView === 'New Employee'}" ng-click="toggleActive('New Employee')"><a ui-sref="business.newemployee">New Employee</a></li>
+            <li ng-class="{active: inView === 'Manage Employees'}" ng-click="toggleActive('Manage Employees')"><a ui-sref="business.manageemployees">Manage Employees</a></li>
         </ul>
     </li>
     <li ng-class="{active: inView === 'Pay Runs'}" class="parent" ng-click="toggleActive('Pay Runs')"><a href=""><i class="fa fa-refresh"></i> <span>Pay Runs</span></a>
         <ul class="children">
-            <li ng-class="{active: inView === 'Manage Pay Runs'}" ng-click="toggleActive('Manage Pay Runs')"><a ui-sref="business.payruns">Pay Runs</a></li>
             <li ng-class="{active: inView === 'New Pay Run'}" ng-click="toggleActive('New Pay Run')"><a ui-sref="business.newpayrun">New Pay Run</a></li>
+            <li ng-class="{active: inView === 'Manage Pay Runs'}" ng-click="toggleActive('Manage Pay Runs')"><a ui-sref="business.payruns">Pay Runs</a></li>
         </ul>
     </li>
-    <li ng-class="{active: inView === 'Leave'}" ng-click="toggleActive('Leave')"><a><i class="fa fa-paper-plane-o"></i> <span>Leave</span></a></li>
+    <li ng-class="{active: inView === 'Loan Management'}" class="parent" ng-click="toggleActive('Loan Management')"><a href=""><i class="fa fa-bar-chart"></i> <span>Loan Management</span></a>
+        <ul class="children">
+            <li ng-class="{active: inView === 'New Loan Application'}" ng-click="toggleActive('New Loan Application')"><a ui-sref="business.newloan">New Loan Application</a></li>
+            <li ng-class="{active: inView === 'Payment Rules'}" ng-click="toggleActive('Payment Rules')"><a ui-sref="business.loanpaymentrules">Payment Rules</a></li>
+            <li ng-class="{active: inView === 'Manage Loans'}" ng-click="toggleActive('Manage Loans')"><a ui-sref="business.loans">Manage Loans</a></li>
+        </ul>
+    </li>
+    <li ng-class="{active: inView === 'Leave Management'}" ng-click="toggleActive('Leave Management')"><a><i class="fa fa-paper-plane-o"></i> <span>Leave Management</span></a></li>
     <li ng-class="{active: inView === 'Payroll'}" ng-click="toggleActive('Payroll')"><a><i class="fa fa-bank"></i> <span>Payroll</span></a></li>
     <li><a ui-sref="home.overview"><i class="fa fa-angle-double-left"></i> <span>Back to Home</span></a></li>
 </ul>
