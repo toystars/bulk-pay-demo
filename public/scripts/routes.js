@@ -222,4 +222,22 @@ bulkPay.config(['$stateProvider', '$urlRouterProvider', '$locationProvider', 'to
         }
       })
 
+      .state('business.loans', {
+        url: '/loans',
+        templateUrl: 'modules/business/loans/manage/manage-loans.html',
+        controller: 'BusinessLoansManagerCtrl',
+        data: {
+          pageTitle: 'Loans | BulkPay'
+        }
+      })
+
+      .state('business.loanpaymentrules', {
+        url: '/loan/rules',
+        templateUrl: 'modules/business/loans/payment/payment.html',
+        controller: 'BusinessLoanPaymentRulesCtrl',
+        data: {
+          pageTitle: 'Payment Rules | BulkPay'
+        }
+      })
+
   }]);
