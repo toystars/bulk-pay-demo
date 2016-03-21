@@ -78,6 +78,12 @@
                                 </div><!-- col-sm-12 -->
                                 <div class="col-sm-12">
                                     <div class="form-group">
+                                        <label class="control-label">Currency</label>
+                                        <select2 options="options" ng-model="currency" ng-change="changeCurrency()" s2-options="currency.currency as getCurrencyString(currency) for currency in currencies" style="width: 100%"></select2>
+                                    </div><!-- form-group -->
+                                </div><!-- col-sm-12 -->
+                                <div class="col-sm-12">
+                                    <div class="form-group">
                                         <label for="new-business-contact-name" class="control-label">Contact Name</label>
                                         <input ng-model="newBusiness.contactName" type="text" id="new-business-contact-name" class="form-control" />
                                     </div><!-- form-group -->

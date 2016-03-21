@@ -8,6 +8,8 @@ bulkPay.controller('CreateBusinessCtrl', ['$scope', 'AuthSvc', '$cookies', '$sta
 
   $scope.$parent.inView = 'New Business';
   var userId = AuthSvc.getCurrentUser()._id;
+  $scope.currencies = [];
+  $scope.currency = '';
 
   /*
    * Initializing data and helper functions
@@ -33,21 +35,35 @@ bulkPay.controller('CreateBusinessCtrl', ['$scope', 'AuthSvc', '$cookies', '$sta
     allowClear: true
   };
 
+  var getCurrencies = function () {
+    $http.get('data/currencies.json').success(function (currencies) {
+      var keys = Object.keys(currencies);
+      _.each(keys, function (key) {
+        if (currencies.hasOwnProperty(key)) {
+          $scope.currencies.push({
+            currency: key,
+            format: currencies[key].format,
+            symbol: currencies[key].symbol
+          });
+        }
+      });
+    }).error(function (error) {
+      console.log(error);
+    });
+  };
+
 
   /*
    * Main logic
    * */
 
   resetBusiness();
-
-  $scope.$on('ngRepeatFinished', function (ngRepeatFinishedEvent) {
-    triggerSelect();
-  });
+  getCurrencies();
 
   $scope.save = function () {
     /*
-    * Validation to be handled later
-    * */
+     * Validation to be handled later
+     * */
     $http.post('/api/businesses', $scope.newBusiness).success(function (business) {
       if (business) {
         swal("Success", "Business created successfully.", "success");
@@ -56,6 +72,16 @@ bulkPay.controller('CreateBusinessCtrl', ['$scope', 'AuthSvc', '$cookies', '$sta
       }
     }).error(function (error) {
       console.log(error);
+    });
+  };
+
+  $scope.getCurrencyString = function (currency) {
+    return currency.currency + ' - ' + currency.symbol;
+  };
+
+  $scope.changeCurrency = function () {
+    $scope.newBusiness.currency = _.find($scope.currencies, function (currency) {
+      return currency.currency === $scope.currency;
     });
   };
 

@@ -64,6 +64,12 @@
                                         <input ng-model="business.city" type="text" id="new-business-city" class="form-control" />
                                     </div><!-- form-group -->
                                 </div><!-- col-sm-12 -->
+                                <div class="col-sm-12">
+                                    <div class="form-group">
+                                        <label class="control-label">Industry</label>
+                                        <select2 ng-model="business.industry" s2-options="industry as industry for industry in industries" style="width: 100%"></select2>
+                                    </div><!-- form-group -->
+                                </div><!-- col-sm-12 -->
                             </div>
 
                         </div><!-- col-sm-6 -->
@@ -72,8 +78,8 @@
                             <div class="row">
                                 <div class="col-sm-12">
                                     <div class="form-group">
-                                        <label class="control-label">Industry</label>
-                                        <select2 ng-model="business.industry" s2-options="industry as industry for industry in industries" style="width: 100%"></select2>
+                                        <label class="control-label">Currency</label>
+                                        <select2 options="options" ng-model="currency" ng-change="changeCurrency()" s2-options="currency.currency as getCurrencyString(currency) for currency in currencies" style="width: 100%"></select2>
                                     </div><!-- form-group -->
                                 </div><!-- col-sm-12 -->
                                 <div class="col-sm-12">

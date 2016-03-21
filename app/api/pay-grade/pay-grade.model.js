@@ -23,11 +23,6 @@ var payGradesSchema = new Schema({
     type: String,
     required: "Please specify payGroupId"
   },
-  taxRuleId: String,
-  pensionRuleId: {
-    type: String,
-    default: ''
-  },
   status: {
     type: String,
     required: "Please specify type status",

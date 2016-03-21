@@ -1,5 +1,5 @@
 
-bulkPay.controller('BusinessUpdateCtrl', ['$scope', '$rootScope', 'AuthSvc', 'BusinessDataSvc', '$stateParams', '$cookies', 'Business', '$state', function ($scope, $rootScope, AuthSvc, BusinessDataSvc, $stateParams, $cookies, Business, $state) {
+bulkPay.controller('BusinessUpdateCtrl', ['$scope', '$rootScope', 'AuthSvc', 'BusinessDataSvc', '$stateParams', '$cookies', 'Business', '$state', '$http', function ($scope, $rootScope, AuthSvc, BusinessDataSvc, $stateParams, $cookies, Business, $state, $http) {
 
   AuthSvc.isLoggedIn(function (status) {
     if (!status) {
@@ -9,7 +9,8 @@ bulkPay.controller('BusinessUpdateCtrl', ['$scope', '$rootScope', 'AuthSvc', 'Bu
 
   $scope.$parent.inView = 'Update Business Info';
   $scope.businessHistory = [];
-
+  $scope.currencies = [];
+  $scope.currency = '';
 
   if (!BusinessDataSvc.getBusinessId() || BusinessDataSvc.getBusinessId() !== $stateParams.businessId) {
     $cookies.put('currentBusiness', $stateParams.businessId);
@@ -23,6 +24,7 @@ bulkPay.controller('BusinessUpdateCtrl', ['$scope', '$rootScope', 'AuthSvc', 'Bu
    * */
   $rootScope.$on('business.fetched', function (event, businesses) {
     $scope.business = businesses;
+    $scope.currency = $scope.business.currency.currency;
   });
 
   $rootScope.$on('history.fetched', function (event, history) {
@@ -31,6 +33,34 @@ bulkPay.controller('BusinessUpdateCtrl', ['$scope', '$rootScope', 'AuthSvc', 'Bu
 
   $scope.getLastHistory = function () {
     return $scope.businessHistory[$scope.businessHistory.length - 1];
+  };
+
+  var getCurrencies = function () {
+    $http.get('data/currencies.json').success(function (currencies) {
+      var keys = Object.keys(currencies);
+      _.each(keys, function (key) {
+        if (currencies.hasOwnProperty(key)) {
+          $scope.currencies.push({
+            currency: key,
+            format: currencies[key].format,
+            symbol: currencies[key].symbol
+          });
+        }
+      });
+    }).error(function (error) {
+      console.log(error);
+    });
+  };
+  getCurrencies();
+
+  $scope.getCurrencyString = function (currency) {
+    return currency.currency + ' - ' + currency.symbol;
+  };
+
+  $scope.changeCurrency = function () {
+    $scope.business.currency = _.find($scope.currencies, function (currency) {
+      return currency.currency === $scope.currency;
+    });
   };
 
   $scope.updateBusiness = function () {

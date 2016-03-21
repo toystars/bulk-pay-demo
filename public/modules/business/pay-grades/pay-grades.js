@@ -10,8 +10,6 @@ bulkPay.controller('BusinessPayGradesCtrl', ['$scope', '$rootScope', '$timeout',
   $scope.payGrade = {};
   $scope.payGrades = [];
   $scope.payTypes = [];
-  $scope.taxes = [];
-  $scope.pensions = [];
   $scope.$parent.inView = 'Pay Grades';
   var payGroups = [];
   var businessId = '';
@@ -55,22 +53,6 @@ bulkPay.controller('BusinessPayGradesCtrl', ['$scope', '$rootScope', '$timeout',
     })
   };
 
-  var getTaxes = function (businessId) {
-    $http.get('/api/taxes/business/' + businessId).success(function (data) {
-      $scope.taxes = data;
-    }).error(function (error) {
-      AuthSvc.handleError(error);
-    })
-  };
-
-  var getPensions = function (businessId) {
-    $http.get('/api/pensions/business/' + businessId).success(function (data) {
-      $scope.pensions = data;
-    }).error(function (error) {
-      AuthSvc.handleError(error);
-    })
-  };
-
   var resetPayGrade = function () {
     $scope.payGrade = {
       code: '',
@@ -79,7 +61,6 @@ bulkPay.controller('BusinessPayGradesCtrl', ['$scope', '$rootScope', '$timeout',
       businessId: businessId,
       status: '',
       payGroupId: '',
-      taxRuleId: '',
       payTypes: []
     };
     insertBaseTypes();
@@ -113,8 +94,6 @@ bulkPay.controller('BusinessPayGradesCtrl', ['$scope', '$rootScope', '$timeout',
     getPayGrades(businessId);
     getPayGroups(businessId);
     getPayTypes(businessId);
-    getTaxes(businessId);
-    getPensions(businessId);
   });
 
 
@@ -141,13 +120,6 @@ bulkPay.controller('BusinessPayGradesCtrl', ['$scope', '$rootScope', '$timeout',
   /*
    * Helpers
    * */
-  $scope.getPension = function (id) {
-    for (var x = 0; x < $scope.pensions.length; x++) {
-      if ($scope.pensions[x]._id === id) {
-        return $scope.pensions[x].code + ' - ' + $scope.pensions[x].name;
-      }
-    }
-  };
 
   $scope.getTaxRule = function (id) {
     for (var x = 0; x < $scope.taxes.length; x++) {
@@ -226,14 +198,6 @@ bulkPay.controller('BusinessPayGradesCtrl', ['$scope', '$rootScope', '$timeout',
         $scope.payGrades[x] = data;
       }
     }
-  };
-
-  $scope.getTaxRuleDisplayName = function (tax) {
-    return tax.code + ' - ' + tax.name;
-  };
-
-  $scope.getPensionRuleDisplayName = function (pension) {
-    return pension.name;
   };
 
   $scope.getLastHistory = function () {

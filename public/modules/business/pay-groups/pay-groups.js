@@ -1,4 +1,3 @@
-
 bulkPay.controller('BusinessPayGroupsCtrl', ['$scope', '$rootScope', 'AuthSvc', 'BusinessDataSvc', '$stateParams', '$cookies', '$http', '$state', function ($scope, $rootScope, AuthSvc, BusinessDataSvc, $stateParams, $cookies, $http, $state) {
 
   AuthSvc.isLoggedIn(function (status) {
@@ -16,6 +15,8 @@ bulkPay.controller('BusinessPayGroupsCtrl', ['$scope', '$rootScope', 'AuthSvc', 
   };
   $scope.statuses = ['Active', 'Inactive'];
   $scope.dataFetched = false;
+  $scope.pensions = [];
+  $scope.taxes = [];
 
   if (!BusinessDataSvc.getBusinessId() || BusinessDataSvc.getBusinessId() !== $stateParams.businessId) {
     $cookies.put('currentBusiness', $stateParams.businessId);
@@ -33,12 +34,27 @@ bulkPay.controller('BusinessPayGroupsCtrl', ['$scope', '$rootScope', 'AuthSvc', 
     })
   };
 
+  var getTaxes = function (businessId) {
+    $http.get('/api/taxes/business/' + businessId).success(function (data) {
+      $scope.taxes = data;
+    }).error(function (error) {
+      AuthSvc.handleError(error);
+    })
+  };
+
+  var getPensions = function (businessId) {
+    $http.get('/api/pensions/business/' + businessId).success(function (data) {
+      $scope.pensions = data;
+    }).error(function (error) {
+      AuthSvc.handleError(error);
+    })
+  };
+
   var resetPayGroup = function () {
     $scope.payGroup = {
       businessId: businessId
     };
   };
-
 
 
   /*
@@ -48,6 +64,8 @@ bulkPay.controller('BusinessPayGroupsCtrl', ['$scope', '$rootScope', 'AuthSvc', 
     $scope.business = args;
     businessId = args._id;
     getPayGroups(businessId);
+    getTaxes(businessId);
+    getPensions(businessId);
     resetPayGroup();
   });
 
@@ -62,7 +80,6 @@ bulkPay.controller('BusinessPayGroupsCtrl', ['$scope', '$rootScope', 'AuthSvc', 
       console.log(error);
     });
   };
-
 
 
   /*
@@ -151,6 +168,38 @@ bulkPay.controller('BusinessPayGroupsCtrl', ['$scope', '$rootScope', 'AuthSvc', 
       console.log(error);
     });
   };
+
+  $scope.getTaxRuleDisplayName = function (tax) {
+    return tax.code + ' - ' + tax.name;
+  };
+
+  $scope.getPensionRuleDisplayName = function (pension) {
+    return pension.name;
+  };
+
+  $scope.getPensionName = function (id) {
+    var pensionName;
+    var pension = _.find($scope.pensions, function (pension) {
+      return pension._id === id;
+    });
+    if (pension) {
+      pensionName = pension.code + ' - ' + pension.name;
+    } else {
+      pensionName = 'No pension rule defined.';
+    }
+    return pensionName;
+  };
+
+  $scope.getTaxName = function (taxRuleId) {
+    var tax = _.find($scope.taxes, function (tax) {
+      return tax._id === taxRuleId;
+    });
+    if (tax) {
+      return tax.code + ' - ' + tax.name;
+    } else {
+      return 'No tax rule defined.';
+    }
+  }
 
 
 }]);

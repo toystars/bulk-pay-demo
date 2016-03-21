@@ -14,6 +14,14 @@ var businessSchema = Schema({
     type: String,
     default: 'Active'
   },
+  currency: {
+    type: Schema.Types.Mixed,
+    default: {
+      currency: "NGN",
+      format: "%v %s",
+      symbol: "₦"
+    }
+  },
   industry: String,
   contactName: String,
   contactEmail: String,

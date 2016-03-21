@@ -16,6 +16,8 @@ var payGroupsSchema = new Schema({
     type: String,
     required: "Please specify companyId"
   },
+  taxRuleId: String,
+  pensionRuleId: String,
   status: {
     type: String,
     required: "Please specify type status",
