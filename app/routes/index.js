@@ -17,6 +17,8 @@ var pensionRoute = require('../api/pension/index');
 var pensionManagerRoute = require('../api/pension-manager/index');
 var payRunRoute = require('../api/payrun/index');
 var payRollRoute = require('../api/payroll/index');
+var paymentRuleRoute = require('../api/payment-rule/index');
+var loanRoute = require('../api/loan/index');
 
 module.exports = function(app, passport) {
   authRoute(app, passport);
@@ -36,4 +38,6 @@ module.exports = function(app, passport) {
   pensionManagerRoute(app);
   payRunRoute(app);
   payRollRoute(app);
+  paymentRuleRoute(app);
+  loanRoute(app);
 };

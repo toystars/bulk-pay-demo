@@ -18,6 +18,67 @@
 <div class="contentpanel">
 
 
+    <div class="row">
+
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <div class="panel-btns">
+                        <a href="" class="panel-minimize tooltips" data-toggle="tooltip" title="Minimize Panel"><i class="fa fa-minus"></i></a>
+                        <a href="" class="panel-close tooltips" data-toggle="tooltip" title="Close Panel"><i class="fa fa-times"></i></a>
+                    </div><!-- panel-btns -->
+                    <h4 class="panel-title">New Loan Application</h4>
+                </div>
+                <div class="panel-body">
+
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label class="control-label">Employee</label>
+                                <select2 options="options" ng-model="loan.employee" s2-options="employee._id as employee.fullName for employee in employees" style="width: 100%"></select2>
+                            </div><!-- form-group -->
+                        </div><!-- col-sm-6 -->
+
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label for="loan-amount" class="control-label">Amount</label>
+                                <input type="number" ng-blur="calculateEMI()" id="loan-amount" placeholder="100000" class="form-control" ng-model="loan.amount"/>
+                            </div><!-- form-group -->
+                        </div><!-- col-sm-6 -->
+
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label for="loan-rate" class="control-label">Rate (%)</label>
+                                <input type="number" ng-blur="calculateEMI()" id="loan-rate" placeholder="10" class="form-control" ng-model="loan.rate"/>
+                            </div><!-- form-group -->
+                        </div><!-- col-sm-6 -->
+
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label for="loan-term" class="control-label">Term (months)</label>
+                                <input type="number" ng-blur="calculateEMI()" id="loan-term" placeholder="12" class="form-control" ng-model="loan.term"/>
+                            </div><!-- form-group -->
+                        </div><!-- col-sm-6 -->
+
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label for="loan-term" class="control-label">EMI Payable (month)</label>
+                                <input type="number" disabled id="loan-emi" placeholder="0" class="form-control" ng-model="loan.emi"/>
+                            </div><!-- form-group -->
+                        </div><!-- col-sm-6 -->
+
+                    </div><!-- row -->
+
+                </div><!-- panel-body -->
+                <div class="panel-footer">
+                    <button class="btn btn-primary mr5" ng-click="createLoan()">Apply</button>
+                    <button type="reset" class="btn btn-warning" ng-click="cancel()">Cancel</button>
+                </div><!-- panel-footer -->
+            </div><!-- panel -->
+
+        </div><!-- col-md-12 -->
+
+    </div>
 
 
 </div><!-- contentpanel -->

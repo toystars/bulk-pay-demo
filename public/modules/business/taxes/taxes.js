@@ -42,14 +42,6 @@ bulkPay.controller('BusinessTaxesCtrl', ['$scope', '$rootScope', 'AuthSvc', 'Bus
     })
   };
 
-  var getPayTypes = function (businessId) {
-    $http.get('/api/paytypes/business/' + businessId).success(function (data) {
-      $scope.payTypes = data;
-    }).error(function (error) {
-      console.log(error);
-    })
-  };
-
   var resetTax = function () {
     $scope.tax = {
       businessId: businessId,
@@ -70,7 +62,6 @@ bulkPay.controller('BusinessTaxesCtrl', ['$scope', '$rootScope', 'AuthSvc', 'Bus
     $scope.business = args;
     businessId = args._id;
     getTaxes(businessId);
-    getPayTypes(businessId);
     resetTax();
   });
 

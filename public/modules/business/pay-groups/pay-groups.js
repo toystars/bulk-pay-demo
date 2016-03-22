@@ -161,8 +161,8 @@ bulkPay.controller('BusinessPayGroupsCtrl', ['$scope', '$rootScope', 'AuthSvc', 
 
   $scope.updatePayGroup = function () {
     $http.put('/api/paygroups/' + $scope.singlePayGroup._id, $scope.singlePayGroup).success(function (data) {
-      getHistories(data._id);
       replace(data);
+      $scope.showPayGroup(data);
       swal("Success", "Pay group updated.", "success");
     }).error(function (error) {
       console.log(error);
