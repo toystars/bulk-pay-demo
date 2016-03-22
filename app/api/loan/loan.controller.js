@@ -90,17 +90,3 @@ exports.update = function (req, res) {
     }
   });
 };
-
-/*
- * Delete loan
- * */
-exports.destroy = function (req, res) {
-  Loan.findOne({_id: req.params.id}, function (error, loan) {
-    if (error) {
-      crudHelper.handleError(res, 400, error);
-    }
-    if (loan) {
-      crudHelper.handleEntityNotFound(req, res, loan, false);
-    }
-  });
-};
