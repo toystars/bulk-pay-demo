@@ -243,8 +243,12 @@ bulkPay.controller('BusinessEmployeeCreateCtrl', ['$scope', '$rootScope', '$time
         newDepartments = departments;
       } else if (newValue && newValue !== '') {
         _.each(departments, function (department) {
-          if (_.find(department.divisionsServed, function (divisionServed) { return divisionServed === 'All'; }) ||
-            _.find(department.divisionsServed, function (divisionServed) { return divisionServed === newValue; }) ||
+          if (_.find(department.divisionsServed, function (divisionServed) {
+              return divisionServed === 'All';
+            }) ||
+            _.find(department.divisionsServed, function (divisionServed) {
+              return divisionServed === newValue;
+            }) ||
             department.divisionId === newValue) {
             newDepartments.push(department);
           }
@@ -281,7 +285,7 @@ bulkPay.controller('BusinessEmployeeCreateCtrl', ['$scope', '$rootScope', '$time
         position = data;
         $http.get('/api/employees/position/' + position._id).success(function (data) {
           if (data.length >= position.numberOfAllowedEmployees) {
-            $timeout(function() {
+            $timeout(function () {
               $scope.employee.positionId = '';
               $scope.message = 'Select another position.';
               swal('Not Allowed', 'Already exceeded number of employees for ' + position.name + ' position. Contact admin if quota should be increased.', 'warning');
@@ -386,7 +390,9 @@ bulkPay.controller('BusinessEmployeeCreateCtrl', ['$scope', '$rootScope', '$time
     _.each(concatenatedPayTypes, function (payType) {
       if ($scope.employee.exemptedPayTypes.length === 0) {
         if (payType.type === type) {
-          foundType = _.find($scope.employee.editablePayTypes, function (editableType) {return editableType.code === payType.code});
+          foundType = _.find($scope.employee.editablePayTypes, function (editableType) {
+            return editableType.code === payType.code
+          });
           if (foundType) {
             types.push(foundType);
           } else {
@@ -394,8 +400,12 @@ bulkPay.controller('BusinessEmployeeCreateCtrl', ['$scope', '$rootScope', '$time
           }
         }
       } else {
-        if (!_.find($scope.employee.exemptedPayTypes, function (exType) {return exType.code === payType.code}) && payType.type === type) {
-          foundType = _.find($scope.employee.editablePayTypes, function (editableType) {return editableType.code === payType.code});
+        if (!_.find($scope.employee.exemptedPayTypes, function (exType) {
+            return exType.code === payType.code
+          }) && payType.type === type) {
+          foundType = _.find($scope.employee.editablePayTypes, function (editableType) {
+            return editableType.code === payType.code
+          });
           if (foundType) {
             types.push(foundType);
           } else {
@@ -476,7 +486,10 @@ bulkPay.controller('BusinessEmployeeCreateCtrl', ['$scope', '$rootScope', '$time
           derivative: $scope.customType.derived,
           status: $scope.customType.status,
           isBase: false
-        }).success(function (data) { }).error(function (error) { AuthSvc.handleError(error); });
+        }).success(function (data) {
+        }).error(function (error) {
+          AuthSvc.handleError(error);
+        });
       }
       jQuery('#new-pay-type-close').click();
     }
@@ -501,18 +514,15 @@ bulkPay.controller('BusinessEmployeeCreateCtrl', ['$scope', '$rootScope', '$time
     }
   };
   $scope.prepareSummary = function () {
-    $http.get('/api/taxes/' + $scope.currentPayGrade.taxRuleId).success(function (tax) {
-      $http.get('/api/pensions/' + $scope.currentPayGrade.pensionRuleId).success(function (pension) {
-        var calculator = new PayRollCalculation($scope.employee, $scope.currentPayGrade.payTypes, tax, pension);
-        $scope.payrollInformation = calculator.calculate();
-      }).error(function (error) {
-        AuthSvc.handleError(error);
-      });
+    $http.get('/api/paygroups/' + $scope.employee.payGroupId).success(function (payGroup) {
+      console.log(payGroup);
+      var calculator = new PayRollCalculation($scope.employee, $scope.currentPayGrade.payTypes, payGroup.tax, payGroup.pension);
+      $scope.payrollInformation = calculator.calculate();
     }).error(function (error) {
+      console.log(error);
       AuthSvc.handleError(error);
     });
   };
-
 
 
   $scope.resetSummary = function () {
@@ -562,7 +572,7 @@ bulkPay.controller('BusinessEmployeeCreateCtrl', ['$scope', '$rootScope', '$time
     }
   };
 
-  $scope.fileSelected = function(files) {
+  $scope.fileSelected = function (files) {
     if (files && files.length) {
       $scope.file = files[0];
       var reader = new FileReader();
@@ -575,9 +585,9 @@ bulkPay.controller('BusinessEmployeeCreateCtrl', ['$scope', '$rootScope', '$time
 
   $scope.createEmployee = function () {
     if ($scope.file) {
-      imageUploader.imageUpload($scope.file).progress(function(evt) {
+      imageUploader.imageUpload($scope.file).progress(function (evt) {
         $scope.cloudinaryRequest = true;
-      }).success(function(data) {
+      }).success(function (data) {
         $scope.employee.profilePictures.push(data.name);
         $scope.employee.currentProfilePicture = data.name;
         saveEmployee();
@@ -606,6 +616,32 @@ bulkPay.controller('BusinessEmployeeCreateCtrl', ['$scope', '$rootScope', '$time
   $scope.resetNewEmployee = function () {
     resetEmployee();
   };
+
+  $scope.print = function (elementId) {
+    var printContents = document.getElementById(elementId).innerHTML;
+    var popupWin;
+    if (navigator.userAgent.toLowerCase().indexOf('chrome') > -1) {
+      popupWin = window.open('', '_blank', 'width=800,height=9000,scrollbars=no,menubar=no,toolbar=no,location=no,status=no,titlebar=no');
+      popupWin.window.focus();
+      popupWin.document.write('<!DOCTYPE html><html><head>' + '<link rel="stylesheet" type="text/css" href="http://localhost:5000/styles/main.css />' + '<link rel="stylesheet" type="text/css" href="styles/custom.css" />' + '</head><body onload="window.print()"><div class="reward-body">' + printContents + '</div></html>');
+      popupWin.onbeforeunload = function (event) {
+        popupWin.close();
+        return '';
+      };
+      popupWin.onabort = function (event) {
+        popupWin.document.close();
+        popupWin.close();
+      }
+    }
+    else {
+      popupWin = window.open('', '_blank', 'width=800,height=9000');
+      popupWin.document.open();
+      popupWin.document.write('<html><head><link rel="stylesheet" type="text/css" href="http://localhost:5000/styles/main.css" /><link rel="stylesheet" type="text/css" href="styles/custom.css" /></head><body onload="window.print()">' + printContents + '</html>');
+      popupWin.document.close();
+    }
+    popupWin.document.close();
+    return true;
+  }
 
 }]);
 

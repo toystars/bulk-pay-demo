@@ -45,6 +45,7 @@
                         <th>Amount</th>
                         <th>Rate</th>
                         <th>Term</th>
+                        <th>Installment Paid</th>
                         <th>Serviced</th>
                         <th>Application Date</th>
                     </tr>
@@ -56,6 +57,7 @@
                         <td>{{loan.amount}}</td>
                         <td>{{loan.rate}}%</td>
                         <td>{{getComputedTerm(loan.term)}}</td>
+                        <td>{{loan.payCount}}</td>
                         <!--<td>
                             <span ng-if="loan.status === 'Active'" class="label label-success">{{loan.status}}</span>
                             <span ng-if="loan.status === 'Inactive'" class="label label-danger">{{loan.status}}</span>
@@ -78,7 +80,7 @@
                         <a href="" class="panel-minimize tooltips" data-toggle="tooltip" title="Minimize Panel"><i class="fa fa-minus"></i></a>
                         <a href="" class="panel-close tooltips" data-toggle="tooltip" title="Close Panel"><i class="fa fa-times"></i></a>
                     </div><!-- panel-btns -->
-                    <h4 class="panel-title">Update - {{oldLoan.name}} Payment Rule</h4>
+                    <h4 class="panel-title">Loan</h4>
                 </div>
                 <div class="panel-body">
 

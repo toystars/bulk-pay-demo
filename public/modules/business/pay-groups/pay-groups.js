@@ -190,9 +190,9 @@ bulkPay.controller('BusinessPayGroupsCtrl', ['$scope', '$rootScope', 'AuthSvc', 
     return pensionName;
   };
 
-  $scope.getTaxName = function (taxRuleId) {
+  $scope.getTaxName = function (taxId) {
     var tax = _.find($scope.taxes, function (tax) {
-      return tax._id === taxRuleId;
+      return tax._id === taxId;
     });
     if (tax) {
       return tax.code + ' - ' + tax.name;

@@ -122,11 +122,11 @@
                         <td>{{employee.employeeId}}</td>
                         <td>{{employee.fullName}}</td>
                         <td>{{employee.payGrade.name}}</td>
-                        <td>{{employee.paymentInformation.grossIncome / 12 | currency:""}}</td>
-                        <td>{{employee.paymentInformation.tax / 12 | currency:""}}</td>
-                        <td>{{employee.paymentInformation.pension / 12 | currency:""}}</td>
-                        <td>{{employee.paymentInformation.totalDeductions / 12 | currency:""}}</td>
-                        <td>{{employee.paymentInformation.netPay / 12 | currency:""}}</td>
+                        <td class="text-right">{{employee.paymentInformation.grossIncome / 12 | currency:""}}</td>
+                        <td class="text-right">{{employee.paymentInformation.tax / 12 | currency:""}}</td>
+                        <td class="text-right">{{employee.paymentInformation.pension / 12 | currency:""}}</td>
+                        <td class="text-right">{{employee.paymentInformation.totalDeductions / 12 | currency:""}}</td>
+                        <td class="text-right">{{employee.paymentInformation.netPay / 12 | currency:""}}</td>
                         <td><a href="" data-toggle="modal" data-target=".payroll-summary" ng-click="showPayDetails(employee)">View Pay Details</a></td>
                     </tr>
                     </tbody>

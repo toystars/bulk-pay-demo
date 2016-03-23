@@ -19,7 +19,7 @@ var mongoose = require('mongoose'),
  * Get all pay groups
  */
 exports.index = function (req, res) {
-  PayGroup.find({}, function (error, payGroups) {
+  PayGroup.find({}).populate('tax pension').exec(function (error, payGroups) {
     if (error) {
       crudHelper.handleError(res, null, error);
     }
@@ -61,7 +61,7 @@ exports.create = function (req, res) {
  * Fetch a pay group
  * */
 exports.show = function (req, res) {
-  PayGroup.findOne({ _id: req.params.id }, function (error, payGroup) {
+  PayGroup.findOne({ _id: req.params.id }).populate('tax pension').exec(function (error, payGroup) {
     if (error) {
       crudHelper.handleError(res, null, error);
     } else if (payGroup) {

@@ -14,12 +14,14 @@ require('../pay-grade/pay-grade.model.js');
 require('../pay-group/pay-group.model.js');
 require('../tax/tax.model.js');
 require('../pension/pension.model.js');
+require('../loan/loan.model.js');
 var mongoose = require('mongoose'),
   Employee = mongoose.model('Employee'),
   PayGrade = mongoose.model('PayGrade'),
   PayGroup = mongoose.model('PayGroup'),
   Tax = mongoose.model('Tax'),
   Pension = mongoose.model('Pension'),
+  Loan = mongoose.model('Loan'),
   _ = require('underscore'),
   crudHelper = require('../../helpers/crud.js');
 
@@ -88,43 +90,31 @@ exports.getPayRunEmployees = function (req, res) {
               employee.payGrade = payGrade;
             }
           });
-          Tax.find({ businessId: req.params.businessId }, function (error, taxes) {
-            if (taxes) {
+          PayGroup.find({ businessId: req.params.businessId }).populate('tax pension').exec(function (error, payGroups) {
+            _.each(employees, function (employee) {
+              var payGroup = _.find(payGroups, function (payGroup) {
+                return employee.payGroupId === payGroup.toObject()._id.toString();
+              });
+              if (payGroup) {
+                employee.taxRule = payGroup.tax;
+                employee.pensionRule = payGroup.pension;
+              }
+            });
+            Loan.find({ businessId: req.params.businessId, fullyServiced: 'No' }).populate('employee').exec(function (error, loans) {
               _.each(employees, function (employee) {
-                var taxRule = _.find(taxes, function (tax) {
-                  return employee.payGrade.taxRuleId === tax.toObject()._id.toString();
+                var employeeLoans = [];
+                _.each(loans, function (loan) {
+                  if (employee.toObject()._id.toString() === loan.employee._id.toString()) {
+                    employeeLoans.push(loan);
+                  }
                 });
-                if (taxRule) {
-                  employee.taxRule = taxRule;
-                }
+                employee.loans = employeeLoans;
               });
-              Pension.find({ businessId: req.params.businessId }, function (error, pensions) {
-                if (pensions) {
-                  _.each(employees, function (employee) {
-                    var pension = _.find(pensions, function (pension) {
-                      return employee.payGrade.pensionRuleId === pension.toObject()._id.toString();
-                    });
-                    if (pension) {
-                      employee.pensionRule = pension;
-                    }
-                  });
-                  PayGroup.find({ businessId: req.params.businessId }, function (error, payGroups) {
-                    if (payGroups) {
-                      crudHelper.respondWithResult(res, null, {
-                        employees: employees,
-                        payGroups: payGroups
-                      });
-                    } else {
-                      crudHelper.handleError(res, null, error);
-                    }
-                  });
-                } else {
-                  crudHelper.handleError(res, null, error);
-                }
+              crudHelper.respondWithResult(res, null, {
+                employees: employees,
+                payGroups: payGroups
               });
-            } else {
-              crudHelper.handleError(res, null, error);
-            }
+            });
           });
         } else {
           crudHelper.handleError(res, null, error);

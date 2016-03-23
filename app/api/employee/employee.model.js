@@ -19,6 +19,10 @@ var employeesSchema = new Schema({
     type: Schema.Types.Mixed,
     default: {}
   },
+  loans: {
+    type: Schema.Types.Mixed,
+    default: {}
+  },
   city: String,
   confirmationDate: Date,
   customPayTypes: [ { type: Schema.Types.Mixed } ],

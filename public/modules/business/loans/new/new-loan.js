@@ -43,11 +43,8 @@ bulkPay.controller('BusinessNewLoanCtrl', ['$scope', '$rootScope', 'AuthSvc', 'B
   * */
 
   $scope.calculateEMI = function () {
-    var loanAmount = $scope.loan.amount ? $scope.loan.amount : 0;
-    var rate = $scope.loan.rate ? ($scope.loan.rate / 100) / 12 : 0;
-    var duration = $scope.loan.term ? $scope.loan.term : 0;
-    var calculatedEMI = ( loanAmount * (Math.pow(1 + rate, duration)) * rate ) / ( (Math.pow(1 + rate, duration)) - 1 );
-    $scope.loan.emi = Math.round(calculatedEMI);
+    var Loan = new LoanCalculator($scope.loan).evaluate();
+    $scope.loan.emi = Loan.emi;
   };
 
 

@@ -13,6 +13,8 @@ var loanSchema = new Schema({
     ref: 'Employee'
   },
   amount: Number,
+  activeAmount: Number,
+  payments: [{type: Schema.Types.Mixed}],
   rate: Number,
   term: Number,
   payCount: {
@@ -24,10 +26,22 @@ var loanSchema = new Schema({
     required: "Please specify type service status",
     default: "No"
   },
+  purpose: {
+    type: String,
+    default: 'Loan'
+  },
   createdAt: {
     type: Date,
     default: Date.now
   }
+});
+
+loanSchema.pre('save', function (next) {
+  var self = this;
+  if (!self.activeAmount) {
+    self.activeAmount = self.amount;
+  }
+  next();
 });
 
 module.exports = mongoose.model('Loan', loanSchema);

@@ -175,18 +175,6 @@
                                         </div>
                                     </div><!-- form-group -->
                                     <div class="form-group">
-                                        <label class="col-sm-4 control-label">Tax Rule</label>
-                                        <div class="col-sm-8">
-                                            <select2 options="options" ng-model="payGrade.taxRuleId" s2-options="tax._id as getTaxRuleDisplayName(tax) for tax in taxes" style="width: 100%"></select2>
-                                        </div>
-                                    </div><!-- form-group -->
-                                    <div class="form-group">
-                                        <label class="col-sm-4 control-label">Pension Rule</label>
-                                        <div class="col-sm-8">
-                                            <select2 options="options" ng-model="payGrade.pensionRuleId" s2-options="pension._id as getPensionRuleDisplayName(pension) for pension in pensions" style="width: 100%"></select2>
-                                        </div>
-                                    </div><!-- form-group -->
-                                    <div class="form-group">
                                         <label class="col-sm-4 control-label">Status</label>
                                         <div class="col-sm-8">
                                             <select2 options="options" ng-model="payGrade.status" s2-options="status as status for status in statuses" style="width: 100%"></select2>
@@ -291,6 +279,7 @@
                                                     <th>Derivative</th>
                                                     <th>Formula / Value</th>
                                                     <th>Value</th>
+                                                    <th>Monthly Equivalent</th>
                                                 </tr>
                                                 </thead>
                                                 <tbody ng-sortable="payTypeSortConfig" id="data-body">
@@ -304,8 +293,15 @@
                                                         <input ng-blur="calculate()" ng-if="payType.derived !== 'Fixed'" type="text" placeholder="% or Formula e.g 5 % DC1" class="form-control calc" ng-model="payType.derivative" />
                                                     </td>
                                                     <td>
-                                                        <input type="number" class="compute-value calc" ng-if="payType.derived !== 'Fixed'" disabled ng-model="payType.value" />
+                                                        <span><b>{{ payType.value || 0 | currency:"" }}</b></span>
                                                     </td>
+                                                    <td>
+                                                        <span><b>{{ payType.value / 12 | currency:"" }}</b></span>
+                                                    </td>
+
+                                                    <!--<td>
+                                                        <input type="number" class="compute-value calc" ng-if="payType.derived !== 'Fixed'" disabled ng-model="payType.value" />
+                                                    </td>-->
                                                 </tr>
                                                 </tbody>
                                             </table>

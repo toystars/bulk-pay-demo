@@ -16,8 +16,14 @@ var payGroupsSchema = new Schema({
     type: String,
     required: "Please specify companyId"
   },
-  taxRuleId: String,
-  pensionRuleId: String,
+  tax: {
+    type: Schema.Types.ObjectId,
+    ref: 'Tax'
+  },
+  pension: {
+    type: Schema.Types.ObjectId,
+    ref: 'Pension'
+  },
   status: {
     type: String,
     required: "Please specify type status",

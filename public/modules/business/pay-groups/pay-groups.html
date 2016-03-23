@@ -51,8 +51,8 @@
                         <td>{{$index + 1}}</td>
                         <td>{{payGroup.code}}</td>
                         <td>{{payGroup.name}}</td>
-                        <td>{{getTaxName(payGroup.taxRuleId)}}</td>
-                        <td>{{getPensionName(payGroup.pensionRuleId)}}</td>
+                        <td>{{getTaxName(payGroup.tax)}}</td>
+                        <td>{{getPensionName(payGroup.pension)}}</td>
                         <td>
                             <span ng-if="payGroup.status === 'Active'" class="label label-success">{{payGroup.status}}</span>
                             <span ng-if="payGroup.status === 'Inactive'" class="label label-danger">{{payGroup.status}}</span>
@@ -95,14 +95,14 @@
                         <div class="col-sm-6">
                             <div class="form-group">
                                 <label for="pay-group-name" class="control-label">Tax Rule</label>
-                                <select2 options="options" ng-model="singlePayGroup.taxRuleId" s2-options="tax._id as getTaxRuleDisplayName(tax) for tax in taxes" style="width: 100%"></select2>
+                                <select2 options="options" ng-model="singlePayGroup.tax" s2-options="tax._id as getTaxRuleDisplayName(tax) for tax in taxes" style="width: 100%"></select2>
                             </div><!-- form-group -->
                         </div><!-- col-sm-6 -->
 
                         <div class="col-sm-6">
                             <div class="form-group">
                                 <label for="pay-group-name" class="control-label">Pension Rule</label>
-                                <select2 options="options" ng-model="singlePayGroup.pensionRuleId" s2-options="pension._id as getPensionRuleDisplayName(pension) for pension in pensions" style="width: 100%"></select2>
+                                <select2 options="options" ng-model="singlePayGroup.pension" s2-options="pension._id as getPensionRuleDisplayName(pension) for pension in pensions" style="width: 100%"></select2>
                             </div><!-- form-group -->
                         </div><!-- col-sm-6 -->
 
@@ -191,14 +191,14 @@
                         <div class="col-sm-6">
                             <div class="form-group">
                                 <label for="pay-group-name" class="control-label">Tax Rule</label>
-                                <select2 options="options" ng-model="payGroup.taxRuleId" s2-options="tax._id as getTaxRuleDisplayName(tax) for tax in taxes" style="width: 100%"></select2>
+                                <select2 options="options" ng-model="payGroup.tax" s2-options="tax._id as getTaxRuleDisplayName(tax) for tax in taxes" style="width: 100%"></select2>
                             </div><!-- form-group -->
                         </div><!-- col-sm-6 -->
 
                         <div class="col-sm-6">
                             <div class="form-group">
                                 <label for="pay-group-name" class="control-label">Pension Rule</label>
-                                <select2 options="options" ng-model="payGroup.pensionRuleId" s2-options="pension._id as getPensionRuleDisplayName(pension) for pension in pensions" style="width: 100%"></select2>
+                                <select2 options="options" ng-model="payGroup.pension" s2-options="pension._id as getPensionRuleDisplayName(pension) for pension in pensions" style="width: 100%"></select2>
                             </div><!-- form-group -->
                         </div><!-- col-sm-6 -->
 

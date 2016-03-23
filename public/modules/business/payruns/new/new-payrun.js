@@ -89,7 +89,8 @@ bulkPay.controller('BusinessNewPayRunCtrl', ['$scope', '$rootScope', '$timeout',
       $scope.payGroups = $scope.payGroups.concat(data.payGroups);
       $scope.employees = data.employees;
       _.each($scope.employees, function (employee) {
-        employee.paymentInformation = new PayRollCalculation(employee, employee.payGrade.payTypes, employee.taxRule, employee.pensionRule).calculate();
+        employee.paymentInformation = new PayRollCalculation(employee, employee.payGrade.payTypes, employee.taxRule,
+          employee.pensionRule, $scope.employees.loans).calculate();
       });
       $scope.filteredEmployees = $scope.employees;
       $scope.dataFetched = true;

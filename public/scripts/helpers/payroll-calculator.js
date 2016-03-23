@@ -7,7 +7,25 @@ var PayRollCalculation = function (employee, payGradeTypes, employeeTaxRule, emp
   * Clean up parameters and sort employee-modified
   * pay components and employee-exempted components
   * */
-  var concatenatedPayTypes = payGradeTypes.concat(employee.customPayTypes);
+
+  var employeeLoans = employee.loans || [];
+  var loans = [];
+  _.each(employeeLoans, function (loan) {
+    var loanObject = new LoanCalculator(loan).evaluate();
+    loans.push({
+      editablePerEmployee: "No",
+      frequency: "Monthly",
+      isBase: false,
+      taxable: "Yes",
+      title: loan.purpose,
+      type: "Deduction",
+      value: loanObject.emi * 12,
+      loanObject: loanObject
+    });
+  });
+
+
+  var concatenatedPayTypes = payGradeTypes.concat(employee.customPayTypes, loans);
   var newPayTypes = [];
   _.each(concatenatedPayTypes, function (payType) {
     var type = _.find(employee.editablePayTypes, function (editablePayType) { return editablePayType.code === payType.code });
