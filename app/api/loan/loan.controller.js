@@ -90,3 +90,17 @@ exports.update = function (req, res) {
     }
   });
 };
+
+/*
+ * Make repayment update
+ * */
+exports.repayment = function (req, res) {
+  Loan.findOne({ _id: req.params.id }, function (error, loan) {
+    if (error) {
+      crudHelper.handleError(res, 400, error);
+    } else {
+      console.log(req.body);
+      crudHelper.respondWithResult(res, null, loan);
+    }
+  });
+};

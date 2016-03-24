@@ -300,7 +300,7 @@
                                         <td>...</td>
                                         <td>...</td>
                                     </tr>
-                                    <tr ng-repeat="payType in singleEmployee.paymentInformation.payBreakDown.deductions">
+                                    <tr ng-repeat="payType in singleEmployee.paymentInformation.payBreakDown.deductions.concat(singleEmployee.paymentInformation.payBreakDown.repayments)">
                                         <td>{{payType.title}}</td>
                                         <td>{{payType.value / 12 | currency:""}}</td>
                                     </tr>

@@ -11,6 +11,7 @@ module.exports = function (app) {
   router.post('/', auth.isAuthenticated, auth.isSuperAdmin, controller.create);
   router.get('/business/:id', auth.isAuthenticated, controller.loans);
   router.get('/:id', auth.isAuthenticated, controller.show);
+  router.put('/:id/repayment', auth.isAuthenticated, auth.isSuperAdmin, controller.repayment);
   router.put('/:id', auth.isAuthenticated, auth.isSuperAdmin, controller.update);
 
   app.use('/api/loans', router);

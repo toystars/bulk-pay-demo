@@ -174,6 +174,7 @@ bulkPay.controller('BusinessNewPayRunCtrl', ['$scope', '$rootScope', '$timeout',
         var stage = 0;
         var payRolls = [];
         _.each($scope.payRunEmployees, function (employee) {
+          console.log(employee.paymentInformation.payBreakDown.repayments);
           $http.post('/api/payrolls', {
             businessId: businessId,
             payRunId: payRun._id,
@@ -186,8 +187,9 @@ bulkPay.controller('BusinessNewPayRunCtrl', ['$scope', '$rootScope', '$timeout',
             pension: employee.paymentInformation.pension / 12,
             totalDeduction: employee.paymentInformation.totalDeductions / 12,
             netPay: employee.paymentInformation.netPay / 12,
-            payTypes: convertPayTypes(employee.paymentInformation.payBreakDown.wages.concat(employee.paymentInformation.payBreakDown.benefits, employee.paymentInformation.payBreakDown.deductions)),
-            paymentDetails: employee.paymentDetails
+            payTypes: convertPayTypes(employee.paymentInformation.payBreakDown.wages.concat(employee.paymentInformation.payBreakDown.benefits, employee.paymentInformation.payBreakDown.deductions, employee.paymentInformation.payBreakDown.repayments)),
+            paymentDetails: employee.paymentDetails,
+            repayments: evaluateRepayments(employee.paymentInformation.payBreakDown.repayments)
           }).success(function (payRoll) {
             payRolls.push(payRoll);
             stage++;
@@ -195,6 +197,7 @@ bulkPay.controller('BusinessNewPayRunCtrl', ['$scope', '$rootScope', '$timeout',
               $scope.payRolls = payRolls;
               $scope.payRunReportsView = true;
               swal('Success!', 'Pay Run successful. View Report to take more actions.', 'success');
+              updateLoans(employee.paymentInformation.payBreakDown.repayments);
             }
           }).error(function (error) {
             AuthSvc.handleError(error);
@@ -204,6 +207,39 @@ bulkPay.controller('BusinessNewPayRunCtrl', ['$scope', '$rootScope', '$timeout',
         AuthSvc.handleError(error);
       });
     });
+  };
+
+  var updateLoans = function (repayments) {
+    _.each(repayments, function (repayment) {
+      var object = {
+        id: repayment.loanObject.id,
+        interest: repayment.loanObject.runAnalysis.interest,
+        principal: repayment.loanObject.runAnalysis.principal,
+        payment: repayment.loanObject.runAnalysis.EMI,
+        basePrincipal: repayment.loanObject.runAnalysis.basePrincipal,
+        amountLeft: repayment.loanObject.runAnalysis.currentPrincipal - repayment.loanObject.runAnalysis.principal,
+        paymentPeriod: $scope.paymentPeriod
+      };
+      $http.put('/api/loans/' + object.id + '/repayment', object).success(function (response) {
+        console.log(response);
+      }).error(function (error) {
+        console.log(error);
+      });
+    });
+  };
+
+  var evaluateRepayments = function (repayments) {
+    var newRepayments = [];
+    _.each(repayments, function (repayment) {
+      newRepayments.push({
+        interest: repayment.loanObject.runAnalysis.interest,
+        principal: repayment.loanObject.runAnalysis.principal,
+        payment: repayment.loanObject.runAnalysis.EMI,
+        basePrincipal: repayment.loanObject.runAnalysis.basePrincipal,
+        amountLeft: repayment.loanObject.runAnalysis.currentPrincipal - repayment.loanObject.runAnalysis.principal
+      });
+    });
+    return newRepayments;
   };
 
   var convertPayTypes = function (payTypes) {

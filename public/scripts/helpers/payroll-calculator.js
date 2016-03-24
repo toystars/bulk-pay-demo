@@ -18,9 +18,9 @@ var PayRollCalculation = function (employee, payGradeTypes, employeeTaxRule, emp
       isBase: false,
       taxable: "Yes",
       title: loan.purpose,
-      type: "Deduction",
+      type: "Repayment",
       value: loanObject.emi * 12,
-      loanObject: loanObject
+      loanObject: _.extend(loanObject, { id: loan._id })
     });
   });
 
@@ -55,7 +55,7 @@ var PayRollCalculation = function (employee, payGradeTypes, employeeTaxRule, emp
   var calculateOtherDeductions = function () {
     var deductions = 0;
     _.each(payTypes, function (type) {
-      if (type.type === 'Deduction') {
+      if (type.type === 'Deduction' || type.type === 'Repayment') {
         deductions += type.value;
       }
     });
@@ -99,6 +99,7 @@ var PayRollCalculation = function (employee, payGradeTypes, employeeTaxRule, emp
     var wages = [];
     var benefits = [];
     var deductions = [];
+    var repayments = [];
     _.each(payTypes, function (type) {
       switch (type.type) {
         case 'Wage':
@@ -114,6 +115,15 @@ var PayRollCalculation = function (employee, payGradeTypes, employeeTaxRule, emp
             value: type.value,
             code: type.code,
             title: type.title,
+            frequency: type.frequency
+          });
+          break;
+        case 'Repayment':
+          repayments.push({
+            value: type.value,
+            code: type.code,
+            title: type.title,
+            loanObject: type.loanObject,
             frequency: type.frequency
           });
           break;
@@ -141,7 +151,8 @@ var PayRollCalculation = function (employee, payGradeTypes, employeeTaxRule, emp
     return {
       wages: wages,
       benefits: benefits,
-      deductions: deductions
+      deductions: deductions,
+      repayments: repayments
     };
   };
 

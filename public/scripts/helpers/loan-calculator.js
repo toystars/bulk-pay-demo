@@ -19,6 +19,8 @@ var LoanCalculator = function (loan) {
     var interest = parseFloat(getInterest().toFixed(2));
     var principal = parseFloat((EMI - interest).toFixed(2));
     return {
+      currentPrincipal: activeAmount,
+      basePrincipal: amount,
       EMI: EMI,
       interest: interest,
       principal: principal
