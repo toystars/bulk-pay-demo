@@ -53,6 +53,14 @@ bulkPay.factory('BusinessDataSvc', ['$http', '$cookies', '$state', 'Business', '
 
 
     /*
+    * Get business
+    * */
+    self.getBusiness = function () {
+      return currentBusiness;
+    };
+
+
+    /*
     * Set local scope object for business object sync
     * */
     self.setLocalScope = function () {

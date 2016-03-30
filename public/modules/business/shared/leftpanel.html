@@ -18,6 +18,7 @@
             <li ng-class="{active: inView === 'Divisions'}" ng-click="toggleActive('Divisions')"><a ui-sref="business.divisions">Divisions</a></li>
             <li ng-class="{active: inView === 'Departments'}" ng-click="toggleActive('Departments')"><a ui-sref="business.departments">Departments</a></li>
             <li ng-class="{active: inView === 'Positions'}" ng-click="toggleActive('Positions')"><a ui-sref="business.positions">Positions</a></li>
+            <li ng-class="{active: inView === 'Org Chart'}" ng-click="toggleActive('Org Chart')"><a ui-sref="business.orgchart">Org Chart</a></li>
         </ul>
     </li>
     <li ng-class="{active: inView === 'Pay Rules'}" class="parent"><a href=""><i class="fa fa-money"></i> <span>Pay Rules</span></a>
@@ -38,6 +39,7 @@
     <li ng-class="{active: inView === 'Pay Runs'}" class="parent" ng-click="toggleActive('Pay Runs')"><a href=""><i class="fa fa-refresh"></i> <span>Pay Runs</span></a>
         <ul class="children">
             <li ng-class="{active: inView === 'New Pay Run'}" ng-click="toggleActive('New Pay Run')"><a ui-sref="business.newpayrun">New Pay Run</a></li>
+            <li ng-class="{active: inView === 'One Off Payments'}" ng-click="toggleActive('One Off Payments')"><a ui-sref="business.oneoff">One Off Payments</a></li>
             <li ng-class="{active: inView === 'Manage Pay Runs'}" ng-click="toggleActive('Manage Pay Runs')"><a ui-sref="business.payruns">Pay Runs</a></li>
         </ul>
     </li>
@@ -48,8 +50,6 @@
             <li ng-class="{active: inView === 'Manage Loans'}" ng-click="toggleActive('Manage Loans')"><a ui-sref="business.loans">Manage Loans</a></li>
         </ul>
     </li>
-    <li ng-class="{active: inView === 'Leave Management'}" ng-click="toggleActive('Leave Management')"><a><i class="fa fa-paper-plane-o"></i> <span>Leave Management</span></a></li>
-    <li ng-class="{active: inView === 'Payroll'}" ng-click="toggleActive('Payroll')"><a><i class="fa fa-bank"></i> <span>Payroll</span></a></li>
     <li><a ui-sref="home.overview"><i class="fa fa-angle-double-left"></i> <span>Back to Home</span></a></li>
 </ul>
 

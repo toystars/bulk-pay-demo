@@ -12,11 +12,26 @@ bulkPay.controller('BusinessUpdateCtrl', ['$scope', '$rootScope', 'AuthSvc', 'Bu
   $scope.currencies = [];
   $scope.currency = '';
 
+  $http.get('data/currencies.json').success(function (currencies) {
+    var keys = Object.keys(currencies);
+    _.each(keys, function (key) {
+      if (currencies.hasOwnProperty(key)) {
+        $scope.currencies.push({
+          currency: key,
+          format: currencies[key].format,
+          symbol: currencies[key].symbol
+        });
+      }
+    });
+  }).error(function (error) {
+    console.log(error);
+  });
+
   if (!BusinessDataSvc.getBusinessId() || BusinessDataSvc.getBusinessId() !== $stateParams.businessId) {
     $cookies.put('currentBusiness', $stateParams.businessId);
     BusinessDataSvc.setBusinessId();
   } else {
-    BusinessDataSvc.setLocalScope();
+    $scope.business = BusinessDataSvc.getBusiness();
   }
 
   /*
@@ -34,24 +49,6 @@ bulkPay.controller('BusinessUpdateCtrl', ['$scope', '$rootScope', 'AuthSvc', 'Bu
   $scope.getLastHistory = function () {
     return $scope.businessHistory[$scope.businessHistory.length - 1];
   };
-
-  var getCurrencies = function () {
-    $http.get('data/currencies.json').success(function (currencies) {
-      var keys = Object.keys(currencies);
-      _.each(keys, function (key) {
-        if (currencies.hasOwnProperty(key)) {
-          $scope.currencies.push({
-            currency: key,
-            format: currencies[key].format,
-            symbol: currencies[key].symbol
-          });
-        }
-      });
-    }).error(function (error) {
-      console.log(error);
-    });
-  };
-  getCurrencies();
 
   $scope.getCurrencyString = function (currency) {
     return currency.currency + ' - ' + currency.symbol;

@@ -6,13 +6,6 @@ bulkPay.controller('BusinessEmployeesManagerCtrl', ['$scope', '$rootScope', '$ti
     }
   });
 
-  if (!BusinessDataSvc.getBusinessId() || BusinessDataSvc.getBusinessId() !== $stateParams.businessId) {
-    $cookies.put('currentBusiness', $stateParams.businessId);
-    BusinessDataSvc.setBusinessId();
-  } else {
-    BusinessDataSvc.setLocalScope();
-  }
-
   $scope.$parent.inView = 'Manage Employees';
   $scope.message = '';
   $scope.options = {
@@ -110,6 +103,19 @@ bulkPay.controller('BusinessEmployeesManagerCtrl', ['$scope', '$rootScope', '$ti
       AuthSvc.handleError(error);
     });
   };
+
+  if (!BusinessDataSvc.getBusinessId() || BusinessDataSvc.getBusinessId() !== $stateParams.businessId) {
+    $cookies.put('currentBusiness', $stateParams.businessId);
+    BusinessDataSvc.setBusinessId();
+  } else {
+    businessId = BusinessDataSvc.getBusinessId();
+    $scope.business = BusinessDataSvc.getBusiness();
+    getBusinessEmployees(businessId);
+    getBusinessUnits(businessId);
+    getBusinessDivisions(businessId);
+    getDepartments(businessId);
+    getPositions(businessId);
+  }
 
 
   /*

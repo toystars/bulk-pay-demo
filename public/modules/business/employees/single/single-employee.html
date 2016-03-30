@@ -17,81 +17,727 @@
 
 <div class="contentpanel">
 
+
+
+
     <div class="row">
-        <div class="col-md-9">
-            <div class="row">
-                <!-- Nav tabs -->
-                <div class="col-md-12">
-                    <ul class="nav nav-tabs">
-                        <li ng-class="{active: inView === 'Profile Info'}">
-                            <a ng-click="changeView('Profile Info')" style="cursor: pointer;">Profile Info</a>
-                        </li>
-                        <li ng-class="{active: inView === 'Bio Data'}">
-                            <a ng-click="changeView('Bio Data')" style="cursor: pointer;">Bio Data</a>
-                        </li>
-                        <li ng-class="{active: inView === 'Qualification'}">
-                            <a ng-click="changeView('Qualification')" style="cursor: pointer;">Qualification(s)</a>
-                        </li>
-                        <li ng-class="{active: inView === 'Job Experience'}">
-                            <a ng-click="changeView('Job Experience')" style="cursor: pointer;">Job Experience(s)</a>
-                        </li>
-                    </ul>
-                </div><!-- col-md-12 -->
-
-                <div class="col-md-12">
-                    <div class="tab-pane active" id="activities">
-                        <div class="row" style="margin-top: 25px; margin-left: 10px; margin-right: 10px;">
-                        </div>
-
-                        <div class="row" ng-if="!dataFetched">
-                            <div class="col-md-12 text-center">
-                                <img alt="" src="images/loaders/loader10.gif">
-                            </div>
-                        </div>
-
-                        <div class="row big-font" ng-if="dataFetched" style="margin-left: 10px; margin-right: 10px;">
-                            <div class="col-md-3">
-                                <div class="text-center">
-                                    <img ng-src="uploads/{{employee.currentProfilePicture}}" id="profile-img" class="img-thumbnail img-offline img-responsive img-profile" alt=""/>
-                                </div>
-                            </div>
-
-                            <div class="col-md-9" ng-show="inView === 'Profile Info'">
-                                <b>Employee Id: </b> {{employee.employeeId}}<br>
-                                <b>Full Name: </b> {{employee.fullName}}<br>
-                                <b>Address: </b> {{employee.address}}<br>
-                                <b>Phone: </b> {{employee.phone}}<br>
-                                <b>Email: </b> {{employee.email}}<br><br><br>
-
-                                <span class="sub-header"><b>Work Information</b></span><br>
-                                <b>Business Unit: </b> {{employee.businessUnitName}}<br>
-                                <b>Division: </b> {{employee.divisionName}}<br>
-                                <b>Department: </b> {{employee.departmentName}}<br>
-                                <b>Position: </b> {{employee.positionName}}<br>
-                                <b>Pay Group: </b> {{employee.payGroupName}}<br>
-                                <b>Pay Grade: </b> {{employee.payGradeName}}<br>
-                                <b>Supervisor: </b> <a class="pointer" ui-sref="business.employee({ employeeId: employee.supervisor.id })">{{employee.supervisor.name}}</a><br>
-                                <b>Location: </b> {{employee.location}}<br>
-                                <b>Date Employed: </b> {{employee.employmentDate | date:"dd/MM/yyyy"}}<br>
-                                <b>Status: </b> {{employee.status}}<br>
-                            </div>
-                        </div><!-- row -->
-                    </div><!-- tab-pane -->
-                </div>
-
+        <div class="col-sm-4 col-md-3">
+            <div class="text-center">
+                <img ng-src="uploads/{{employee.currentProfilePicture}}" class="img-circle img-offline img-responsive img-profile" alt="Employee Picture" />
+                <h4 class="profile-name mb5">{{employee.fullName}}</h4>
+                <div><i class="fa fa-map-marker"></i> {{employee.positionName}}</div>
             </div>
+            <!-- text-center -->
+
+            <br />
+
+
+            <ul class="list-unstyled social-list">
+                <li>Supervisor: <a ui-sref="business.employee({ employeeId: employee.supervisor.id })">{{employee.supervisor.name}}</a></li>
+            </ul>
+
+            <!--<div class="mb30"></div>
+
+            <h5 class="md-title">Actions</h5>
+            <button class="btn btn-primary">Primary</button>-->
+
         </div>
-        <div class="col-md-3">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <div class="panel-btns"></div><!-- panel-btns -->
-                    <h3 class="panel-title">Actions</h3>
+        <!-- col-sm-4 col-md-3 -->
+
+        <div class="col-sm-8 col-md-9">
+
+            <!-- Nav tabs -->
+            <ul class="nav nav-tabs nav-line">
+                <li class="active"><a href=".personal" data-toggle="tab"><strong>Personal Details</strong></a></li>
+                <li><a href=".employment" data-toggle="tab"><strong>Employment Details </strong></a></li>
+                <li><a href=".payment" data-toggle="tab"><strong>Payment Details</strong></a></li>
+                <li><a href=".payroll" data-toggle="tab"><strong>Payroll Details</strong></a></li>
+            </ul>
+
+            <!-- Tab panes -->
+            <div class="tab-content nopadding noborder">
+                <div class="tab-pane active personal" id="activities">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">Personal Details</h4>
+                        </div>
+                        <!-- panel-heading -->
+                        <div class="panel-body nopadding">
+                            <form class="form-horizontal form-bordered">
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">Employee ID</label>
+                                    <div class="col-sm-4">
+                                        <input ng-model="employee.employeeId" type="text" placeholder="Unique" class="form-control"/>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">First Name</label>
+                                    <div class="col-sm-4">
+                                        <input ng-model="employee.firstName" type="text" placeholder="First Name" class="form-control"/>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        &nbsp;
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">Last Name</label>
+                                    <div class="col-sm-4">
+                                        <input ng-model="employee.lastName" type="text" placeholder="Last Name" class="form-control"/>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        &nbsp;
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">Other Names</label>
+                                    <div class="col-sm-4">
+                                        <input ng-model="employee.otherNames" type="text" placeholder="Other Names" class="form-control"/>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        &nbsp;
+                                    </div>
+                                </div>
+
+
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">Date of Birth</label>
+                                    <div class="input-group col-sm-4" style="padding-left:10px;padding-right:10px">
+                                        <adm-dtp ng-model="employee.dateOfBirth"></adm-dtp>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        &nbsp;
+                                    </div>
+                                </div>
+
+
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">Gender</label>
+                                    <div class="col-sm-4">
+                                        <select2 ng-model="employee.gender" options="options" s2-options="gender as gender for gender in genders" style="width: 100%"></select2>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        &nbsp;
+                                    </div>
+                                </div>
+
+
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">Marital
+                                        Status</label>
+                                    <div class="col-sm-4">
+                                        <select2 ng-model="employee.maritalStatus" options="options" s2-options="status as status for status in maritalStatus" style="width: 100%"></select2>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        &nbsp;
+                                    </div>
+                                </div>
+
+
+                                <div class="form-group">
+                                    <label for="employee-email" class="col-sm-4 control-label">Email</label>
+                                    <div class="col-sm-4">
+                                        <input ng-model="employee.email" type="email" id="employee-email" placeholder="Email" class="form-control"/>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        &nbsp;
+                                    </div>
+                                </div>
+
+
+                                <div class="form-group">
+                                    <label for="employee-phone" class="col-sm-4 control-label">Phone Number</label>
+                                    <div class="col-sm-4">
+                                        <input ng-model="employee.phone" type="tel" id="employee-phone" placeholder="Phone Number" class="form-control"/>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        &nbsp;
+                                    </div>
+                                </div>
+
+
+                                <div class="form-group">
+                                    <label for="employee-address" class="col-sm-4 control-label">Address</label>
+                                    <div class="col-sm-4">
+                                        <textarea ng-model="employee.address" id="employee-address" class="form-control" rows="5"></textarea>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        &nbsp;
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="employee-city" class="col-sm-4 control-label">City</label>
+                                    <div class="col-sm-4">
+                                        <input ng-model="employee.city" id="employee-city" type="text" placeholder="City" class="form-control"/>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        &nbsp;
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">State</label>
+                                    <div class="col-sm-4">
+                                        <select2 ng-model="employee.state" options="options" s2-options="state as state for state in states" style="width: 100%"></select2>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        &nbsp;
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <div class="col-sm-12">
+                                        <h5>Next of Kin/Guarantor</h5></div>
+
+                                </div>
+                                <div class="form-group">
+                                    <label for="employee-guarantor-name" class="col-sm-4 control-label">Full
+                                        Name</label>
+                                    <div class="col-sm-4">
+                                        <input ng-model="employee.guarantor.fullName" id="employee-guarantor-name" type="text" placeholder="Guarantor's Full Name" class="form-control"/>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        &nbsp;
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="employee-guarantor-email"
+                                           class="col-sm-4 control-label">Email</label>
+                                    <div class="col-sm-4">
+                                        <input ng-model="employee.guarantor.email" id="employee-guarantor-email" type="email" placeholder="Guarantor's Email" class="form-control"/>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        &nbsp;
+                                    </div>
+                                </div>
+
+
+                                <div class="form-group">
+                                    <label for="employee-guarantor-phone" class="col-sm-4 control-label">Phone
+                                        Number</label>
+                                    <div class="col-sm-4">
+                                        <input ng-model="employee.guarantor.phone" id="employee-guarantor-phone" type="tel" placeholder="Guarantor's Phone" class="form-control"/>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        &nbsp;
+                                    </div>
+                                </div>
+
+
+                                <div class="form-group">
+                                    <label for="employee-guarantor-address"
+                                           class="col-sm-4 control-label">Address</label>
+                                    <div class="col-sm-4">
+                                        <textarea ng-model="employee.guarantor.address" id="employee-guarantor-address" class="form-control" rows="5"></textarea>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        &nbsp;
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="employee-guarantor-city" class="col-sm-4 control-label">City</label>
+                                    <div class="col-sm-4">
+                                        <input ng-model="employee.guarantor.city" id="employee-guarantor-city" type="text" placeholder="Guarantor's City" class="form-control"/>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        &nbsp;
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">State</label>
+                                    <div class="col-sm-4">
+                                        <select2 ng-model="employee.guarantor.state" options="options" s2-options="state as state for state in states" style="width: 100%"></select2>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        &nbsp;
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+
+                        <!-- panel-body -->
+                    </div>
+                    <!-- panel -->
+
                 </div>
-                <div class="panel-body">
-                    Panel content
+                <!-- tab-pane -->
+
+                <div class="tab-pane employment" id="followers">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">Employment Details</h4>
+                        </div>
+                        <!-- panel-heading -->
+                        <div class="panel-body nopadding">
+                            <form class="form-horizontal form-bordered">
+
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">Location</label>
+                                    <div class="col-sm-4">
+                                        <select2 ng-model="employee.location" options="options" s2-options="state as state for state in states" style="width: 100%"></select2>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        &nbsp;
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">Business Unit</label>
+                                    <div class="col-sm-4">
+                                        <select2 ng-model="employee.businessUnitId" options="options" s2-options="businessUnit._id as businessUnit.name for businessUnit in businessUnits" style="width: 100%"></select2>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        &nbsp;
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">Division</label>
+                                    <div class="col-sm-4">
+                                        <select2 ng-model="employee.divisionId" options="options" s2-options="division._id as division.name for division in filteredDivisions" style="width: 100%"></select2>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        &nbsp;
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">Department</label>
+                                    <div class="col-sm-4">
+                                        <select2 ng-model="employee.departmentId" options="options" s2-options="department._id as department.name for department in filteredDepartments" style="width: 100%"></select2>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        &nbsp;
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">Position</label>
+                                    <div class="col-sm-4">
+                                        <select2 ng-change="checkValidity()" ng-model="employee.positionId" options="options" s2-options="position._id as position.name for position in filteredPositions" style="width: 100%"></select2>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <div>
+                                            <span class="label label-danger">{{message}}</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">Hire Date</label>
+                                    <div class="input-group col-sm-4" style="padding-left:10px;padding-right:10px">
+                                        <adm-dtp ng-model="employee.employmentDate"></adm-dtp>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        &nbsp;
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">Confirmation Date</label>
+                                    <div class="input-group col-sm-4" style="padding-left:10px;padding-right:10px">
+                                        <adm-dtp ng-model="employee.confirmationDate"></adm-dtp>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        &nbsp;
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">Status</label>
+                                    <div class="col-sm-4">
+                                        <select2 ng-model="employee.status" options="options" s2-options="status as status for status in statuses" style="width: 100%"></select2>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        &nbsp;
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">Termination/Resignation Date</label>
+                                    <div class="input-group col-sm-4" style="padding-left:10px;padding-right:10px">
+                                        <adm-dtp ng-model="employee.terminationDate"></adm-dtp>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        &nbsp;
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+
+                        <!-- panel-body -->
+                    </div>
+                    <!-- panel -->
                 </div>
-            </div><!-- panel -->
-        </div>
+                <!-- tab-pane -->
+
+                <div class="tab-pane payment" id="following">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">Payment Details</h4>
+                        </div>
+                        <!-- panel-heading -->
+                        <div class="panel-body nopadding">
+                            <form class="form-horizontal form-bordered">
+
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">Payment Method</label>
+                                    <div class="col-sm-4">
+                                        <select2 ng-model="employee.paymentDetails.paymentMethod" options="options" s2-options="method as method for method in paymentMethods" style="width: 100%"></select2>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        &nbsp;
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">Bank</label>
+                                    <div class="col-sm-4">
+                                        <select2 ng-model="employee.paymentDetails.bank" options="options" s2-options="bank as bank for bank in banks" style="width: 100%"></select2>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        &nbsp;
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">Bank Account No.</label>
+                                    <div class="col-sm-4">
+                                        <input ng-model="employee.paymentDetails.accountNumber" type="text" placeholder="Account Number" class="form-control"/>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        &nbsp;
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">Bank Account Name</label>
+                                    <div class="col-sm-4">
+                                        <input ng-model="employee.paymentDetails.accountName" type="text" placeholder="Account Name" class="form-control"/>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        &nbsp;
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">Pension Manager</label>
+                                    <div class="col-sm-4">
+                                        <select2 ng-model="employee.paymentDetails.pensionManager" options="options" s2-options="manager._id as manager.name for manager in pensionManagers" style="width: 100%"></select2>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        &nbsp;
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">RSA Pin</label>
+                                    <div class="col-sm-4">
+                                        <input ng-model="employee.paymentDetails.RSAPin" type="text" placeholder="RSA Pin" class="form-control"/>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        &nbsp;
+                                    </div>
+                                </div>
+                            </form>
+                        </div><!-- panel-body -->
+                    </div><!-- panel -->
+
+                </div><!-- tab-pane -->
+
+                <div class="tab-pane payroll" id="events">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">Payroll Details</h4>
+                        </div>
+                        <!-- panel-heading -->
+                        <div class="panel-body nopadding">
+                            <form class="form-horizontal form-bordered">
+
+                                <div class="form-group">
+                                    <div class="col-sm-12">
+                                        <h5>Payroll Information</h5>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">Pay Group</label>
+                                    <div class="col-sm-4">
+                                        <select2 ng-model="employee.payGroupId" options="options" s2-options="payGroup._id as payGroup.name for payGroup in payGroups" style="width: 100%"></select2>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        &nbsp;
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">Copy From</label>
+                                    <div class="col-sm-6 input-group" style="padding-left:10px;padding-right:10px">
+                                        <div class="input-group-btn">
+                                            <button data-toggle="dropdown" class="btn btn-default dropdown-toggle" type="button">{{sourcePointer}} <span class="caret"></span>
+                                            </button>
+                                            <ul class="dropdown-menu">
+                                                <li><a style="cursor: pointer;" ng-click="setSource('Employee')">Employee</a></li>
+                                                <li><a style="cursor: pointer;" ng-click="setSource('Payroll Template')">Payroll Template</a></li>
+                                            </ul>
+                                        </div>
+                                        <select2 ng-disabled="sourceStatus" ng-model="sourceId" options="options" s2-options="source.displayId as source.display for source in copySource" style="width: 100%"></select2>
+                                            <span class="input-group-btn">
+                                                <button ng-disabled="!copyStatus()" type="button" class="btn btn-default" ng-click="copy()">Copy</button>
+                                            </span>
+                                    </div>
+                                    <span class="help-block text-center">To speed up data entry, you can copy payroll data from another employee, or from a pre-defined pay grade</span>
+                                    <!--<div class="col-sm-3">
+                                        &nbsp;
+                                    </div>-->
+                                </div>
+
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <h6>&nbsp;Wages</h6>
+                                        </div>
+                                        <div class="col-sm-12">
+                                            <div class="row" ng-repeat="wage in getTypes('Wage') track by $index">
+                                                <label class="col-sm-3"><h6>&nbsp;</h6></label>
+                                                <div class="col-sm-1 text-right" style="padding-right:5px;">
+                                                    <span><a ng-click="removePayType(wage)" class="fa fa-times text-danger pointer"></a></span>
+                                                </div>
+                                                <div class="col-sm-4">
+                                                    <div class="input-group input-group-sm">
+                                                        <span ng-click="openType(wage)" class="input-group-addon pointer" style="width:150px">{{wage.code}} - {{wage.title}}</span>
+                                                        <input ng-model="wage.value" type="number" placeholder="" class="form-control" ng-disabled="wage.editablePerEmployee === 'No'"/>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-sm-4">
+                                                    <div class="input-group input-group-sm" ng-if="wage.derived !== 'Fixed'">
+                                                        <span class="input-group-addon" style="width:150px">Formula</span>
+                                                        <input ng-model="wage.derivative" type="text" placeholder="" class="form-control" ng-disabled="wage.editablePerEmployee === 'No'"/>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="col-sm-4">
+                                                    &nbsp;
+                                                </div>
+
+                                                <div class="col-sm-4 text-right">
+                                                    <span class="help-block"><a ng-click="showOptions('Wage')" class="fa fa-plus pointer" style="vertical-align:middle;">&nbsp;[add wage]</a></span>
+                                                </div>
+                                                <div class="col-sm-4">
+                                                    &nbsp;
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <h6>&nbsp;Benefits</h6>
+                                        </div>
+                                        <div class="col-sm-12">
+                                            <div class="row" ng-repeat="benefit in getTypes('Benefit') track by $index">
+                                                <label class="col-sm-3"><h6>&nbsp;</h6></label>
+                                                <div class="col-sm-1 text-right" style="padding-right:0px;">
+                                                    <span><a ng-click="removePayType(benefit)" class="fa fa-times text-danger pointer" style="vertical-align:middle"></a></span>
+                                                </div>
+                                                <div class="col-sm-4">
+                                                    <div class="input-group input-group-sm">
+                                                        <span ng-click="openType(benefit)" class="input-group-addon pointer" style="width:150px">{{benefit.code}} - {{benefit.title}}</span>
+                                                        <input ng-model="benefit.value" type="number" placeholder="" class="form-control" ng-disabled="benefit.editablePerEmployee === 'No'"/>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-sm-4">
+                                                    <div class="input-group input-group-sm" ng-if="benefit.derived !== 'Fixed'">
+                                                        <span class="input-group-addon" style="width:150px">Formula</span>
+                                                        <input ng-model="benefit.derivative" type="text" placeholder="" class="form-control" ng-disabled="benefit.editablePerEmployee === 'No'"/>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="col-sm-4">
+                                                    &nbsp;
+                                                </div>
+
+                                                <div class="col-sm-4 text-right">
+                                                    <span class="help-block"><a ng-click="showOptions('Benefit')" class="fa fa-plus pointer" style="vertical-align:middle;">&nbsp;[add benefit]</a></span>
+                                                </div>
+                                                <div class="col-sm-4">
+                                                    &nbsp;
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <h6>&nbsp;Deductions</h6>
+                                        </div>
+                                        <div class="col-sm-12">
+                                            <div class="row" ng-repeat="deduction in getTypes('Deduction') track by $index">
+                                                <label class="col-sm-3"><h6>&nbsp;</h6></label>
+                                                <div class="col-sm-1 text-right" style="padding-right:0px;">
+                                                    <span><a ng-click="removePayType(deduction)" class="fa fa-times text-danger pointer" style="vertical-align:middle"></a></span>
+                                                </div>
+                                                <div class="col-sm-4">
+                                                    <div class="input-group input-group-sm">
+                                                        <span ng-click="openType(deduction)" class="input-group-addon pointer" style="width:150px">{{deduction.code}} - {{deduction.title}}</span>
+                                                        <input ng-model="deduction.value" type="number" placeholder="" class="form-control" ng-disabled="deduction.editablePerEmployee === 'No'"/>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-sm-4">
+                                                    <div class="input-group input-group-sm" ng-if="deduction.derived !== 'Fixed'">
+                                                        <span class="input-group-addon" style="width:150px">Formula</span>
+                                                        <input ng-model="deduction.derivative" type="text" placeholder="" class="form-control" ng-disabled="deduction.editablePerEmployee === 'No'"/>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="col-sm-4">
+                                                    &nbsp;
+                                                </div>
+
+                                                <div class="col-sm-4 text-right">
+                                                    <span class="help-block"><a ng-click="showOptions('Deduction')" class="fa fa-plus pointer" style="vertical-align:middle;">&nbsp;[add deduction]</a></span>
+                                                </div>
+                                                <div class="col-sm-4">
+                                                    &nbsp;
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <h5><a class="pointer" ng-click="prepareSummary()" data-toggle="modal" data-target=".payroll-summary">View Payroll Summary</a></h5>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <h5 class="text-right"><a class="pointer" data-toggle="modal" data-target=".restore-removed">Restore</a></h5>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <div class="form-group">
+                                    <div class="col-md-12">
+                                        <ul class="list-unstyled wizard">
+                                            <li class="pull-right">
+                                                <button type="button" class="btn btn-primary" ng-click="createEmployee()">Save</button>
+                                            </li>
+                                        </ul>
+                                    </div><!-- col-md-12 -->
+                                </div>
+                            </form>
+                        </div><!-- panel-body -->
+                    </div><!-- panel -->
+                </div><!-- tab-pane -->
+
+            </div><!-- tab-content -->
+
+        </div><!-- col-sm-9 -->
     </div>
+    <!-- row -->
+
+
+
 
 </div><!-- contentpanel -->
+
+
+
+<!--
+<div class="row">
+    <div class="col-md-9">
+        <div class="row">
+            &lt;!&ndash; Nav tabs &ndash;&gt;
+            <div class="col-md-12">
+                <ul class="nav nav-tabs">
+                    <li ng-class="{active: inView === 'Profile Info'}">
+                        <a ng-click="changeView('Profile Info')" style="cursor: pointer;">Profile Info</a>
+                    </li>
+                    <li ng-class="{active: inView === 'Bio Data'}">
+                        <a ng-click="changeView('Bio Data')" style="cursor: pointer;">Bio Data</a>
+                    </li>
+                    <li ng-class="{active: inView === 'Qualification'}">
+                        <a ng-click="changeView('Qualification')" style="cursor: pointer;">Qualification(s)</a>
+                    </li>
+                    <li ng-class="{active: inView === 'Job Experience'}">
+                        <a ng-click="changeView('Job Experience')" style="cursor: pointer;">Job Experience(s)</a>
+                    </li>
+                </ul>
+            </div>&lt;!&ndash; col-md-12 &ndash;&gt;
+
+            <div class="col-md-12">
+                <div class="tab-pane active" id="activities">
+                    <div class="row" style="margin-top: 25px; margin-left: 10px; margin-right: 10px;">
+                    </div>
+
+                    <div class="row" ng-if="!dataFetched">
+                        <div class="col-md-12 text-center">
+                            <img alt="" src="images/loaders/loader10.gif">
+                        </div>
+                    </div>
+
+                    <div class="row big-font" ng-if="dataFetched" style="margin-left: 10px; margin-right: 10px;">
+                        <div class="col-md-3">
+                            <div class="text-center">
+                                <img ng-src="uploads/{{employee.currentProfilePicture}}" id="profile-img" class="img-thumbnail img-offline img-responsive img-profile" alt=""/>
+                            </div>
+                        </div>
+
+                        <div class="col-md-9" ng-show="inView === 'Profile Info'">
+                            <b>Employee Id: </b> {{employee.employeeId}}<br>
+                            <b>Full Name: </b> {{employee.fullName}}<br>
+                            <b>Address: </b> {{employee.address}}<br>
+                            <b>Phone: </b> {{employee.phone}}<br>
+                            <b>Email: </b> {{employee.email}}<br><br><br>
+
+                            <span class="sub-header"><b>Work Information</b></span><br>
+                            <b>Business Unit: </b> {{employee.businessUnitName}}<br>
+                            <b>Division: </b> {{employee.divisionName}}<br>
+                            <b>Department: </b> {{employee.departmentName}}<br>
+                            <b>Position: </b> {{employee.positionName}}<br>
+                            <b>Pay Group: </b> {{employee.payGroupName}}<br>
+                            <b>Pay Grade: </b> {{employee.payGradeName}}<br>
+                            <b>Supervisor: </b> <a class="pointer" ui-sref="business.employee({ employeeId: employee.supervisor.id })">{{employee.supervisor.name}}</a><br>
+                            <b>Location: </b> {{employee.location}}<br>
+                            <b>Date Employed: </b> {{employee.employmentDate | date:"dd/MM/yyyy"}}<br>
+                            <b>Status: </b> {{employee.status}}<br>
+                        </div>
+                    </div>&lt;!&ndash; row &ndash;&gt;
+                </div>&lt;!&ndash; tab-pane &ndash;&gt;
+            </div>
+
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <div class="panel-btns"></div>&lt;!&ndash; panel-btns &ndash;&gt;
+                <h3 class="panel-title">Actions</h3>
+            </div>
+            <div class="panel-body">
+                Panel content
+            </div>
+        </div>&lt;!&ndash; panel &ndash;&gt;
+    </div>
+</div>-->

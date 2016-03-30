@@ -105,4 +105,14 @@ ul {
 }
 
 
+#chart-container {
+    position: relative;
+    display: inline-block;
+    top: 10px;
+    width: calc(100% - 20px);
+    border-radius: 5px;
+    overflow: auto;
+    text-align: center;
+}
+
 

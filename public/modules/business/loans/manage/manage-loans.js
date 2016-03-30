@@ -22,7 +22,6 @@ bulkPay.controller('BusinessLoansManagerCtrl', ['$scope', '$rootScope', 'AuthSvc
 
   var getLoans = function (businessId) {
     $http.get('/api/loans/business/' + businessId).success(function (loans) {
-      console.log(loans);
       $scope.loans = loans;
       $scope.dataFetched = true;
     }).error(function (error) {
@@ -48,8 +47,13 @@ bulkPay.controller('BusinessLoansManagerCtrl', ['$scope', '$rootScope', 'AuthSvc
   * */
 
   $scope.getComputedTerm = function (months) {
-    var years = months / 12 + ' years';
-    return months + ' (' + years + ')';
+    var years = months / 12;
+    return months + ' months' + ' (' + parseFloat(years.toFixed(2)) + ' years)';
+  };
+
+  $scope.getAmountPaid = function (loan) {
+    var difference = loan.amount - loan.activeAmount;
+    return difference > 0 ? difference : loan.amount;
   };
 
 

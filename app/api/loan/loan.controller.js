@@ -99,8 +99,21 @@ exports.repayment = function (req, res) {
     if (error) {
       crudHelper.handleError(res, 400, error);
     } else {
-      console.log(req.body);
-      crudHelper.respondWithResult(res, null, loan);
+      var reqObject = req.body;
+      loan.payCount = loan.payCount + 1;
+      loan.activeAmount = reqObject.amountLeft;
+      loan.fullyServiced = loan.activeAmount > 0 ? 'No' : 'Yes';
+      loan.payments.push({
+        interest: reqObject.interest,
+        principal: reqObject.principal,
+        payment: reqObject.payment,
+        paymentPeriod: reqObject.paymentPeriod
+      });
+      loan.save(function (error, loan) {
+        if (loan) {
+          crudHelper.respondWithResult(res, null, loan);
+        }
+      });
     }
   });
 };

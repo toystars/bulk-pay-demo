@@ -114,6 +114,15 @@ bulkPay.config(['$stateProvider', '$urlRouterProvider', '$locationProvider', 'to
         }
       })
 
+      .state('business.orgchart', {
+        url: '/chart',
+        templateUrl: 'modules/business/org-chart/org-chart.html',
+        controller: 'BusinessOrgChartCtrl',
+        data: {
+          pageTitle: 'Org Chart | BulkPay'
+        }
+      })
+
       .state('business.payment', {
         url: '/paytypes',
         templateUrl: 'modules/business/pay-types/pay-types.html',
@@ -201,6 +210,15 @@ bulkPay.config(['$stateProvider', '$urlRouterProvider', '$locationProvider', 'to
         controller: 'BusinessNewPayRunCtrl',
         data: {
           pageTitle: 'New Pay Runs | BulkPay'
+        }
+      })
+
+      .state('business.oneoff', {
+        url: '/payments',
+        templateUrl: 'modules/business/payruns/one-offs/one-offs.html',
+        controller: 'BusinessOneOffCtrl',
+        data: {
+          pageTitle: 'One Off Payments | BulkPay'
         }
       })
 

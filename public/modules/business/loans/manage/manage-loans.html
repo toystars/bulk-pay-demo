@@ -43,6 +43,8 @@
                         <th>#</th>
                         <th>Employee</th>
                         <th>Amount</th>
+                        <th>Paid</th>
+                        <th>Balance</th>
                         <th>Rate</th>
                         <th>Term</th>
                         <th>Installment Paid</th>
@@ -54,14 +56,12 @@
                     <tr class="pointer" ng-click="showLoan(loan)" ng-repeat="loan in loans">
                         <td>{{$index + 1}}</td>
                         <td>{{loan.employee.fullName}}</td>
-                        <td>{{loan.amount}}</td>
+                        <td>{{loan.amount | currency:""}}</td>
+                        <td>{{getAmountPaid(loan) | currency:""}}</td>
+                        <td>{{loan.amount - loan.activeAmount | currency:""}}</td>
                         <td>{{loan.rate}}%</td>
                         <td>{{getComputedTerm(loan.term)}}</td>
                         <td>{{loan.payCount}}</td>
-                        <!--<td>
-                            <span ng-if="loan.status === 'Active'" class="label label-success">{{loan.status}}</span>
-                            <span ng-if="loan.status === 'Inactive'" class="label label-danger">{{loan.status}}</span>
-                        </td>-->
                         <td>{{loan.fullyServiced}}</td>
                         <td>{{loan.createdAt | date:"yyyy-MM-dd"}}</td>
                     </tr>

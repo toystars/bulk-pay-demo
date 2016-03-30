@@ -192,12 +192,12 @@ bulkPay.controller('BusinessNewPayRunCtrl', ['$scope', '$rootScope', '$timeout',
             repayments: evaluateRepayments(employee.paymentInformation.payBreakDown.repayments)
           }).success(function (payRoll) {
             payRolls.push(payRoll);
+            updateLoans(employee.paymentInformation.payBreakDown.repayments);
             stage++;
             if (stage === $scope.payRunEmployees.length) {
               $scope.payRolls = payRolls;
               $scope.payRunReportsView = true;
               swal('Success!', 'Pay Run successful. View Report to take more actions.', 'success');
-              updateLoans(employee.paymentInformation.payBreakDown.repayments);
             }
           }).error(function (error) {
             AuthSvc.handleError(error);
@@ -221,9 +221,10 @@ bulkPay.controller('BusinessNewPayRunCtrl', ['$scope', '$rootScope', '$timeout',
         paymentPeriod: $scope.paymentPeriod
       };
       $http.put('/api/loans/' + object.id + '/repayment', object).success(function (response) {
-        console.log(response);
+
       }).error(function (error) {
         console.log(error);
+        AuthSvc.handleError(error);
       });
     });
   };
