@@ -8,17 +8,6 @@ var _ = require('underscore'),
   History = mongoose.model('History'),
   audit = require('./audit.js');
 
-var handleAuthCodeUsed = function (res, entity, code) {
-  code.active = false;
-  code.usedDate = new Date();
-  code.save(function (error, code) {
-    if (code) {
-      respondWithResult(res, null, entity);
-    }
-  });
-};
-exports.handleAuthCodeUsed = handleAuthCodeUsed;
-
 var respondWithResult = function (res, statusCode, entity) {
   statusCode = statusCode || 200;
   if (entity) {

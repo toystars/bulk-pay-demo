@@ -15,15 +15,13 @@ var UserSchema = new Schema({
     lowercase: true
   },
   avatar: String,
-  authorizationCode: String,
-  authorizationCodeId: String,
   businesses : [{
     type: Schema.Types.ObjectId,
     ref: 'Business'
   }],
   role: {
     type: String,
-    default: 'user'
+    default: 'superAdmin'
   },
   password: String,
   createdAt: {

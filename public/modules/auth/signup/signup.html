@@ -35,21 +35,21 @@
                     </div>
                     <div class="col-sm-6">
                         <div class="input-group mb15">
-                            <span class="input-group-addon"><i class="glyphicon glyphicon-check"></i></span>
-                            <input type="text" class="form-control" placeholder="Authorization Code" ng-model="user.authorizationCode">
-                        </div><!-- input-group -->
-                    </div>
-                </div><!-- row -->
-                <br />
-                <div class="row">
-                    <div class="col-sm-6">
-                        <div class="input-group mb15">
                             <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
                             <input type="password" class="form-control" placeholder="Password" ng-model="user.password">
                         </div><!-- input-group -->
                     </div>
                 </div><!-- row -->
-                <br />
+
+                <div class="text-center" ng-show="loginLoader">
+                    <img alt="" ng-src="{{loginLoader}}">
+                </div>
+
+                <div class="alert alert-danger text-center" ng-show="errorOccur">
+                    {{errorMessage}}
+                </div>
+
+
                 <div class="clearfix">
                     <div class="pull-left">
                         <div class="ckbox ckbox-primary mt5">
@@ -64,7 +64,7 @@
             </form>
         </div><!-- panel-body -->
         <div class="text-center">
-            <a ui-sref="login">Already registered? Sign In</a>
+            Already registered?<a ui-sref="login"> Sign In</a>
         </div><!-- panel-footer -->
     </div><!-- panel -->
 </section>

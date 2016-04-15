@@ -6,7 +6,6 @@
  * PUT     /api/payrolls/:id          ->  update
  * DELETE  /api/payrolls/:id          ->  destroy
  */
-
 'use strict';
 
 require('./payroll.model.js');
@@ -35,7 +34,7 @@ exports.index = function (req, res) {
  */
 exports.payrolls = function (req, res) {
 
-  PayRoll.find({ payRunId: req.params.payRunId }).populate('employee payGroup position pensionManager').exec(function (error, docs) {
+  PayRoll.find({payRunId: req.params.payRunId}).populate('employee payGroup position pensionManager').exec(function (error, docs) {
     if (error) {
       crudHelper.handleError(res, null, error);
     }
@@ -49,17 +48,33 @@ exports.payrolls = function (req, res) {
  * Create new pay roll
  * */
 exports.create = function (req, res) {
-  var newPayRoll = new PayRoll(req.body);
-  newPayRoll.save(function (error, doc) {
-    if (error) {
-      crudHelper.handleError(res, 400, error);
-    } else {
-      PayRoll.findOne({ _id: doc._id }).populate('employee payGroup position pensionManager').exec(function (error, payRoll) {
+
+  var start = new Date(new Date().getFullYear(), 0, 1); // get first day of current year
+  var end = new Date(); // current date
+
+  PayRoll.findOne({
+    employee: req.body.employee,
+    createdAt: {"$gte": start, "$lte": end}
+  }).sort({createdAt: -1}).exec(function (error, payRoll) {
+    if (!error) {
+      req.body.YTD = {
+        gross: payRoll ? payRoll.YTD.gross + req.body.grossPay : req.body.grossPay,
+        net: payRoll ? payRoll.YTD.net + req.body.netPay : req.body.netPay,
+        tax: payRoll ? payRoll.YTD.tax + req.body.tax : req.body.tax
+      };
+      var newPayRoll = new PayRoll(req.body);
+      newPayRoll.save(function (error, doc) {
         if (error) {
-          crudHelper.handleError(res, null, error);
-        }
-        if (payRoll) {
-          crudHelper.respondWithResult(res, 201, payRoll);
+          crudHelper.handleError(res, 400, error);
+        } else {
+          PayRoll.findOne({_id: doc._id}).populate('employee payGroup position pensionManager').exec(function (error, payRoll) {
+            if (error) {
+              crudHelper.handleError(res, null, error);
+            }
+            if (payRoll) {
+              crudHelper.respondWithResult(res, 201, payRoll);
+            }
+          });
         }
       });
     }
@@ -71,13 +86,13 @@ exports.create = function (req, res) {
  * Fetch an pay run
  * */
 exports.show = function (req, res) {
-  PayRoll.findOne({ _id: req.params.id }, function (error, doc) {
+  PayRoll.findOne({_id: req.params.id}, function (error, doc) {
     if (error) {
       crudHelper.handleError(res, null, error);
     } else if (doc) {
       crudHelper.respondWithResult(res, null, doc);
     } else {
-      crudHelper.handleError(res, null, { message: 'Pay roll not found!' });
+      crudHelper.handleError(res, null, {message: 'Pay roll not found!'});
     }
   });
 };

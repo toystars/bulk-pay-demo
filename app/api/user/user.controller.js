@@ -13,38 +13,26 @@ var mongoose = require('mongoose'),
 
 exports.signUp = function(strategy, passport) {
   return function(req, res, next) {
-    passport.authenticate(strategy, function(err, user, message) {
+    passport.authenticate(strategy, function (err, user, message) {
       if (err) {
         return next(err);
       }
       if (!user) {
-        res.status(400).json(message);
+        crudHelper.respondWithResult(res, 400, message);
       } else {
-        if (!req.body.authorizationCode) {
-          res.status(400).json({message: 'Validation code required!'});
-        } else {
-          Code.findOne({ code: req.body.authorizationCode, active: true }, function (error, code) {
-            if (!code) {
-              crudHelper.handleError(res, null, { message: 'Authorization code invalid or used!' });
-            } else {
-              var newUser = new User(req.body);
-              var regex = new RegExp('/', 'g');
-              newUser.authorizationCodeId = code._id;
-              newUser.authorizationCode = code.code;
-              newUser.verifyEmailToken = bcrypt.genSaltSync(8).toString('hex').replace(regex, '');
-              newUser.verifyEmailTokenExpires = Date.now() + 3600000;
-              newUser.save(function (err, user) {
-                if (err) {
-                  return next(err);
-                }
-                var token = jwt.sign(user, config.sessionSecret, {
-                  expiresIn: 60 * 60 * 5
-                });
-                crudHelper.handleAuthCodeUsed(res, { token: token }, code);
-              });
-            }
+        var newUser = new User(req.body);
+        var regex = new RegExp('/', 'g');
+        newUser.verifyEmailToken = bcrypt.genSaltSync(8).toString('hex').replace(regex, '');
+        newUser.verifyEmailTokenExpires = Date.now() + 3600000;
+        newUser.save(function (err, user) {
+          if (err) {
+            return next(err);
+          }
+          var token = jwt.sign(user, config.sessionSecret, {
+            expiresIn: 60 * 60 * 5
           });
-        }
+          crudHelper.respondWithResult(res, null, { token: token });
+        });
       }
     })(req, res, next);
   };

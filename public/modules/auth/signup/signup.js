@@ -13,14 +13,27 @@ bulkPay.controller('signUpCtrl', ['$scope', 'toastr', '$state', 'AuthSvc', funct
 
 
   $scope.register = function () {
-
-    AuthSvc.createUser($scope.user, function (error, data) {
-      if (data) {
-        toastr.success('Sign up Successful');
-        $state.go('home.overview');
+    clearError();
+    $scope.loginLoader = 'images/loaders/loader19.gif';
+    AuthSvc.createUser($scope.user, function (error) {
+      if (error) {
+        $scope.loginLoader = '';
+        $scope.errorOccur = true;
+        $scope.errorMessage = error.message;
+      } else {
+        AuthSvc.getCurrentUser(function (user) {
+          toastr.success('Sign up Successful');
+          if (user.role === 'superAdmin') {
+            $state.go('home.overview');
+          }
+        });
       }
     });
+  };
 
+  var clearError = function () {
+    $scope.errorOccur = false;
+    $scope.errorMessage = '';
   };
 
 

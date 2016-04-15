@@ -191,6 +191,7 @@ bulkPay.controller('BusinessNewPayRunCtrl', ['$scope', '$rootScope', '$timeout',
             paymentDetails: employee.paymentDetails,
             repayments: evaluateRepayments(employee.paymentInformation.payBreakDown.repayments)
           }).success(function (payRoll) {
+            console.log(payRoll);
             payRolls.push(payRoll);
             updateLoans(employee.paymentInformation.payBreakDown.repayments);
             stage++;

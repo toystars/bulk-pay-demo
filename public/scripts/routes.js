@@ -114,6 +114,15 @@ bulkPay.config(['$stateProvider', '$urlRouterProvider', '$locationProvider', 'to
         }
       })
 
+      .state('business.jobs', {
+        url: '/jobs',
+        templateUrl: 'modules/business/jobs/jobs.html',
+        controller: 'BusinessJobsCtrl',
+        data: {
+          pageTitle: 'Jobs | BulkPay'
+        }
+      })
+
       .state('business.orgchart', {
         url: '/chart',
         templateUrl: 'modules/business/org-chart/org-chart.html',

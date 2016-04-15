@@ -22,6 +22,14 @@ var payRollSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'PensionManager'
   },
+  YTD: {
+    type: Schema.Types.Mixed,
+    default: {
+      gross: 0,
+      net: 0,
+      tax: 0
+    }
+  },
   grossPay: Number,
   tax: Number,
   pension: Number,

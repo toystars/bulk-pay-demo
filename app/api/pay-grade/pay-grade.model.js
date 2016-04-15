@@ -19,9 +19,9 @@ var payGradesSchema = new Schema({
     type: String,
     required: "Please specify businessId"
   },
-  payGroupId: {
+  positionId: {
     type: String,
-    required: "Please specify payGroupId"
+    required: "Please specify positionId"
   },
   status: {
     type: String,

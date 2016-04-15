@@ -4,7 +4,7 @@ process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 
 var db = require("./config/mongoose")(),
   app = require("./config/express")(),
-  port = process.env.PORT || 5000;
+  port = process.env.PORT || 9000;
 
 app.listen(port, function (error) {
   if (error) {
@@ -14,3 +14,5 @@ app.listen(port, function (error) {
 });
 
 module.exports = app;
+
+

@@ -11,10 +11,10 @@ bulkPay.controller('BusinessPayGradesCtrl', ['$scope', '$rootScope', '$timeout',
   $scope.payGrades = [];
   $scope.payTypes = [];
   $scope.$parent.inView = 'Pay Grades';
-  var payGroups = [];
+  var positions = [];
   var businessId = '';
   $scope.dataFetched = false;
-  $scope.activePayGroups = [];
+  $scope.activePositions = [];
   $scope.options = {
     placeholder: "Choose One"
   };
@@ -36,9 +36,10 @@ bulkPay.controller('BusinessPayGradesCtrl', ['$scope', '$rootScope', '$timeout',
     });
   };
 
-  var getPayGroups = function (businessId) {
-    $http.get('/api/paygroups/business/' + businessId).success(function (data) {
-      payGroups = data;
+  var getPositions = function (businessId) {
+    $http.get('/api/positions/business/' + businessId).success(function (data) {
+      positions = data;
+      $scope.positions = positions;
     }).error(function (error) {
       console.log(error);
     });
@@ -60,7 +61,7 @@ bulkPay.controller('BusinessPayGradesCtrl', ['$scope', '$rootScope', '$timeout',
       description: '',
       businessId: businessId,
       status: '',
-      payGroupId: '',
+      positionId: '',
       payTypes: []
     };
     insertBaseTypes();
@@ -92,7 +93,7 @@ bulkPay.controller('BusinessPayGradesCtrl', ['$scope', '$rootScope', '$timeout',
     $scope.business = args;
     businessId = args._id;
     getPayGrades(businessId);
-    getPayGroups(businessId);
+    getPositions(businessId);
     getPayTypes(businessId);
   });
 
@@ -121,22 +122,22 @@ bulkPay.controller('BusinessPayGradesCtrl', ['$scope', '$rootScope', '$timeout',
    * Helpers
    * */
 
-  $scope.getPayGroup = function (id) {
-    for (var x = 0; x < payGroups.length; x++) {
-      if (payGroups[x]._id === id) {
-        return payGroups[x];
+  $scope.getPosition = function (id) {
+    for (var x = 0; x < positions.length; x++) {
+      if (positions[x]._id === id) {
+        return positions[x];
       }
     }
   };
 
-  $scope.setActivePayGroups = function () {
-    var activePayGroups = [];
-    for (var x = 0; x < payGroups.length; x++) {
-      if (payGroups[x].status === 'Active') {
-        activePayGroups.push(payGroups[x]);
+  $scope.setActivePositions = function () {
+    var activePositions = [];
+    for (var x = 0; x < positions.length; x++) {
+      if (positions[x].status === 'Active') {
+        activePositions.push(positions[x]);
       }
     }
-    $scope.activePayGroups = activePayGroups;
+    $scope.activePositions = activePositions;
   };
 
   $scope.getPayTypes = function (type) {
@@ -228,7 +229,7 @@ bulkPay.controller('BusinessPayGradesCtrl', ['$scope', '$rootScope', '$timeout',
     angular.copy(payGrade, $scope.oldPayGrade);
     angular.copy(payGrade, $scope.singlePayGrade);
     getHistories($scope.singlePayGrade._id);
-    $scope.setActivePayGroups();
+    $scope.setActivePositions();
   };
 
   $scope.edit = function () {

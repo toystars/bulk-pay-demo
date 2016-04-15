@@ -17,8 +17,12 @@ bulkPay.controller('loginCtrl', ['$scope', 'AuthSvc', 'toastr', '$cookies', '$st
 
     AuthSvc.login($scope.user, function (status, error) {
       if (status) {
-        toastr.success('Login Successful');
-        $state.go('home.overview');
+        AuthSvc.getCurrentUser(function (user) {
+          toastr.success('Login Successful');
+          if (user.role === 'superAdmin') {
+            $state.go('home.overview');
+          }
+        });
       }
       if (error) {
         $scope.loginLoader = '';

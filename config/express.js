@@ -6,7 +6,11 @@ var express = require("express"),
   session = require("express-session"),
   config = require('./config'),
   passport = require('passport'),
-  multer = require('multer');
+  multer = require('multer'),
+  mongoose = require('mongoose');
+
+require('../app/api/user/user.model.js');
+var User = mongoose.model('User');
 
 module.exports = function() {
   var app = express();
@@ -54,6 +58,19 @@ module.exports = function() {
 
   require('./passport')(passport);
   require("../app/routes/index.js")(app, passport);
+
+  // try to insert demo data into app
+  User.find({}, function (error, users) {
+    if (!error) {
+      if (users.length === 0) {
+        // clear database and reinsert data
+
+      }
+    }
+  });
+
+
+
 
   return app;
 };

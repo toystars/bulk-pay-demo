@@ -30,6 +30,7 @@ bulkPay.controller('CreateBusinessCtrl', ['$scope', 'AuthSvc', '$cookies', '$sta
       creator: userId
     };
   };
+
   $scope.options = {
     placeholder: "Choose One",
     allowClear: true
@@ -69,6 +70,7 @@ bulkPay.controller('CreateBusinessCtrl', ['$scope', 'AuthSvc', '$cookies', '$sta
         swal("Success", "Business created successfully.", "success");
         resetBusiness();
         AuthSvc.refreshUser();
+        $state.go('home.overview');
       }
     }).error(function (error) {
       console.log(error);

@@ -22,6 +22,7 @@ bulkPay.factory('AuthSvc', ['$http', '$cookies', '$state', 'User', 'toastr', fun
 
     var self = this;
 
+
     /**
      * Check if a user is logged in
      *   (synchronous|asynchronous)

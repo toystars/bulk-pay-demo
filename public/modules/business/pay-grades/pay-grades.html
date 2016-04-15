@@ -52,7 +52,7 @@
                         <td>{{payGrade.code}}</td>
                         <td>{{payGrade.name}}</td>
                         <td>{{payGrade.description}}</td>
-                        <td>{{getPayGroup(payGrade.payGroupId).name}}</td>
+                        <td>{{getPosition(payGrade.positionId).name}}</td>
                         <td>
                             <span ng-if="payGrade.status === 'Active'" class="label label-success">{{payGrade.status}}</span>
                             <span ng-if="payGrade.status === 'Inactive'" class="label label-danger">{{payGrade.status}}</span>
@@ -87,7 +87,7 @@
                                 <div class="form-group col-md-12">
                                     <span class="compute-value">Title:</span> {{singlePayGrade.name}}<br/>
                                     <span class="compute-value">Description:</span> {{singlePayGrade.description}}<br/>
-                                    <span class="compute-value">Pay Group:</span> {{getPayGroup(singlePayGrade.payGroupId).name}}<br/>
+                                    <span class="compute-value">Pay Group:</span> {{getPosition(singlePayGrade.positionId).name}}<br/>
                                     <span class="compute-value">Tax Rule:</span> {{getTaxRule(singlePayGrade.taxRuleId)}}<br/>
                                     <span class="compute-value">Pension Rule:</span> {{getPension(singlePayGrade.pensionRuleId)}}<br/>
                                     <span class="compute-value">Status:</span> {{singlePayGrade.status}}
@@ -169,9 +169,9 @@
                                         </div>
                                     </div><!-- form-group -->
                                     <div class="form-group">
-                                        <label class="col-sm-4 control-label">Pay Group</label>
+                                        <label class="col-sm-4 control-label">Position</label>
                                         <div class="col-sm-8">
-                                            <select2 options="options" ng-model="payGrade.payGroupId" s2-options="payGroup._id as payGroup.name for payGroup in activePayGroups" style="width: 100%"></select2>
+                                            <select2 options="options" ng-model="payGrade.positionId" s2-options="position._id as position.name for position in activePositions" style="width: 100%"></select2>
                                         </div>
                                     </div><!-- form-group -->
                                     <div class="form-group">
@@ -418,9 +418,9 @@
                                         </div>
                                     </div><!-- form-group -->
                                     <div class="form-group">
-                                        <label class="col-sm-4 control-label">Pay Group</label>
+                                        <label class="col-sm-4 control-label">Position</label>
                                         <div class="col-sm-8">
-                                            <select2 options="options" ng-model="payGrade.payGroupId" s2-options="payGroup._id as payGroup.name for payGroup in activePayGroups" style="width: 100%"></select2>
+                                            <select2 options="options" ng-model="payGrade.positionId" s2-options="position._id as position.name for position in positions" style="width: 100%"></select2>
                                         </div>
                                     </div><!-- form-group -->
                                     <div class="form-group">
