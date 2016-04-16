@@ -5,8 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node index.js",
-    "postinstall": "node ./node_modules/bower/bin/bower install"
+    "start": "node index.js"
   },
   "keywords": [
     "Bulkpay",
@@ -16,7 +15,6 @@
   "author": "Mustapha Babatunde <toystars2008@gmail.com> (http://bmustapha.com)",
   "license": "ISC",
   "dependencies": {
-    "bower": "1.6.5",
     "bcrypt-nodejs": "0.0.3",
     "body-parser": "^1.14.2",
     "composable-middleware": "^0.3.0",

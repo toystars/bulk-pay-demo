@@ -1,0 +1,15 @@
+{
+  "name": "jquery-calx",
+  "homepage": "https://github.com/xsanisty/jquery-calx",
+  "version": "2.2.5",
+  "_release": "2.2.5",
+  "_resolution": {
+    "type": "version",
+    "tag": "2.2.5",
+    "commit": "6c5128be95d1a804838d2e9d2b68082373a48b43"
+  },
+  "_source": "git://github.com/xsanisty/jquery-calx.git",
+  "_target": "^2.2.5",
+  "_originalSource": "jquery-calx",
+  "_direct": true
+}

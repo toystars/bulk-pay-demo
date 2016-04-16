@@ -1,0 +1,14 @@
+{
+  "name": "autogrow-textarea",
+  "version": "1.0.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/themepixels/autogrow-textarea.git"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "grunt": "^0.4.5",
+    "grunt-contrib-uglify": "^0.7.0",
+    "load-grunt-tasks": "^0.6.0"
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "name": "autogrow-textarea",
+  "version": "1.0.0",
+  "homepage": "https://github.com/themepixels/autogrow-textarea",
+  "main": "autogrow-textarea.js",
+  "license": "MIT",
+  "ignore": [
+    "**/.*"
+  ],
+  "_release": "1.0.0",
+  "_resolution": {
+    "type": "version",
+    "tag": "v1.0.0",
+    "commit": "0ee8fd30952b86d9bffdc56e8c085cac68300a58"
+  },
+  "_source": "git://github.com/themepixels/autogrow-textarea.git",
+  "_target": "~1.0.0",
+  "_originalSource": "autogrowtextarea"
+}

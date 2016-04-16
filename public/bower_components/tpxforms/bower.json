@@ -1,0 +1,21 @@
+{
+  "name": "tpxforms",
+  "version": "1.0.0",
+  "homepage": "https://github.com/themepixels/tpxForms",
+  "authors": [
+    "ThemePixels <themepixels@gmail.com>"
+  ],
+  "description": "An enhanced version of some of the form elements using only css",
+  "main": "tpxforms.css",
+  "keywords": [
+    "checkbox",
+    "radio",
+    "enhanced form",
+    "fancy form",
+    "forms"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*"
+  ]
+}

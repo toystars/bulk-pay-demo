@@ -33,6 +33,5 @@ public/uploads
 
 .tmp
 .sass-cache
-bower_components
 .idea
 # Created by .ignore support plugin (hsz.mobi)
