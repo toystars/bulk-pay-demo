@@ -8,9 +8,9 @@
                 <li><a href=""><i class="glyphicon glyphicon-home"></i></a></li>
                 <li><a ui-sref="business.overview">Business</a></li>
                 <li>{{business.name}}</li>
-                <li>Salary Register</li>
+                <li>Pension Report</li>
             </ul>
-            <h4>Salary Register</h4>
+            <h4>Pension Report</h4>
         </div>
     </div><!-- media -->
 </div><!-- pageheader -->
@@ -20,7 +20,7 @@
 
     <div class="row">
         <div class="col-md-12">
-            <h5 class="lg-title mb5">Salary Register For - {{reportPeriod.month}}, {{reportPeriod.year}}</h5>
+            <h5 class="lg-title mb5">Pension Report For - {{reportPeriod.month}}, {{reportPeriod.year}}</h5>
             <br/>
         </div>
     </div>
@@ -55,15 +55,11 @@
                         <th>#</th>
                         <th>Employee Id</th>
                         <th>Employee Name</th>
-                        <th>Overtime Rate</th>
-                        <th>Overtime Hours</th>
-                        <th>Overtime Pay</th>
-                        <th>Tax</th>
-                        <th>Pension</th>
-                        <th>Gross</th>
-                        <th>Deduction</th>
-                        <th>Taxable Pay</th>
-                        <th>Net</th>
+                        <th>Pension Number</th>
+                        <th>Pay Components (Basic, Trans, Hou)</th>
+                        <th>Employee Contribution</th>
+                        <th>Employer Contribution</th>
+                        <th>Total Amount</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -71,15 +67,21 @@
                         <td>{{$index + 1}}</td>
                         <td>{{employee.id}}</td>
                         <td>{{employee.fullName}}</td>
-                        <td>{{employee.overtimeRate}}</td>
-                        <td>{{employee.overtimeHours}}</td>
-                        <td>{{employee.overtimeRate * employee.overtimeHours | currency:""}}</td>
-                        <td>{{employee.tax | currency:""}}</td>
-                        <td>{{employee.pension | currency:""}}</td>
-                        <td>{{employee.gross | currency:""}}</td>
-                        <td>{{employee.deduction | currency:""}}</td>
-                        <td>{{employee.taxablePay | currency:""}}</td>
-                        <td>{{employee.gross - employee.deduction | currency:""}}</td>
+                        <td>{{employee.pensionNumber}}</td>
+                        <td>{{employee.components | currency:""}}</td>
+                        <td>{{employee.employeeContribution | currency:""}}</td>
+                        <td>{{employee.employerContribution | currency:""}}</td>
+                        <td>{{employee.total | currency:""}}</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td><b>Total: </b></td>
+                        <td></td>
+                        <td></td>
+                        <td><b>{{getComponentSum() | currency:""}}</b></td>
+                        <td><b>{{getEmployeeSum() | currency:""}}</b></td>
+                        <td><b>{{getEmployerSum() | currency:""}}</b></td>
+                        <td><b>{{getTotalSum() | currency:""}}</b></td>
                     </tr>
                     </tbody>
                 </table>

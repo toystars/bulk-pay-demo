@@ -30,7 +30,7 @@
         </div>
         <div class="col-md-12 employee-filter" ng-if="dataFetched">
             <div class="row">
-                <div class="col-md-4">
+                <div class="col-md-2">
                     <div class="form-group">
                         <label for="employee-name-filter" class="control-label">Name</label>
                         <input ng-model="nameFilter.name" type="text" id="employee-name-filter" class="form-control" placeholder="Name" />
@@ -58,6 +58,12 @@
                     <div class="form-group">
                         <label class="control-label">Position</label>
                         <select2 ng-change="alterFilter()" options="options" ng-model="filter.positionId" s2-options="position._id as position.name for position in positions" style="width: 100%"></select2>
+                    </div><!-- form-group -->
+                </div>
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <label class="control-label">Active</label>
+                        <select2 ng-change="alterFilter()" options="options" ng-model="filter.status" s2-options="status as status for status in statuses" style="width: 100%"></select2>
                     </div><!-- form-group -->
                 </div>
             </div>

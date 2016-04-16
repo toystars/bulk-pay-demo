@@ -15,6 +15,7 @@ bulkPay.controller('BusinessEmployeesManagerCtrl', ['$scope', '$rootScope', '$ti
   $scope.nameFilter = {
     name: ''
   };
+  $scope.statuses = ['Active', 'Inactive'];
   $scope.dataFetched = false;
   $scope.filter = {};
   $scope.currentPage = 1;

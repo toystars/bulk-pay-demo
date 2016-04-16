@@ -32,10 +32,17 @@
                 <div class="panel-body">
 
                     <div class="row">
-                        <div class="col-sm-12">
+                        <div class="col-sm-6">
                             <div class="form-group">
                                 <label class="control-label">Employee</label>
                                 <select2 options="options" ng-model="loan.employee" s2-options="employee._id as employee.fullName for employee in employees" style="width: 100%"></select2>
+                            </div><!-- form-group -->
+                        </div><!-- col-sm-6 -->
+
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label class="control-label">Loan Type</label>
+                                <select2 options="options" ng-model="loan.type" s2-options="loanType as loanType for loanType in loanTypes" style="width: 100%"></select2>
                             </div><!-- form-group -->
                         </div><!-- col-sm-6 -->
 

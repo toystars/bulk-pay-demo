@@ -73,6 +73,8 @@ bulkPay.controller('BusinessNewLoanCtrl', ['$scope', '$rootScope', 'AuthSvc', 'B
     $state.go('business.loans');
   };
 
+  $scope.loanTypes = ['Car', 'Housing', 'Computer', 'Tour'];
+
 
 }]);
 
