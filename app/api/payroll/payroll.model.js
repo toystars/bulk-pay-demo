@@ -10,10 +10,6 @@ var payRollSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'Employee'
   },
-  payGroup: {
-    type: Schema.Types.ObjectId,
-    ref: 'PayGroup'
-  },
   position: {
     type: Schema.Types.ObjectId,
     ref: 'Position'

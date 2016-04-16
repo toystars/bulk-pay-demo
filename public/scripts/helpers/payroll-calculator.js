@@ -107,6 +107,7 @@ var PayRollCalculation = function (employee, payGradeTypes, employeeTaxRule, emp
             value: type.value,
             code: type.code,
             title: type.title,
+            type: type.type,
             frequency: type.frequency
           });
           break;
@@ -115,6 +116,7 @@ var PayRollCalculation = function (employee, payGradeTypes, employeeTaxRule, emp
             value: type.value,
             code: type.code,
             title: type.title,
+            type: type.type,
             frequency: type.frequency
           });
           break;
@@ -123,6 +125,7 @@ var PayRollCalculation = function (employee, payGradeTypes, employeeTaxRule, emp
             value: type.value,
             code: type.code,
             title: type.title,
+            type: 'Deduction',
             loanObject: type.loanObject,
             frequency: type.frequency
           });
@@ -132,6 +135,7 @@ var PayRollCalculation = function (employee, payGradeTypes, employeeTaxRule, emp
             value: type.value,
             code: type.code,
             title: type.title,
+            type: type.type,
             frequency: type.frequency
           });
           break;
@@ -140,11 +144,13 @@ var PayRollCalculation = function (employee, payGradeTypes, employeeTaxRule, emp
     deductions.unshift({
       value: calculateTax(),
       code: 'PAYE',
+      type: 'Deduction',
       title: 'PAYE Tax',
       frequency: 'Monthly'
     }, {
       value: calculatePensionRelief(),
       code: 'Pension',
+      type: 'Deduction',
       title: 'Pension',
       frequency: 'Monthly'
     });

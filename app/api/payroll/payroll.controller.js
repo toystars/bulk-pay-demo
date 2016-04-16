@@ -64,6 +64,7 @@ exports.create = function (req, res) {
       };
       var newPayRoll = new PayRoll(req.body);
       newPayRoll.save(function (error, doc) {
+        console.log(error);
         if (error) {
           crudHelper.handleError(res, 400, error);
         } else {

@@ -48,6 +48,8 @@
                         <th>Position</th>
                         <th>Pay Group</th>
                         <th>Pension Manager</th>
+                        <th>Pension ( ₦ )</th>
+                        <th>Tax Pay ( ₦ )</th>
                         <th>Gross Pay ( ₦ )</th>
                         <th>Deductions ( ₦ )</th>
                         <th>Net Pay ( ₦ )</th>
@@ -55,28 +57,94 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr class="pointer" dir-paginate="payRoll in payRolls | itemsPerPage: pageSize"
-                        current-page="currentPage">
+                    <tr class="pointer" dir-paginate="payRoll in payRolls | itemsPerPage: pageSize" current-page="currentPage">
                         <td>{{payRoll.employee.employeeId}}</td>
                         <td>{{payRoll.employee.fullName}}</td>
                         <td>{{payRoll.position.name}}</td>
                         <td>{{payRoll.payGroup.name}}</td>
                         <td>{{payRoll.pensionManager.name}}</td>
+                        <td>{{payRoll.pension | currency:""}}</td>
+                        <td>{{payRoll.tax | currency:""}}</td>
                         <td>{{payRoll.grossPay | currency:""}}</td>
                         <td>{{payRoll.totalDeduction | currency:""}}</td>
                         <td>{{payRoll.netPay | currency:""}}</td>
-                        <td><a class="pointer" ng-click="viewPaySlip(payRoll)">View Pay Slip</a></td>
+                        <td><a class="pointer" data-toggle="modal" data-target=".payroll-summary" ng-click="viewPaySlip(payRoll)">View Pay Slip</a></td>
                     </tr>
                     </tbody>
                 </table>
             </div><!-- table-responsive -->
             <div class="col-md-12 text-left">
-                <dir-pagination-controls boundary-links="true" on-page-change="pageChangeHandler(newPageNumber)"
-                                         template-url="bower_components/angularUtils-pagination/dirPagination.tpl.html"></dir-pagination-controls>
+                <dir-pagination-controls boundary-links="true" on-page-change="pageChangeHandler(newPageNumber)" template-url="bower_components/angularUtils-pagination/dirPagination.tpl.html"></dir-pagination-controls>
             </div>
         </div>
 
     </div>
 
-
 </div><!-- contentpanel -->
+
+
+<div class="modal fade payroll-summary" tabindex="-1" role="dialog" data-backdrop="static">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Summary</h3>
+                </div>
+                <div id="payroll-summary" class="panel-body big-font">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h5 class="lg-title mb5 text-center">{{business.name}}</h5>
+                            <h5 class="mb20 text-center">{{singlePayroll.employee.fullName}}</h5>
+                            <h5 class="mb20 text-center">{{singleEmployee.fullName}}</h5>
+                            <p class="mb20 text-center">Payroll Summary</p>
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-primary mb30">
+                                    <thead>
+                                    <tr>
+                                        <th>Pay Components</th>
+                                        <th>Amount ( ₦  )</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr ng-repeat="payType in getNonDeductions()">
+                                        <td>{{payType.title}}</td>
+                                        <td>{{payType.monthlyValue | currency:""}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>Gross Pay: </b></td>
+                                        <td><b>{{singlePayroll.grossPay | currency:""}}</b></td>
+                                    </tr>
+                                    <tr>
+                                        <td>...</td>
+                                        <td>...</td>
+                                    </tr>
+                                    <tr ng-repeat="payType in getDeductions()">
+                                        <td>{{payType.title}}</td>
+                                        <td>{{payType.monthlyValue | currency:""}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>Total Deductions: </b></td>
+                                        <td><b>{{singlePayroll.totalDeduction | currency:""}}</b></td>
+                                    </tr>
+                                    <tr>
+                                        <td>...</td>
+                                        <td>...</td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>Net Pay: </b></td>
+                                        <td><b>{{singlePayroll.netPay | currency:""}}</b></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div><!-- table-responsive -->
+                        </div><!-- col-md-12 -->
+                    </div><!-- row -->
+                </div>
+                <div class="panel-footer">
+                    <button type="reset" ng-click="resetSummary()" class="btn btn-danger" id="payroll-summary-close" data-dismiss="modal">Close</button>
+                    <button type="reset" ng-click="print('payroll-summary')" class="btn btn-info" id="payroll-summary-print">Print</button>
+                </div><!-- panel-footer -->
+            </div>
+        </div>
+    </div>
+</div>

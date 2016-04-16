@@ -576,7 +576,7 @@ bulkPay.controller('BusinessEmployeeCreateCtrl', ['$scope', '$rootScope', '$time
     }
     popupWin.document.close();
     return true;
-  }
+  };
 
 }]);
 

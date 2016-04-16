@@ -86,7 +86,6 @@ bulkPay.controller('BusinessNewPayRunCtrl', ['$scope', '$rootScope', '$timeout',
   var getPaymentEmployees = function (businessId) {
     $http.get('/api/employees/business/' + businessId + '/payrun').success(function (data) {
       $scope.employees = data;
-      console.log(data);
       _.each($scope.employees, function (employee) {
         employee.paymentInformation = new PayRollCalculation(employee, employee.payGrade.payTypes, employee.payGrade.tax,
           employee.payGrade.pension, $scope.employees.loans).calculate();
@@ -156,6 +155,7 @@ bulkPay.controller('BusinessNewPayRunCtrl', ['$scope', '$rootScope', '$timeout',
       $http.post('/api/payruns/', $scope.payRun).success(function (payRun) {
         var stage = 0;
         var payRolls = [];
+        console.log($scope.payRunEmployees);
         _.each($scope.payRunEmployees, function (employee) {
           console.log(employee.paymentInformation.payBreakDown.repayments);
           $http.post('/api/payrolls', {
