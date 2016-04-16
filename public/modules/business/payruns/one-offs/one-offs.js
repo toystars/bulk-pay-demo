@@ -1,4 +1,4 @@
-bulkPay.controller('BusinessOneOffCtrl', ['$scope', '$rootScope', 'AuthSvc', 'BusinessDataSvc', '$stateParams', '$cookies', '$http', '$state', function ($scope, $rootScope, AuthSvc, BusinessDataSvc, $stateParams, $cookies, $http, $state) {
+bulkPay.controller('BusinessOneOffCtrl', ['$scope', '$rootScope', 'AuthSvc', 'BusinessDataSvc', '$stateParams', '$cookies', '$http', '$state', '$timeout', function ($scope, $rootScope, AuthSvc, BusinessDataSvc, $stateParams, $cookies, $http, $state, $timeout) {
 
   AuthSvc.isLoggedIn(function (status) {
     if (!status) {
@@ -136,10 +136,12 @@ bulkPay.controller('BusinessOneOffCtrl', ['$scope', '$rootScope', 'AuthSvc', 'Bu
   $scope.createOneOffPayment = function () {
     $scope.oneOff.customTitle = $scope.oneOff.payment.id !== 'custom' ? '' : $scope.oneOff.customTitle;
     $http.post('/api/oneoffs/', $scope.oneOff).success(function (oneOff) {
-      $scope.oneOfffs.push(oneOff);
-      jQuery('#new-on-off-close').click();
-      resetOneOff();
-      swal('Success', ' One Off created.', 'success');
+      $timeout(function() {
+        $scope.oneOfffs.push(oneOff);
+        jQuery('#new-on-off-close').click();
+        resetOneOff();
+        swal('Success', ' One Off created.', 'success');
+      });
     }).error(function (error) {
       console.log(error);
       AuthSvc.handleError(error);

@@ -267,4 +267,15 @@ bulkPay.config(['$stateProvider', '$urlRouterProvider', '$locationProvider', 'to
         }
       })
 
+
+
+      .state('business.salaryregister', {
+        url: '/reports/salaryregister',
+        templateUrl: 'modules/business/reports/salary-register/salary-register.html',
+        controller: 'BusinessSalaryRegisterCtrl',
+        data: {
+          pageTitle: 'Salary Register | BulkPay'
+        }
+      })
+
   }]);

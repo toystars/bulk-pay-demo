@@ -1,0 +1,92 @@
+<div class="pageheader">
+    <div class="media">
+        <div class="pageicon pull-left">
+            <i class="fa fa-money"></i>
+        </div>
+        <div class="media-body">
+            <ul class="breadcrumb">
+                <li><a href=""><i class="glyphicon glyphicon-home"></i></a></li>
+                <li><a ui-sref="business.overview">Business</a></li>
+                <li>{{business.name}}</li>
+                <li>Salary Register</li>
+            </ul>
+            <h4>Salary Register</h4>
+        </div>
+    </div><!-- media -->
+</div><!-- pageheader -->
+
+<div class="contentpanel">
+
+
+    <div class="row">
+        <div class="col-md-12">
+            <h5 class="lg-title mb5">Salary Register For - {{reportPeriod.month}}, {{reportPeriod.year}}</h5>
+            <br/>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <select2 options="options" ng-model="reportPeriod.month" s2-options="month as month for month in months" style="width: 100%"></select2>
+                        </div>
+                        <div class="col-md-6">
+                            <select2 options="options" ng-model="reportPeriod.year" s2-options="year as year for year in years" style="width: 100%"></select2>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br/>
+            <br/>
+            <br/>
+        </div>
+    </div>
+
+    <div class="row">
+
+        <div class="col-md-12">
+            <div class="table-responsive">
+                <table class="table table-primary mb60 table-hover">
+                    <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Employee Id</th>
+                        <th>Employee Name</th>
+                        <th>Overtime Rate</th>
+                        <th>Overtime Hours</th>
+                        <th>Overtime Pay</th>
+                        <th>Tax</th>
+                        <th>Pension</th>
+                        <th>Gross</th>
+                        <th>Deduction</th>
+                        <th>Taxable Pay</th>
+                        <th>Net</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr class="pointer" dir-paginate="employee in employeeRegister | itemsPerPage: pageSize" current-page="currentPage">
+                        <td>{{$index + 1}}</td>
+                        <td>{{employee.id}}</td>
+                        <td>{{employee.fullName}}</td>
+                        <td>{{employee.overtimeRate}}</td>
+                        <td>{{employee.overtimeHours}}</td>
+                        <td>{{employee.overtimeRate * employee.overtimeHours | currency:""}}</td>
+                        <td>{{employee.tax | currency:""}}</td>
+                        <td>{{employee.pension | currency:""}}</td>
+                        <td>{{employee.gross | currency:""}}</td>
+                        <td>{{employee.deduction | currency:""}}</td>
+                        <td>{{employee.taxablePay | currency:""}}</td>
+                        <td>{{employee.gross - employee.deduction | currency:""}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div><!-- table-responsive -->
+        </div>
+
+    </div>
+
+
+</div><!-- contentpanel -->
