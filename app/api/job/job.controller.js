@@ -19,7 +19,7 @@ var mongoose = require('mongoose'),
  * Get all jobs
  */
 exports.index = function (req, res) {
-  Job.find({}, function (error, jobs) {
+  Job.find({}).populate('position').exec(function (error, jobs) {
     if (error) {
       crudHelper.handleError(res, null, error);
     }
@@ -33,7 +33,7 @@ exports.index = function (req, res) {
  * Get all jobs per business
  */
 exports.jobs = function (req, res) {
-  Job.find({ businessId: req.params.id }, function (error, jobs) {
+  Job.find({ businessId: req.params.id }).populate('position').exec(function (error, jobs) {
     if (error) {
       crudHelper.handleError(res, null, error);
     }
@@ -52,7 +52,7 @@ exports.create = function (req, res) {
     if (error) {
       crudHelper.handleError(res, 400, error);
     } else {
-      Job.findOne({ _id: job._id }, function (error, job) {
+      Job.findOne({ _id: job._id }).populate('position').exec(function (error, job) {
         if (error) {
           crudHelper.handleError(res, null, error);
         } else {
@@ -67,7 +67,7 @@ exports.create = function (req, res) {
  * Fetch a job
  * */
 exports.show = function (req, res) {
-  Job.findOne({ _id: req.params.id }, function (error, job) {
+  Job.findOne({ _id: req.params.id }).populate('position').exec(function (error, job) {
     if (error) {
       crudHelper.handleError(res, null, error);
     } else if (job) {

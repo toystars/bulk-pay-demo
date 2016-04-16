@@ -10,6 +10,8 @@ bulkPay.controller('BusinessPayGradesCtrl', ['$scope', '$rootScope', '$timeout',
   $scope.payGrade = {};
   $scope.payGrades = [];
   $scope.payTypes = [];
+  $scope.taxes = [];
+  $scope.pensions = [];
   $scope.$parent.inView = 'Pay Grades';
   var positions = [];
   var businessId = '';
@@ -34,6 +36,22 @@ bulkPay.controller('BusinessPayGradesCtrl', ['$scope', '$rootScope', '$timeout',
     }).error(function (error) {
       console.log(error);
     });
+  };
+
+  var getTaxes = function (businessId) {
+    $http.get('/api/taxes/business/' + businessId).success(function (data) {
+      $scope.taxes = data;
+    }).error(function (error) {
+      AuthSvc.handleError(error);
+    })
+  };
+
+  var getPensions = function (businessId) {
+    $http.get('/api/pensions/business/' + businessId).success(function (data) {
+      $scope.pensions = data;
+    }).error(function (error) {
+      AuthSvc.handleError(error);
+    })
   };
 
   var getPositions = function (businessId) {
@@ -61,14 +79,16 @@ bulkPay.controller('BusinessPayGradesCtrl', ['$scope', '$rootScope', '$timeout',
       description: '',
       businessId: businessId,
       status: '',
-      positionId: '',
+      positionIds: [],
+      pensionRuleId: '',
+      taxRuleId: '',
       payTypes: []
     };
     insertBaseTypes();
   };
 
   var insertBaseTypes = function () {
-    var concatenated = getBasePayTypes('Wage').concat(getBasePayTypes('Benefit'), getBasePayTypes('Deduction'));
+    var concatenated = getBasePayTypes('Wage').concat(getBasePayTypes('Benefit'), getBasePayTypes('Deduction'), getBasePayTypes('One Off'));
     _.each(concatenated, function (type) {
       $scope.check(type, type.type);
     });
@@ -93,6 +113,8 @@ bulkPay.controller('BusinessPayGradesCtrl', ['$scope', '$rootScope', '$timeout',
     $scope.business = args;
     businessId = args._id;
     getPayGrades(businessId);
+    getTaxes(businessId);
+    getPensions(businessId);
     getPositions(businessId);
     getPayTypes(businessId);
   });
@@ -100,6 +122,9 @@ bulkPay.controller('BusinessPayGradesCtrl', ['$scope', '$rootScope', '$timeout',
 
 
   $scope.createPayGrade = function () {
+    $scope.payGrade.positions = $scope.payGrade.positionIds;
+    $scope.payGrade.pension = $scope.payGrade.pensionRuleId;
+    $scope.payGrade.tax = $scope.payGrade.taxRuleId;
     $http.post('/api/paygrades/', $scope.payGrade).success(function (data) {
       $timeout(function() {
         $scope.payGrades.push(data);
@@ -121,6 +146,18 @@ bulkPay.controller('BusinessPayGradesCtrl', ['$scope', '$rootScope', '$timeout',
   /*
    * Helpers
    * */
+
+  $scope.getPayGradePositions = function (positions) {
+    var cleanedPositions = '';
+    _.each(positions, function (position, index) {
+      if (index === 0) {
+        cleanedPositions += ' ' + position.name;
+      } else {
+        cleanedPositions += ', ' + position.name;
+      }
+    });
+    return cleanedPositions;
+  };
 
   $scope.getPosition = function (id) {
     for (var x = 0; x < positions.length; x++) {
@@ -272,6 +309,9 @@ bulkPay.controller('BusinessPayGradesCtrl', ['$scope', '$rootScope', '$timeout',
   };
 
   $scope.updatePayGrade = function () {
+    $scope.singlePayGrade.positions = $scope.singlePayGrade.positionIds;
+    $scope.singlePayGrade.pension = $scope.singlePayGrade.pensionRuleId;
+    $scope.singlePayGrade.tax = $scope.singlePayGrade.taxRuleId;
     $http.put('/api/paygrades/' + $scope.singlePayGrade._id, $scope.singlePayGrade).success(function (data) {
       getHistories(data._id);
       replace(data);

@@ -4,11 +4,9 @@ var mongoose = require("mongoose"),
   Schema = mongoose.Schema;
 
 var employeesSchema = new Schema({
-  address1: String, // done
-  address2: String, // done
+  address: String,
   businessId: String,
   businessUnitId: String,
-  userId: String,
   payGrade: {
     type: Schema.Types.Mixed,
     default: {}
@@ -27,27 +25,26 @@ var employeesSchema = new Schema({
   },
   city: String,
   confirmationDate: Date,
-  customPayTypes: [{type: Schema.Types.Mixed}],
+  customPayTypes: [ { type: Schema.Types.Mixed } ],
   dateOfBirth: Date,
   departmentId: String,
   divisionId: String,
-  profilePictures: [{type: Schema.Types.Mixed}],
+  profilePictures: [ { type: Schema.Types.Mixed } ],
   currentProfilePicture: String,
-  editablePayTypes: [{type: Schema.Types.Mixed}],
+  editablePayTypes: [{ type: Schema.Types.Mixed }],
   email: String,
   employeeId: String,
   employmentDate: Date,
-  businessPhone: String,
-  exemptedPayTypes: [{type: Schema.Types.Mixed}],
+  exemptedPayTypes: [{ type: Schema.Types.Mixed }],
   firstName: String,
   gender: String,
-  guarantor: {type: Schema.Types.Mixed},
+  guarantor: { type: Schema.Types.Mixed },
   lastName: String,
   maritalStatus: String,
   otherNames: String,
   payGradeId: String,
   payGroupId: String,
-  paymentDetails: {type: Schema.Types.Mixed},
+  paymentDetails: { type: Schema.Types.Mixed },
   phone: String,
   positionId: String,
   state: String,
@@ -71,7 +68,7 @@ var employeesSchema = new Schema({
 });
 
 employeesSchema.virtual('fullName').get(function () {
-  return this.lastName + ' ' + this.firstName + ' ' + this.otherNames;
+    return  this.lastName + ' ' + this.firstName + ' ' + this.otherNames;
 });
 
 module.exports = mongoose.model('Employee', employeesSchema);

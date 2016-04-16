@@ -20,6 +20,7 @@ bulkPay.controller('BusinessJobsCtrl', ['$scope', '$rootScope', 'AuthSvc', 'Busi
     $scope.job = {
       code: '',
       title: '',
+      role: '',
       businessId: businessId,
       positionId: '',
       description: ''
@@ -67,6 +68,7 @@ bulkPay.controller('BusinessJobsCtrl', ['$scope', '$rootScope', 'AuthSvc', 'Busi
 
 
   $scope.createJob = function () {
+    $scope.job.position = $scope.job.positionId;
     $http.post('/api/jobs/', $scope.job).success(function (data) {
       $scope.jobs.push(data);
       resetJob();
@@ -84,22 +86,22 @@ bulkPay.controller('BusinessJobsCtrl', ['$scope', '$rootScope', 'AuthSvc', 'Busi
    * */
   $scope.statuses = ['Active', 'Inactive'];
 
+
   /*
    * Helpers
    * */
-
   var replace = function (data) {
-    for (var x = 0; x < $scope.departments.length; x++) {
-      if ($scope.departments[x]._id === data._id) {
-        $scope.departments[x] = data;
+    for (var x = 0; x < $scope.jobs.length; x++) {
+      if ($scope.jobs[x]._id === data._id) {
+        $scope.jobs[x] = data;
       }
     }
   };
 
   var removeFromCollection = function (id) {
-    for (var x = 0; x < $scope.departments.length; x++) {
-      if ($scope.departments[x]._id === id) {
-        $scope.departments.splice(x, 1);
+    for (var x = 0; x < $scope.jobs.length; x++) {
+      if ($scope.jobs[x]._id === id) {
+        $scope.jobs.splice(x, 1);
       }
     }
   };
@@ -114,21 +116,17 @@ bulkPay.controller('BusinessJobsCtrl', ['$scope', '$rootScope', 'AuthSvc', 'Busi
 
 
   /*
-   * Single unit display
+   * Single job display
    * */
   $scope.singleView = false;
-  $scope.filteredDepartments = [];
 
-  $scope.showDepartment = function (department) {
+  $scope.showJob = function (job) {
     $scope.singleView = true;
-    $scope.singleDepartment = {};
-    $scope.oldDepartment = {};
-    angular.copy(department, $scope.oldDepartment);
-    angular.copy(department, $scope.singleDepartment);
-    $scope.singleDepartment.parentId = $scope.singleDepartment.parent ? $scope.singleDepartment.parent._id : '';
-    $scope.singleDepartment.divisionId = $scope.singleDepartment.division ? $scope.singleDepartment.division._id : '';
-    getHistories($scope.singleDepartment._id);
-    setParentsDepartments();
+    $scope.singleJob = {};
+    $scope.oldJob = {};
+    angular.copy(job, $scope.oldJob);
+    angular.copy(job, $scope.singleJob);
+    getHistories($scope.singleJob._id);
   };
 
   $scope.delete = function () {
@@ -154,14 +152,25 @@ bulkPay.controller('BusinessJobsCtrl', ['$scope', '$rootScope', 'AuthSvc', 'Busi
     });
   };
 
-  $scope.closeDivision = function () {
-    $scope.singleDepartment = {};
+  $scope.closeJob = function () {
+    $scope.singleJob = {};
     $scope.singleView = false;
     $scope.histories = [];
   };
 
   $scope.updateJob = function () {
-
+    $scope.singleJob.position = $scope.singleJob.positionId;
+    $http.put('/api/jobs/' + $scope.singleJob._id, $scope.singleJob).success(function (data) {
+      getHistories(data._id);
+      angular.copy(data, $scope.oldJob);
+      angular.copy(data, $scope.singleJob);
+      $scope.editActive = false;
+      replace(data);
+      swal("Success", "Job updated.", "success");
+    }).error(function (error) {
+      console.log(error);
+      AuthSvc.handleError(error);
+    });
   };
 
 

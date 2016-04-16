@@ -85,11 +85,11 @@
             <img alt="" src="images/loaders/loader10.gif">
         </div>
         <div class="col-md-12">
-            <div class="alert alert-danger text-center" ng-if="dataFetched && filteredEmployees.length === 0">
+            <div class="alert alert-danger text-center" ng-if="dataFetched && employees.length === 0">
                 <p>No Employee available</p>
             </div>
         </div>
-        <div class="col-md-12" ng-if="dataFetched && filteredEmployees.length > 0">
+        <div class="col-md-12" ng-if="dataFetched && employees.length > 0">
             <div class="table-responsive">
                 <table class="table table-primary mb60 table-hover">
                     <thead>
@@ -112,7 +112,7 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr class="pointer" dir-paginate="employee in filteredEmployees | itemsPerPage: pageSize" current-page="currentPage">
+                    <tr class="pointer" dir-paginate="employee in employees | itemsPerPage: pageSize" current-page="currentPage">
                         <td>
                             <div class="ckbox ckbox-success">
                                 <input ng-model="employee.selected" ng-checked="employee.selected" type="checkbox" id="{{'em' + employee._id}}" checked="checked" />
@@ -137,7 +137,7 @@
         </div>
 
         </div>
-        <div class="col-md-12 text-left" ng-if="filteredEmployees.length > 0">
+        <div class="col-md-12 text-left" ng-if="employees.length > 0">
             <div class="form-group">
                 <label class="control-label">.</label>
                 <button class="btn btn-primary" ng-click="initiatePayRun()">Start Pay Run</button>

@@ -244,6 +244,8 @@ bulkPay.controller('BusinessSingleEmployeeCtrl', ['$scope', '$rootScope', '$time
     }
   });
 
+
+
   $scope.checkValidity = function () {
     $scope.message = '';
     var position = _.find(positions, function (currentPosition) {
@@ -259,6 +261,27 @@ bulkPay.controller('BusinessSingleEmployeeCtrl', ['$scope', '$rootScope', '$time
               $scope.message = 'Select another position.';
               swal('Not Allowed', 'Already exceeded number of employees for ' + position.name + ' position. Contact admin if quota should be increased.', 'warning');
             });
+          } else {
+            // fetch the pay grade position belongs to
+            $http.get('/api/paygrades/position/' + $scope.employee.positionId).success(function (data) {
+              $scope.currentPayGrade = data;
+              if ($scope.currentPayGrade) {
+                $scope.employee.payGradeId = $scope.currentPayGrade._id;
+                _.each($scope.currentPayGrade.payTypes, function (payType) {
+                  if (payType.editablePerEmployee === 'Yes') {
+                    if ($scope.employee.editablePayTypes.length > 0) {
+                      _.each($scope.employee.editablePayTypes, function (type, index) {
+                        if (type.payTypeId === payType.payTypeId) {
+                          $scope.employee.editablePayTypes[index] = payType;
+                        }
+                      });
+                    } else {
+                      $scope.employee.editablePayTypes.push(payType);
+                    }
+                  }
+                });
+              }
+            });
           }
         }).error(function (error) {
           AuthSvc.handleError(error);
@@ -269,86 +292,6 @@ bulkPay.controller('BusinessSingleEmployeeCtrl', ['$scope', '$rootScope', '$time
     }
   };
 
-  $scope.copyStatus = function () {
-    return $scope.sourceId && $scope.sourceId !== '';
-  };
-
-  $scope.$watch('employee.payGroupId', function (newValue, oldValue) {
-    if ($scope.sourcePointer && $scope.sourcePointer !== 'Select') {
-      $scope.setSource($scope.sourcePointer);
-    }
-  });
-
-  $scope.setSource = function (source) {
-    $scope.sourcePointer = source;
-    $scope.sourceStatus = true;
-    $scope.sourceId = '';
-    switch (source) {
-      case 'Payroll Template':
-        // fetch all pay grades assigned to selected pay group
-        $http.get('/api/paygrades/paygroup/' + $scope.employee.payGroupId).success(function (data) {
-          $scope.copySource = data;
-          _.each($scope.copySource, function (payGrade) {
-            payGrade.display = payGrade.name;
-            payGrade.displayId = payGrade._id;
-          });
-          $scope.sourceStatus = false;
-        });
-        break;
-      case 'Employee':
-        // fetch all employees assigned to selected pay group
-        $http.get('/api/employees/paygroup/' + $scope.employee.payGroupId).success(function (data) {
-          $scope.copySource = data;
-          _.each($scope.copySource, function (employee) {
-            employee.display = employee.firstName + ' ' + employee.lastName;
-            employee.displayId = employee._id;
-          });
-          $scope.sourceStatus = false;
-        });
-        break;
-    }
-  };
-
-  $scope.copy = function () {
-    if ($scope.sourcePointer === 'Payroll Template') {
-      $scope.currentPayGrade = _.find($scope.copySource, function (element) {
-        return element._id === $scope.sourceId;
-      });
-      if ($scope.currentPayGrade) {
-        $scope.employee.payGradeId = $scope.sourceId;
-        _.each($scope.currentPayGrade.payTypes, function (payType) {
-          if (payType.editablePerEmployee === 'Yes') {
-            if ($scope.employee.editablePayTypes.length > 0) {
-              _.each($scope.employee.editablePayTypes, function (type, index) {
-                if (type.payTypeId === payType.payTypeId) {
-                  $scope.employee.editablePayTypes[index] = payType;
-                }
-              });
-            } else {
-              $scope.employee.editablePayTypes.push(payType);
-            }
-          }
-        });
-      }
-    } else {
-      // get from employee using id as well...
-      var copiedEmployee = _.find($scope.copySource, function (element) {
-        return element._id === $scope.sourceId;
-      });
-      if (copiedEmployee) {
-        // fetch payGrade
-        $http.get('/api/paygrades/' + copiedEmployee.payGradeId).success(function (data) {
-          $scope.currentPayGrade = data;
-          $scope.employee.payGradeId = data._id;
-          $scope.employee.editablePayTypes = copiedEmployee.editablePayTypes;
-          $scope.employee.customPayTypes = copiedEmployee.customPayTypes;
-          $scope.employee.exemptedPayTypes = copiedEmployee.exemptedPayTypes;
-        }).error(function (error) {
-          AuthSvc.handleError(error);
-        });
-      }
-    }
-  };
 
   $scope.getTypes = function (type) {
     var types = [];
@@ -483,14 +426,8 @@ bulkPay.controller('BusinessSingleEmployeeCtrl', ['$scope', '$rootScope', '$time
     }
   };
   $scope.prepareSummary = function () {
-    $http.get('/api/paygroups/' + $scope.employee.payGroupId).success(function (payGroup) {
-      console.log(payGroup);
-      var calculator = new PayRollCalculation($scope.employee, $scope.currentPayGrade.payTypes, payGroup.tax, payGroup.pension);
-      $scope.payrollInformation = calculator.calculate();
-    }).error(function (error) {
-      console.log(error);
-      AuthSvc.handleError(error);
-    });
+    var calculator = new PayRollCalculation($scope.employee, $scope.currentPayGrade.payTypes, $scope.currentPayGrade.tax, $scope.currentPayGrade.pension);
+    $scope.payrollInformation = calculator.calculate();
   };
 
 

@@ -27,7 +27,6 @@ bulkPay.controller('BusinessNewPayRunCtrl', ['$scope', '$rootScope', '$timeout',
   $scope.payGroupId = 'all';
   $scope.currentPage = 1;
   $scope.pageSize = 25;
-  $scope.filteredEmployees = [];
   $scope.payRunEmployees = [];
   $scope.singleEmploye = {};
   $scope.authorizeView = false;
@@ -86,32 +85,16 @@ bulkPay.controller('BusinessNewPayRunCtrl', ['$scope', '$rootScope', '$timeout',
 
   var getPaymentEmployees = function (businessId) {
     $http.get('/api/employees/business/' + businessId + '/payrun').success(function (data) {
-      $scope.payGroups = $scope.payGroups.concat(data.payGroups);
-      $scope.employees = data.employees;
+      $scope.employees = data;
+      console.log(data);
       _.each($scope.employees, function (employee) {
-        employee.paymentInformation = new PayRollCalculation(employee, employee.payGrade.payTypes, employee.taxRule,
-          employee.pensionRule, $scope.employees.loans).calculate();
+        employee.paymentInformation = new PayRollCalculation(employee, employee.payGrade.payTypes, employee.payGrade.tax,
+          employee.payGrade.pension, $scope.employees.loans).calculate();
       });
-      $scope.filteredEmployees = $scope.employees;
       $scope.dataFetched = true;
     }).error(function (error) {
       AuthSvc.handleError(error);
     });
-  };
-
-  $scope.changeGroup = function (payGroupId) {
-    var employees = [];
-    if (payGroupId === 'all') {
-      $scope.filteredEmployees = $scope.employees;
-    } else {
-      _.each($scope.employees, function (employee) {
-        if (employee.payGroupId === payGroupId) {
-          employees.push(employee);
-        }
-      });
-      $scope.filteredEmployees = employees;
-    }
-    return $scope.filteredEmployees;
   };
 
   $scope.showPayDetails = function (employee) {
@@ -140,7 +123,7 @@ bulkPay.controller('BusinessNewPayRunCtrl', ['$scope', '$rootScope', '$timeout',
 
   $scope.initiatePayRun = function () {
     $scope.payRunEmployees = [];
-    _.each($scope.filteredEmployees, function (employee) {
+    _.each($scope.employees, function (employee) {
       if (employee.selected) {
         $scope.payRunEmployees.push(employee);
       }
@@ -293,7 +276,7 @@ bulkPay.controller('BusinessNewPayRunCtrl', ['$scope', '$rootScope', '$timeout',
   };
 
   $scope.selectAllEmployees = function () {
-    _.each($scope.filteredEmployees, function (employee) {
+    _.each($scope.employees, function (employee) {
       employee.selected = $scope.settings.preSelected;
     });
   };

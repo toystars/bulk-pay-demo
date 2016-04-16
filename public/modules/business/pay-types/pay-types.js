@@ -16,7 +16,7 @@ bulkPay.controller('BusinessPayTypesCtrl', ['$scope', '$rootScope', 'AuthSvc', '
   };
   $scope.statuses = ['Active', 'Inactive'];
   $scope.choices = ['Yes', 'No'];
-  $scope.types = ['Wage', 'Benefit', 'Deduction'];
+  $scope.types = ['Wage', 'Benefit', 'Deduction', 'One Off'];
   $scope.derivatives = ['Fixed', 'Formula'];
   $scope.frequencies = ['Monthly', 'Quarterly', 'Bi-Annually', 'Annually'];
   $scope.dataFetched = false;

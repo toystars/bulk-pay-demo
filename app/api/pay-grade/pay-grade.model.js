@@ -19,9 +19,29 @@ var payGradesSchema = new Schema({
     type: String,
     required: "Please specify businessId"
   },
-  positionId: {
+  positionIds: [{
     type: String,
     required: "Please specify positionId"
+  }],
+  positions: [{
+    type: Schema.Types.ObjectId,
+    ref: 'Position'
+  }],
+  taxRuleId: {
+    type: String,
+    required: "Please specify taxRuleId"
+  },
+  tax: {
+    type: Schema.Types.ObjectId,
+    ref: 'Tax'
+  },
+  pensionRuleId: {
+    type: String,
+    required: "Please specify taxRuleId"
+  },
+  pension: {
+    type: Schema.Types.ObjectId,
+    ref: 'Pension'
   },
   status: {
     type: String,

@@ -447,38 +447,6 @@
                                     </div>
 
                                     <div class="form-group">
-                                        <label class="col-sm-4 control-label">Pay Group</label>
-                                        <div class="col-sm-4">
-                                            <select2 ng-model="employee.payGroupId" options="options" s2-options="payGroup._id as payGroup.name for payGroup in payGroups" style="width: 100%"></select2>
-                                        </div>
-                                        <div class="col-sm-4">
-                                            &nbsp;
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label class="col-sm-3 control-label">Copy From</label>
-                                        <div class="col-sm-6 input-group" style="padding-left:10px;padding-right:10px">
-                                            <div class="input-group-btn">
-                                                <button data-toggle="dropdown" class="btn btn-default dropdown-toggle" type="button">{{sourcePointer}} <span class="caret"></span>
-                                                </button>
-                                                <ul class="dropdown-menu">
-                                                    <li><a style="cursor: pointer;" ng-click="setSource('Employee')">Employee</a></li>
-                                                    <li><a style="cursor: pointer;" ng-click="setSource('Payroll Template')">Payroll Template</a></li>
-                                                </ul>
-                                            </div>
-                                            <select2 ng-disabled="sourceStatus" ng-model="sourceId" options="options" s2-options="source.displayId as source.display for source in copySource" style="width: 100%"></select2>
-                                            <span class="input-group-btn">
-                                                <button ng-disabled="!copyStatus()" type="button" class="btn btn-default" ng-click="copy()">Copy</button>
-                                            </span>
-                                        </div>
-                                        <span class="help-block text-center">To speed up data entry, you can copy payroll data from another employee, or from a pre-defined pay grade</span>
-                                        <!--<div class="col-sm-3">
-                                            &nbsp;
-                                        </div>-->
-                                    </div>
-
-                                    <div class="form-group">
                                         <div class="row">
                                             <div class="col-sm-12">
                                                 <h6>&nbsp;Wages</h6>

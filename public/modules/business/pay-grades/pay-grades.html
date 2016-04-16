@@ -42,7 +42,7 @@
                         <th>Code</th>
                         <th>Name</th>
                         <th>Description</th>
-                        <th>Pay Group</th>
+                        <th>Positions</th>
                         <th>Status</th>
                     </tr>
                     </thead>
@@ -52,7 +52,7 @@
                         <td>{{payGrade.code}}</td>
                         <td>{{payGrade.name}}</td>
                         <td>{{payGrade.description}}</td>
-                        <td>{{getPosition(payGrade.positionId).name}}</td>
+                        <td>{{}} Positions to show here...</td>
                         <td>
                             <span ng-if="payGrade.status === 'Active'" class="label label-success">{{payGrade.status}}</span>
                             <span ng-if="payGrade.status === 'Inactive'" class="label label-danger">{{payGrade.status}}</span>
@@ -87,9 +87,9 @@
                                 <div class="form-group col-md-12">
                                     <span class="compute-value">Title:</span> {{singlePayGrade.name}}<br/>
                                     <span class="compute-value">Description:</span> {{singlePayGrade.description}}<br/>
-                                    <span class="compute-value">Pay Group:</span> {{getPosition(singlePayGrade.positionId).name}}<br/>
-                                    <span class="compute-value">Tax Rule:</span> {{getTaxRule(singlePayGrade.taxRuleId)}}<br/>
-                                    <span class="compute-value">Pension Rule:</span> {{getPension(singlePayGrade.pensionRuleId)}}<br/>
+                                    <span class="compute-value">Positions:</span> {{getPayGradePositions(singlePayGrade.positions)}}<br/>
+                                    <span class="compute-value">Tax Rule:</span> {{singlePayGrade.tax.name}}<br/>
+                                    <span class="compute-value">Pension Rule:</span> {{singlePayGrade.pension.name}}<br/>
                                     <span class="compute-value">Status:</span> {{singlePayGrade.status}}
                                 </div>
                             </div><!-- row -->
@@ -138,7 +138,8 @@
                             <ul class="nav nav-justified nav-wizard nav-disabled-click">
                                 <li><a href="#tab1-2" data-toggle="tab"><strong>Step 1:</strong> Description</a></li>
                                 <li><a href="#tab2-2" data-toggle="tab"><strong>Step 2:</strong> Pay Types</a></li>
-                                <li><a href="#tab3-2" data-toggle="tab"><strong>Step 3:</strong> Derivatives</a></li>
+                                <li><a href="#tab3-2" data-toggle="tab"><strong>Step 3:</strong> One Off Payments</a></li>
+                                <li><a href="#tab4-2" data-toggle="tab"><strong>Step 4:</strong> Derivatives</a></li>
                             </ul>
 
 
@@ -169,9 +170,21 @@
                                         </div>
                                     </div><!-- form-group -->
                                     <div class="form-group">
-                                        <label class="col-sm-4 control-label">Position</label>
+                                        <label class="col-sm-4 control-label">Positions</label>
                                         <div class="col-sm-8">
-                                            <select2 options="options" ng-model="payGrade.positionId" s2-options="position._id as position.name for position in activePositions" style="width: 100%"></select2>
+                                            <select2 options="options" multiple ng-model="payGrade.positionIds" s2-options="position._id as position.name for position in activePositions" style="width: 100%"></select2>
+                                        </div>
+                                    </div><!-- form-group -->
+                                    <div class="form-group">
+                                        <label class="col-sm-4 control-label">Tax Rule</label>
+                                        <div class="col-sm-8">
+                                            <select2 options="options" ng-model="payGrade.taxRuleId" s2-options="tax._id as tax.name for tax in taxes" style="width: 100%"></select2>
+                                        </div>
+                                    </div><!-- form-group -->
+                                    <div class="form-group">
+                                        <label class="col-sm-4 control-label">Pension Rule</label>
+                                        <div class="col-sm-8">
+                                            <select2 options="options" ng-model="payGrade.pensionRuleId" s2-options="pension._id as pension.name for pension in pensions" style="width: 100%"></select2>
                                         </div>
                                     </div><!-- form-group -->
                                     <div class="form-group">
@@ -268,6 +281,43 @@
 
                                 <div class="tab-pane" id="tab3-2">
                                     <div class="form-group">
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                <div class="form-group">
+                                                    <div class="col-sm-12">
+                                                        <input id="filter" type="text" placeholder="Search..." class="form-control" ng-model="oneOffSearchText" />
+                                                    </div>
+                                                </div><!-- form-group -->
+                                            </div>
+                                            <div class="col-sm-12">
+                                                <div class="table-responsive">
+                                                    <table class="table table-hover">
+                                                        <thead>
+                                                        <tr>
+                                                            <th>One Off Payments</th>
+                                                        </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                        <tr>
+                                                            <td>
+                                                                <div class="col-sm-8" ng-repeat="oneOff in getPayTypes('One Off') | filter:oneOffSearchText">
+                                                                    <div class="ckbox ckbox-success">
+                                                                        <input ng-checked="isPresent(oneOff._id)" type="checkbox" id="{{'n' + oneOff._id}}" ng-click="check(oneOff, 'One Off')" ng-model="oneOffPaymentCheck" />
+                                                                        <label for="{{'n' + oneOff._id}}">{{oneOff.title + getBaseStatus(oneOff.isBase)}}</label>
+                                                                    </div>
+                                                                </div><!-- col-sm-4 -->
+                                                            </td>
+                                                        </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div><!-- table-responsive -->
+                                            </div>
+                                        </div>
+                                    </div><!-- form-group -->
+                                </div><!-- tab-pane -->
+
+                                <div class="tab-pane" id="tab4-2">
+                                    <div class="form-group">
                                         <h5 class="lg-title">Define Pay Types Values</h5><br/>
                                         <div class="table-responsive">
                                             <table class="table table-hover">
@@ -296,7 +346,7 @@
                                                         <span><b>{{ payType.value || 0 | currency:"" }}</b></span>
                                                     </td>
                                                     <td>
-                                                        <span><b>{{ payType.value / 12 | currency:"" }}</b></span>
+                                                        <span ng-if="payType.type !== 'One Off'"><b>{{ payType.value / 12 | currency:"" }}</b></span>
                                                     </td>
 
                                                     <!--<td>
@@ -387,7 +437,8 @@
                             <ul class="nav nav-justified nav-wizard nav-disabled-click">
                                 <li><a href="#new-tab1-2" data-toggle="tab"><strong>Step 1:</strong> Description</a></li>
                                 <li><a href="#new-tab2-2" data-toggle="tab"><strong>Step 2:</strong> Pay Types</a></li>
-                                <li><a href="#new-tab3-2" data-toggle="tab"><strong>Step 3:</strong> Derivatives</a></li>
+                                <li><a href="#new-tab3-2" data-toggle="tab"><strong>Step 3:</strong> One Off Payments</a></li>
+                                <li><a href="#new-tab4-2" data-toggle="tab"><strong>Step 4:</strong> Derivatives</a></li>
                             </ul>
 
 
@@ -418,9 +469,21 @@
                                         </div>
                                     </div><!-- form-group -->
                                     <div class="form-group">
-                                        <label class="col-sm-4 control-label">Position</label>
+                                        <label class="col-sm-4 control-label">Positions</label>
                                         <div class="col-sm-8">
-                                            <select2 options="options" ng-model="payGrade.positionId" s2-options="position._id as position.name for position in positions" style="width: 100%"></select2>
+                                            <select2 options="options" multiple ng-model="payGrade.positionIds" s2-options="position._id as position.name for position in positions" style="width: 100%"></select2>
+                                        </div>
+                                    </div><!-- form-group -->
+                                    <div class="form-group">
+                                        <label class="col-sm-4 control-label">Tax Rule</label>
+                                        <div class="col-sm-8">
+                                            <select2 options="options" ng-model="payGrade.taxRuleId" s2-options="tax._id as tax.name for tax in taxes" style="width: 100%"></select2>
+                                        </div>
+                                    </div><!-- form-group -->
+                                    <div class="form-group">
+                                        <label class="col-sm-4 control-label">Pension Rule</label>
+                                        <div class="col-sm-8">
+                                            <select2 options="options" ng-model="payGrade.pensionRuleId" s2-options="pension._id as pension.name for pension in pensions" style="width: 100%"></select2>
                                         </div>
                                     </div><!-- form-group -->
                                     <div class="form-group">
@@ -496,7 +559,7 @@
                                                             <th>Deductions</th>
                                                         </tr>
                                                         </thead>
-                                                        <tbody id="data-body">
+                                                        <tbody>
                                                         <tr>
                                                             <td>
                                                                 <div class="col-sm-8" ng-repeat="deduction in getPayTypes('Deduction') | filter:searchText">
@@ -516,6 +579,43 @@
                                 </div><!-- tab-pane -->
 
                                 <div class="tab-pane" id="new-tab3-2">
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                <div class="form-group">
+                                                    <div class="col-sm-12">
+                                                        <input id="filter" type="text" placeholder="Search..." class="form-control" ng-model="oneOffSearchText" />
+                                                    </div>
+                                                </div><!-- form-group -->
+                                            </div>
+                                            <div class="col-sm-12">
+                                                <div class="table-responsive">
+                                                    <table class="table table-hover">
+                                                        <thead>
+                                                        <tr>
+                                                            <th>One Off Payments</th>
+                                                        </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                        <tr>
+                                                            <td>
+                                                                <div class="col-sm-8" ng-repeat="oneOff in getPayTypes('One Off') | filter:oneOffSearchText">
+                                                                    <div class="ckbox ckbox-success">
+                                                                        <input ng-checked="isPresent(oneOff._id)" type="checkbox" id="{{'n' + oneOff._id}}" ng-click="check(oneOff, 'One Off')" ng-model="oneOffPaymentCheck" />
+                                                                        <label for="{{'n' + oneOff._id}}">{{oneOff.title + getBaseStatus(oneOff.isBase)}}</label>
+                                                                    </div>
+                                                                </div><!-- col-sm-4 -->
+                                                            </td>
+                                                        </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div><!-- table-responsive -->
+                                            </div>
+                                        </div>
+                                    </div><!-- form-group -->
+                                </div><!-- tab-pane -->
+
+                                <div class="tab-pane" id="new-tab4-2">
                                     <div class="form-group">
                                         <h5 class="lg-title">Define Pay Types Values</h5><br/>
                                         <div class="table-responsive">

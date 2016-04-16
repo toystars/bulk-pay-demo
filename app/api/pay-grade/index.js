@@ -11,7 +11,7 @@ module.exports = function (app) {
   router.post('/', auth.isAuthenticated, auth.isSuperAdmin, controller.create);
   router.get('/business/:id', auth.isAuthenticated, controller.payGrades);
   router.get('/:id', auth.isAuthenticated, controller.show);
-  router.get('/paygroup/:payGroupId', auth.isAuthenticated, controller.getByPayGroup);
+  router.get('/position/:positionId', auth.isAuthenticated, controller.getByPosition);
   router.put('/:id', auth.isAuthenticated, auth.isSuperAdmin, controller.updatePayGrade);
   router.delete('/:id', auth.isAuthenticated, auth.isSuperAdmin, controller.destroy);
 

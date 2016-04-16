@@ -9,12 +9,19 @@ var jobSchema = new Schema({
     required: "Please specify jobCode"
   },
   title: {
-    type: String,
-    required: "Please specify jobTitle"
+    type: String
+  },
+
+  role: {
+    type: String
   },
   positionId: {
     type: String,
     required: "Please specify positionId"
+  },
+  position : {
+    type: Schema.Types.ObjectId,
+    ref: 'Position'
   },
   description: {
     type: String,
@@ -23,6 +30,10 @@ var jobSchema = new Schema({
   businessId: {
     type: String,
     required: "Please specify companyId"
+  },
+  status: {
+    type: String,
+    default: 'Active'
   },
   createdAt: {
     type: Date,

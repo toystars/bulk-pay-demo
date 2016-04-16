@@ -33,7 +33,7 @@ exports.index = function (req, res) {
  * Get all pay grades per business
  */
 exports.payGrades = function (req, res) {
-  PayGrade.find({ businessId: req.params.id }, function (error, payGrades) {
+  PayGrade.find({ businessId: req.params.id }).populate('positions tax pension').exec(function (error, payGrades) {
     if (error) {
       crudHelper.handleError(res, null, error);
     }
@@ -61,7 +61,7 @@ exports.create = function (req, res) {
  * Fetch a pay grade
  * */
 exports.show = function (req, res) {
-  PayGrade.findOne({ _id: req.params.id }, function (error, payGrade) {
+  PayGrade.findOne({ _id: req.params.id }).populate('positions tax pension').exec(function (error, payGrade) {
     if (error) {
       crudHelper.handleError(res, null, error);
     } else if (payGrade) {
@@ -74,14 +74,14 @@ exports.show = function (req, res) {
 
 
 /*
- * Fetch by pay group id
+ * Fetch by position id
  * */
-exports.getByPayGroup = function (req, res) {
-  PayGrade.find({ payGroupId: req.params.payGroupId }, function (error, payGrades) {
+exports.getByPosition = function (req, res) {
+  PayGrade.findOne({ positionIds: req.params.positionId }).populate('positions tax pension').exec(function (error, payGrade) {
     if (error) {
       crudHelper.handleError(res, null, error);
-    } else if (payGrades) {
-      crudHelper.respondWithResult(res, null, payGrades);
+    } else if (payGrade) {
+      crudHelper.respondWithResult(res, null, payGrade);
     } else {
       crudHelper.handleError(res, null, { message: 'No pay grade found!' });
     }

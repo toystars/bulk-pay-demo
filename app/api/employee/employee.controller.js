@@ -80,45 +80,20 @@ exports.getPayRunEmployees = function (req, res) {
       crudHelper.handleError(res, null, error);
     }
     if (employees) {
-      PayGrade.find({businessId: req.params.businessId}, function (error, payGrades) {
-        if (payGrades) {
-          _.each(employees, function (employee) {
-            var payGrade = _.find(payGrades, function (payGrade) {
-              return employee.payGradeId === payGrade.toObject()._id.toString();
-            });
-            if (payGrade) {
-              employee.payGrade = payGrade;
+      _.each(employees, function (employee, index) {
+        PayGrade.findOne({ positionIds: employee.positionId }).populate('tax pension').exec(function (error, payGrade) {
+          if (payGrade) {
+            employee.payGrade = payGrade;
+          }
+          Loan.find({ employee: employee._id, fullyServiced: 'No' }, function (error, loans) {
+            if (!error) {
+              employee.loans = loans;
+            }
+            if (index === employees.length - 1) {
+              crudHelper.respondWithResult(res, null, employees);
             }
           });
-          PayGroup.find({ businessId: req.params.businessId }).populate('tax pension').exec(function (error, payGroups) {
-            _.each(employees, function (employee) {
-              var payGroup = _.find(payGroups, function (payGroup) {
-                return employee.payGroupId === payGroup.toObject()._id.toString();
-              });
-              if (payGroup) {
-                employee.taxRule = payGroup.tax;
-                employee.pensionRule = payGroup.pension;
-              }
-            });
-            Loan.find({ businessId: req.params.businessId, fullyServiced: 'No' }).populate('employee').exec(function (error, loans) {
-              _.each(employees, function (employee) {
-                var employeeLoans = [];
-                _.each(loans, function (loan) {
-                  if (employee.toObject()._id.toString() === loan.employee._id.toString()) {
-                    employeeLoans.push(loan);
-                  }
-                });
-                employee.loans = employeeLoans;
-              });
-              crudHelper.respondWithResult(res, null, {
-                employees: employees,
-                payGroups: payGroups
-              });
-            });
-          });
-        } else {
-          crudHelper.handleError(res, null, error);
-        }
+        });
       });
     }
   });

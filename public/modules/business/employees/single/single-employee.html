@@ -460,41 +460,7 @@
                             <form class="form-horizontal form-bordered">
 
                                 <div class="form-group">
-                                    <div class="col-sm-12">
-                                        <h5>Payroll Information</h5>
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
-                                    <label class="col-sm-4 control-label">Pay Group</label>
-                                    <div class="col-sm-4">
-                                        <select2 ng-model="employee.payGroupId" options="options" s2-options="payGroup._id as payGroup.name for payGroup in payGroups" style="width: 100%"></select2>
-                                    </div>
-                                    <div class="col-sm-4">
-                                        &nbsp;
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
-                                    <label class="col-sm-3 control-label">Copy From</label>
-                                    <div class="col-sm-6 input-group" style="padding-left:10px;padding-right:10px">
-                                        <div class="input-group-btn">
-                                            <button data-toggle="dropdown" class="btn btn-default dropdown-toggle" type="button">{{sourcePointer}} <span class="caret"></span>
-                                            </button>
-                                            <ul class="dropdown-menu">
-                                                <li><a style="cursor: pointer;" ng-click="setSource('Employee')">Employee</a></li>
-                                                <li><a style="cursor: pointer;" ng-click="setSource('Payroll Template')">Payroll Template</a></li>
-                                            </ul>
-                                        </div>
-                                        <select2 ng-disabled="sourceStatus" ng-model="sourceId" options="options" s2-options="source.displayId as source.display for source in copySource" style="width: 100%"></select2>
-                                            <span class="input-group-btn">
-                                                <button ng-disabled="!copyStatus()" type="button" class="btn btn-default" ng-click="copy()">Copy</button>
-                                            </span>
-                                    </div>
-                                    <span class="help-block text-center">To speed up data entry, you can copy payroll data from another employee, or from a pre-defined pay grade</span>
-                                    <!--<div class="col-sm-3">
-                                        &nbsp;
-                                    </div>-->
+                                   
                                 </div>
 
                                 <div class="form-group">
@@ -664,80 +630,67 @@
 
 
 
-<!--
-<div class="row">
-    <div class="col-md-9">
-        <div class="row">
-            &lt;!&ndash; Nav tabs &ndash;&gt;
-            <div class="col-md-12">
-                <ul class="nav nav-tabs">
-                    <li ng-class="{active: inView === 'Profile Info'}">
-                        <a ng-click="changeView('Profile Info')" style="cursor: pointer;">Profile Info</a>
-                    </li>
-                    <li ng-class="{active: inView === 'Bio Data'}">
-                        <a ng-click="changeView('Bio Data')" style="cursor: pointer;">Bio Data</a>
-                    </li>
-                    <li ng-class="{active: inView === 'Qualification'}">
-                        <a ng-click="changeView('Qualification')" style="cursor: pointer;">Qualification(s)</a>
-                    </li>
-                    <li ng-class="{active: inView === 'Job Experience'}">
-                        <a ng-click="changeView('Job Experience')" style="cursor: pointer;">Job Experience(s)</a>
-                    </li>
-                </ul>
-            </div>&lt;!&ndash; col-md-12 &ndash;&gt;
-
-            <div class="col-md-12">
-                <div class="tab-pane active" id="activities">
-                    <div class="row" style="margin-top: 25px; margin-left: 10px; margin-right: 10px;">
-                    </div>
-
-                    <div class="row" ng-if="!dataFetched">
-                        <div class="col-md-12 text-center">
-                            <img alt="" src="images/loaders/loader10.gif">
-                        </div>
-                    </div>
-
-                    <div class="row big-font" ng-if="dataFetched" style="margin-left: 10px; margin-right: 10px;">
-                        <div class="col-md-3">
-                            <div class="text-center">
-                                <img ng-src="uploads/{{employee.currentProfilePicture}}" id="profile-img" class="img-thumbnail img-offline img-responsive img-profile" alt=""/>
-                            </div>
-                        </div>
-
-                        <div class="col-md-9" ng-show="inView === 'Profile Info'">
-                            <b>Employee Id: </b> {{employee.employeeId}}<br>
-                            <b>Full Name: </b> {{employee.fullName}}<br>
-                            <b>Address: </b> {{employee.address}}<br>
-                            <b>Phone: </b> {{employee.phone}}<br>
-                            <b>Email: </b> {{employee.email}}<br><br><br>
-
-                            <span class="sub-header"><b>Work Information</b></span><br>
-                            <b>Business Unit: </b> {{employee.businessUnitName}}<br>
-                            <b>Division: </b> {{employee.divisionName}}<br>
-                            <b>Department: </b> {{employee.departmentName}}<br>
-                            <b>Position: </b> {{employee.positionName}}<br>
-                            <b>Pay Group: </b> {{employee.payGroupName}}<br>
-                            <b>Pay Grade: </b> {{employee.payGradeName}}<br>
-                            <b>Supervisor: </b> <a class="pointer" ui-sref="business.employee({ employeeId: employee.supervisor.id })">{{employee.supervisor.name}}</a><br>
-                            <b>Location: </b> {{employee.location}}<br>
-                            <b>Date Employed: </b> {{employee.employmentDate | date:"dd/MM/yyyy"}}<br>
-                            <b>Status: </b> {{employee.status}}<br>
-                        </div>
-                    </div>&lt;!&ndash; row &ndash;&gt;
-                </div>&lt;!&ndash; tab-pane &ndash;&gt;
+<div class="modal fade payroll-summary" tabindex="-1" role="dialog" data-backdrop="static">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Summary</h3>
+                </div>
+                <div id="payroll-summary" class="panel-body big-font">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h5 class="lg-title mb5 text-center">{{business.name}}</h5>
+                            <p class="mb20 text-center">Payroll Summary</p>
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-primary mb30">
+                                    <thead>
+                                    <tr>
+                                        <th>Pay Components</th>
+                                        <th>Amount ( ₦  )</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr ng-repeat="payType in getNonDeductions()">
+                                        <td>{{payType.title}}</td>
+                                        <td>{{payType.value | currency:""}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>Gross Pay: </b></td>
+                                        <td><b>{{getPaymentGross() | currency:""}}</b></td>
+                                    </tr>
+                                    <tr>
+                                        <td>...</td>
+                                        <td>...</td>
+                                    </tr>
+                                    <tr ng-repeat="payType in getDeductions()">
+                                        <td>{{payType.title}}</td>
+                                        <td>{{payType.value | currency:""}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>Total Deductions: </b></td>
+                                        <td><b>{{getTotalDeductions() | currency:""}}</b></td>
+                                    </tr>
+                                    <tr>
+                                        <td>...</td>
+                                        <td>...</td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>Net Pay: </b></td>
+                                        <td><b>{{getNetPayment() | currency:""}}</b></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div><!-- table-responsive -->
+                        </div><!-- col-md-12 -->
+                    </div><!-- row -->
+                </div>
+                <div class="panel-footer">
+                    <button type="reset" ng-click="resetSummary()" class="btn btn-danger" id="payroll-summary-close" data-dismiss="modal">Close</button>
+                    <button type="reset" ng-click="print('payroll-summary')" class="btn btn-info" id="payroll-summary-print">Print</button>
+                </div><!-- panel-footer -->
             </div>
-
         </div>
     </div>
-    <div class="col-md-3">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <div class="panel-btns"></div>&lt;!&ndash; panel-btns &ndash;&gt;
-                <h3 class="panel-title">Actions</h3>
-            </div>
-            <div class="panel-body">
-                Panel content
-            </div>
-        </div>&lt;!&ndash; panel &ndash;&gt;
-    </div>
-</div>-->
+</div>
+

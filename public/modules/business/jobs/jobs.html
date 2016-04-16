@@ -40,20 +40,22 @@
                     <thead>
                     <tr>
                         <th>#</th>
-                        <th>Name</th>
-                        <th>Location</th>
-                        <th>Division</th>
-                        <th>Parent</th>
+                        <th>Job Code</th>
+                        <th>Job Title</th>
+                        <th>Job Role</th>
+                        <th>Job Description</th>
+                        <th>Position</th>
                         <th>Status</th>
                     </tr>
                     </thead>
                     <tbody>
                     <tr class="pointer" ng-click="showJob(singleJob)" ng-repeat="singleJob in jobs">
                         <td>{{$index + 1}}</td>
-                        <td>{{singleJob.name}}</td>
-                        <td>{{singleJob.location}}</td>
-                        <td>{{singleJob.division.name}}</td>
-                        <td>{{singleJob.parent.name}}</td>
+                        <td>{{singleJob.code}}</td>
+                        <td>{{singleJob.title}}</td>
+                        <td>{{singleJob.role}}</td>
+                        <td>{{singleJob.description}}</td>
+                        <td>{{singleJob.position.name}}</td>
                         <td>
                             <span ng-if="singleJob.status === 'Active'" class="label label-success">{{singleJob.status}}</span>
                             <span ng-if="singleJob.status === 'Inactive'" class="label label-danger">{{singleJob.status}}</span>
@@ -70,66 +72,70 @@
         <div class="col-md-8">
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <h4 class="panel-title">Update - {{oldDepartment.name}} Department</h4>
+                    <h4 class="panel-title">Update - {{oldJob.title}}</h4>
                 </div>
                 <div class="panel-body">
+
+
                     <div class="row">
                         <div class="col-sm-6">
                             <div class="form-group">
-                                <label for="update-department-name" class="control-label">Name</label>
-                                <input ng-model="singleDepartment.name" type="text" id="update-department-name" class="form-control" />
+                                <label for="edit-job-code" class="control-label">Code</label>
+                                <input ng-model="singleJob.code" type="text" id="edit-job-code" placeholder="Job Code" class="form-control" />
                             </div><!-- form-group -->
                         </div><!-- col-sm-6 -->
 
                         <div class="col-sm-6">
                             <div class="form-group">
-                                <label class="control-label">Location</label>
-                                <select2 options="options" ng-model="singleDepartment.location" s2-options="state as state for state in states" style="width: 100%"></select2>
+                                <label for="edit-job-title" class="control-label">Title</label>
+                                <input ng-model="singleJob.title" type="text" id="edit-job-title" placeholder="Job Title" class="form-control" />
                             </div><!-- form-group -->
                         </div><!-- col-sm-6 -->
+
                     </div><!-- row -->
 
                     <div class="row">
 
                         <div class="col-sm-6">
                             <div class="form-group">
-                                <label class="control-label">Parent</label>
-                                <select2 options="options" ng-model="singleDepartment.isParent" s2-options="choice as choice for choice in choices" style="width: 100%"></select2>
-                            </div><!-- form-group -->
-                        </div><!-- col-sm-12 -->
-
-                        <div class="col-sm-6" ng-show="singleDepartment.isParent === 'Yes'">
-                            <div class="form-group">
-                                <label class="control-label">Division</label>
-                                <select2 options="options" ng-model="singleDepartment.divisionId" s2-options="division._id as division.name for division in divisions" style="width: 100%"></select2>
+                                <label class="control-label">Position</label>
+                                <select2 options="options" ng-model="singleJob.positionId" s2-options="position._id as position.name for position in positions" style="width: 100%"></select2>
                             </div><!-- form-group -->
                         </div><!-- col-sm-6 -->
 
-                        <div class="col-sm-6" ng-hide="singleDepartment.isParent === 'Yes'">
+                        <div class="col-sm-6">
                             <div class="form-group">
-                                <label class="control-label">Parent Department</label>
-                                <select2 options="options" ng-model="singleDepartment.parentId" s2-options="department._id as department.name for department in filteredDepartments" style="width: 100%"></select2>
+                                <label for="edit-job-role" class="control-label">Role</label>
+                                <input ng-model="singleJob.role" type="text" id="edit-job-role" placeholder="Job Role" class="form-control" />
                             </div><!-- form-group -->
                         </div><!-- col-sm-6 -->
 
                     </div>
 
+
                     <div class="row">
 
                         <div class="col-sm-12">
                             <div class="form-group">
-                                <label class="control-label">Status</label>
-                                <select2 options="options" ng-model="singleDepartment.status" s2-options="status as status for status in statuses" style="width: 100%"></select2>
+                                <label for="edit-job-description" class="col-sm-4 control-label">Description</label>
+                                <textarea id="edit-job-description" class="form-control" placeholder="Job Description" ng-model="singleJob.description" rows="5"></textarea>
                             </div><!-- form-group -->
-                        </div><!-- col-sm-10 -->
+                        </div><!-- col-sm-12 -->
 
-                    </div><!-- row -->
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label class="control-label">Status</label>
+                                <select2 options="options" ng-model="singleJob.status" s2-options="status as status for status in statuses" style="width: 100%"></select2>
+                            </div><!-- form-group -->
+                        </div><!-- col-sm-12 -->
+
+                    </div>
 
 
                 </div><!-- panel-body -->
                 <div class="panel-footer">
-                    <button class="btn btn-primary mr5" ng-click="updateDepartment()">Update</button>
-                    <button type="reset" class="btn btn-warning" ng-click="closeDivision()">Cancel</button>
+                    <button class="btn btn-primary mr5" ng-click="updateJob()">Update</button>
+                    <button type="reset" class="btn btn-warning" ng-click="closeJob()">Cancel</button>
                     <button type="reset" class="btn btn-danger pull-right" ng-click="delete()">Delete</button>
                 </div><!-- panel-footer -->
             </div><!-- panel -->
@@ -178,60 +184,60 @@
         <div class="modal-content">
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <h3 class="panel-title">New Department</h3>
+                    <h3 class="panel-title">New Job</h3>
                 </div>
                 <div class="panel-body">
                     <div class="row">
                         <div class="col-sm-6">
                             <div class="form-group">
-                                <label for="new-department-name" class="control-label">Name</label>
-                                <input ng-model="department.name" type="text" id="new-department-name" placeholder="Department Name" class="form-control" />
+                                <label for="new-job-code" class="control-label">Code</label>
+                                <input ng-model="job.code" type="text" id="new-job-code" placeholder="Job Code" class="form-control" />
                             </div><!-- form-group -->
                         </div><!-- col-sm-6 -->
 
                         <div class="col-sm-6">
                             <div class="form-group">
-                                <label class="control-label">Location</label>
-                                <select2 options="options" ng-model="department.location" s2-options="state as state for state in states" style="width: 100%"></select2>
+                                <label for="new-job-title" class="control-label">Title</label>
+                                <input ng-model="job.title" type="text" id="new-job-title" placeholder="Job Title" class="form-control" />
                             </div><!-- form-group -->
                         </div><!-- col-sm-6 -->
 
                     </div><!-- row -->
+
+                    <div class="row">
+
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label class="control-label">Position</label>
+                                <select2 options="options" ng-model="job.positionId" s2-options="position._id as position.name for position in positions" style="width: 100%"></select2>
+                            </div><!-- form-group -->
+                        </div><!-- col-sm-6 -->
+
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label for="new-job-role" class="control-label">Role</label>
+                                <input ng-model="job.role" type="text" id="new-job-role" placeholder="Job Role" class="form-control" />
+                            </div><!-- form-group -->
+                        </div><!-- col-sm-6 -->
+
+                    </div>
 
 
                     <div class="row">
 
                         <div class="col-sm-12">
                             <div class="form-group">
-                                <label class="control-label">Parent</label>
-                                <select2 options="options" ng-model="department.isParent" s2-options="choice as choice for choice in choices" style="width: 100%"></select2>
+                                <label for="new-job-description" class="col-sm-4 control-label">Description</label>
+                                <textarea id="new-job-description" class="form-control" placeholder="Job Description" ng-model="job.description" rows="5"></textarea>
                             </div><!-- form-group -->
                         </div><!-- col-sm-12 -->
-
 
                     </div>
 
-                    <div class="row" >
-
-                        <div class="col-sm-12" ng-show="department.isParent === 'Yes'">
-                            <div class="form-group">
-                                <label class="control-label">Division</label>
-                                <select2 options="options" ng-model="department.division" s2-options="division._id as division.name for division in divisions" style="width: 100%"></select2>
-                            </div><!-- form-group -->
-                        </div><!-- col-sm-12 -->
-
-                        <div class="col-sm-12" ng-hide="department.isParent === 'Yes'">
-                            <div class="form-group">
-                                <label class="control-label">Parent Department</label>
-                                <select2 options="options" ng-model="department.parent" s2-options="department._id as department.name for department in departments" style="width: 100%"></select2>
-                            </div><!-- form-group -->
-                        </div><!-- col-sm-12 -->
-
-                    </div><!-- row -->
                 </div>
                 <div class="panel-footer">
-                    <button class="btn btn-primary mr5" ng-click="createDepartment()">Save</button>
-                    <button type="reset" class="btn btn-danger" id="new-department-close" data-dismiss="modal">Cancel</button>
+                    <button class="btn btn-primary mr5" ng-click="createJob()">Save</button>
+                    <button type="reset" class="btn btn-danger" id="new-job-close" data-dismiss="modal">Cancel</button>
                 </div><!-- panel-footer -->
             </div>
         </div>
