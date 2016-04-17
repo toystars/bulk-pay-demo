@@ -53,7 +53,7 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr class="pointer" ng-click="showLoan(loan)" ng-repeat="loan in loans">
+                    <tr class="pointer" ng-repeat="loan in loans">
                         <td>{{$index + 1}}</td>
                         <td>{{loan.employee.fullName}}</td>
                         <td>{{loan.amount | currency:""}}</td>
