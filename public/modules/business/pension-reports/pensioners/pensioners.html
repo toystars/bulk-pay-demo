@@ -1,0 +1,209 @@
+<div class="pageheader">
+    <div class="media">
+        <div class="pageicon pull-left">
+            <i class="fa fa-money"></i>
+        </div>
+        <div class="media-body">
+            <ul class="breadcrumb">
+                <li><a href=""><i class="glyphicon glyphicon-home"></i></a></li>
+                <li><a ui-sref="business.overview">Business</a></li>
+                <li>{{business.name}}</li>
+                <li>Pensioners</li>
+            </ul>
+            <h4>Pensioners</h4>
+        </div>
+    </div><!-- media -->
+</div><!-- pageheader -->
+
+<div class="contentpanel">
+
+
+    <div class="row">
+        <div class="col-md-12">
+            <h5 class="lg-title mb5">Pensioners</h5>
+            <br/>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <br/>
+            <br/>
+        </div>
+    </div>
+
+    <div class="row" ng-if="!singleView">
+
+        <div class="col-md-12">
+            <div class="table-responsive">
+                <table class="table table-primary mb60 table-hover">
+                    <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Employee Name</th>
+                        <th>Pension Number</th>
+                        <th>Address</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr class="pointer" ng-click="viewPensioner(pensioner)" dir-paginate="pensioner in pensioners | itemsPerPage: pageSize" current-page="currentPage">
+                        <td>{{$index + 1}}</td>
+                        <td>{{pensioner.fullName}}</td>
+                        <td>{{pensioner.pensionNumber}}</td>
+                        <td>{{pensioner.address}}</td>
+                        <td>{{pensioner.email}}</td>
+                        <td>{{pensioner.phone}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div><!-- table-responsive -->
+            <div class="col-md-12 text-left">
+                <dir-pagination-controls boundary-links="true" on-page-change="pageChangeHandler(newPageNumber)" template-url="bower_components/angularUtils-pagination/dirPagination.tpl.html"></dir-pagination-controls>
+            </div>
+        </div>
+
+    </div>
+
+
+
+
+    <div class="row" ng-if="singleView">
+
+        <div class="col-md-8">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <div class="panel-btns">
+                        <a href="" class="panel-minimize tooltips" data-toggle="tooltip" title="Minimize Panel"><i class="fa fa-minus"></i></a>
+                        <a href="" class="panel-close tooltips" data-toggle="tooltip" title="Close Panel"><i class="fa fa-times"></i></a>
+                    </div><!-- panel-btns -->
+                    <h4 class="panel-title">{{singlePensioner.fullName}}</h4>
+                </div>
+                <div class="panel-body">
+
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label class="control-label">Name</label>
+                                <input type="text" class="form-control" placeholder="Name" ng-model="singlePensioner.fullName" />
+                            </div><!-- form-group -->
+                        </div><!-- col-sm-6 -->
+
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label class="control-label">Pension Number</label>
+                                <input type="text" class="form-control" placeholder="Pension Number" ng-model="singlePensioner.pensionNumber"/>
+                            </div><!-- form-group -->
+                        </div><!-- col-sm-6 -->
+
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label class="control-label">Address</label>
+                                <input type="text" class="form-control" placeholder="Address" ng-model="singlePensioner.address"/>
+                            </div><!-- form-group -->
+                        </div><!-- col-sm-6 -->
+
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label class="control-label">Phone</label>
+                                <input type="text" class="form-control" placeholder="Phone" ng-model="singlePensioner.phone"/>
+                            </div><!-- form-group -->
+                        </div><!-- col-sm-6 -->
+
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label class="control-label">Email</label>
+                                <input type="text" class="form-control" placeholder="Email" ng-model="singlePensioner.email"/>
+                            </div><!-- form-group -->
+                        </div><!-- col-sm-12 -->
+
+                        <div class="col-sm-12">
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <br>
+                                    <h5 class="lg-title mb5">Nominee</h5>
+                                </div><!-- col-sm-12 -->
+                                <div class="col-md-12">
+                                    <div class="row">
+
+                                        <div class="col-sm-6">
+                                            <div class="form-group">
+                                                <label class="control-label">Name</label>
+                                                <input type="text" class="form-control" placeholder="Name" ng-model="singlePensioner.nominees.name" />
+                                            </div><!-- form-group -->
+                                        </div><!-- col-sm-6 -->
+
+                                        <div class="col-sm-6">
+                                            <div class="form-group">
+                                                <label class="control-label">Address</label>
+                                                <input type="text" class="form-control" placeholder="Pension Number" ng-model="singlePensioner.nominees.address"/>
+                                            </div><!-- form-group -->
+                                        </div><!-- col-sm-6 -->
+
+                                        <div class="col-sm-6">
+                                            <div class="form-group">
+                                                <label class="control-label">Phone</label>
+                                                <input type="text" class="form-control" placeholder="Address" ng-model="singlePensioner.nominees.phoneNumber"/>
+                                            </div><!-- form-group -->
+                                        </div><!-- col-sm-6 -->
+
+                                        <div class="col-sm-6">
+                                            <div class="form-group">
+                                                <label class="control-label">Relationship</label>
+                                                <input type="text" class="form-control" placeholder="Phone" ng-model="singlePensioner.nominees.relationship"/>
+                                            </div><!-- form-group -->
+                                        </div><!-- col-sm-6 -->
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div><!-- col-sm-12 -->
+
+                        <div class="col-sm-12">
+                            <span ng-show="histories.length > 0" class="pull-right">Last updated on {{getLastHistory().date | date:"MM/dd/yyyy 'at' h:mma"}}, by {{getLastHistory().user.username}}</span>
+                        </div><!-- col-sm-12 -->
+                    </div><!-- row -->
+
+                </div><!-- panel-body -->
+                <div class="panel-footer">
+                    <button class="btn btn-primary mr5" ng-click="updatePensioner()">Update</button>
+                    <button type="reset" class="btn btn-warning" ng-click="closePensioner()">Cancel</button>
+                </div><!-- panel-footer -->
+            </div><!-- panel -->
+
+        </div><!-- col-md-12 -->
+
+
+        <div class="col-md-4">
+            <h5 class="lg-title mb10">Edit History</h5>
+
+            <div class="panel-group" id="accordion2">
+                <div ng-repeat="history in histories" class="panel panel-primary">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            <a data-toggle="collapse" data-parent="#accordion2" href=".{{history._id}}">
+                                <span>{{history.date | date:"MM/dd/yyyy 'at' h:mma"}}</span>
+                                <span class="pull-right">{{history.user.username}}</span>
+                            </a>
+                        </h4>
+                    </div>
+                    <div class="panel-collapse collapse" ng-class="history._id">
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="col-md-12" ng-repeat="activity in history.activities">
+                                    <div class="well well-sm">{{activity | prettifyActivity}}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div><!-- panel -->
+
+            </div><!-- panel-group -->
+
+        </div><!-- col-md-4 -->
+
+    </div>
+
+
+</div><!-- contentpanel -->

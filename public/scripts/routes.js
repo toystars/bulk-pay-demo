@@ -287,4 +287,13 @@ bulkPay.config(['$stateProvider', '$urlRouterProvider', '$locationProvider', 'to
         }
       })
 
+      .state('business.pensioners', {
+        url: '/reports/pensioners',
+        templateUrl: 'modules/business/pension-reports/pensioners/pensioners.html',
+        controller: 'BusinessPensionersReportCtrl',
+        data: {
+          pageTitle: 'Pensioners Report | BulkPay'
+        }
+      })
+
   }]);

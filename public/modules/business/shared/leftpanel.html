@@ -57,6 +57,11 @@
             <li ng-class="{active: inView === 'Pension Report'}" ng-click="toggleActive('Pension Report')"><a ui-sref="business.pensionreport">Pension Report</a></li>
         </ul>
     </li>
+    <li ng-class="{active: inView === 'Pension Reports'}" class="parent" ng-click="toggleActive('Pension Reports')"><a href=""><i class="fa fa-archive" aria-hidden="true"></i> <span>Pension Reports</span></a>
+        <ul class="children">
+            <li ng-class="{active: inView === 'Pensioners'}" ng-click="toggleActive('Pensioners')"><a ui-sref="business.pensioners">Pensioners</a></li>
+        </ul>
+    </li>
     <li><a ui-sref="home.overview"><i class="fa fa-angle-double-left"></i> <span>Back to Home</span></a></li>
 </ul>
 
