@@ -21,6 +21,9 @@ var paymentRuleRoute = require('../api/payment-rule/index');
 var loanRoute = require('../api/loan/index');
 var jobRoute = require('../api/job/index');
 var oneOffRoute = require('../api/one-off/index');
+var timeTrackRoute = require('../api/time-track/index');
+var expenseRoute = require('../api/expense/index');
+var leaveRoute = require('../api/leave/index');
 
 module.exports = function(app, passport) {
   authRoute(app, passport);
@@ -44,4 +47,7 @@ module.exports = function(app, passport) {
   loanRoute(app);
   jobRoute(app);
   oneOffRoute(app);
+  timeTrackRoute(app);
+  expenseRoute(app);
+  leaveRoute(app);
 };

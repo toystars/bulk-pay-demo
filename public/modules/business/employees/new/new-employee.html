@@ -59,9 +59,6 @@
                                         <div class="col-sm-4">
                                             <input ng-model="employee.employeeId" type="text" placeholder="Unique" class="form-control"/>
                                         </div>
-                                        <div class="col-sm-4">
-                                            Last ID used:
-                                        </div>
                                     </div>
 
                                     <div class="form-group">
@@ -336,6 +333,16 @@
                                     </div>
 
                                     <div class="form-group">
+                                      <label class="col-sm-4 control-label">Self Service</label>
+                                      <div class="col-sm-4">
+                                        <select2 ng-model="employee.selfService" options="options" s2-options="status as status for status in statuses" style="width: 100%"></select2>
+                                      </div>
+                                      <div class="col-sm-4">
+                                        &nbsp;
+                                      </div>
+                                    </div>
+
+                                    <div class="form-group">
                                         <label class="col-sm-4 control-label">Status</label>
                                         <div class="col-sm-4">
                                             <select2 ng-model="employee.status" options="options" s2-options="status as status for status in statuses" style="width: 100%"></select2>
@@ -354,6 +361,7 @@
                                             &nbsp;
                                         </div>
                                     </div>
+
                                 </form>
                             </div><!-- panel-body -->
                         </div><!-- panel -->

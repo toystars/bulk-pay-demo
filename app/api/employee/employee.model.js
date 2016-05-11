@@ -38,12 +38,20 @@ var employeesSchema = new Schema({
   exemptedPayTypes: [{ type: Schema.Types.Mixed }],
   firstName: String,
   gender: String,
+  leaveDaysTaken: {
+    type: Number,
+    default: 0
+  },
   guarantor: { type: Schema.Types.Mixed },
   lastName: String,
   maritalStatus: String,
   otherNames: String,
   payGradeId: String,
   payGroupId: String,
+  selfService: {
+    type: String,
+    default: 'Active'
+  },
   paymentDetails: { type: Schema.Types.Mixed },
   phone: String,
   positionId: String,

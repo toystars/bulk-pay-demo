@@ -1,0 +1,155 @@
+<div class="pageheader">
+  <div class="media">
+    <div class="pageicon pull-left">
+      <i class="fa fa-money"></i>
+    </div>
+    <div class="media-body">
+      <ul class="breadcrumb">
+        <li><a href=""><i class="glyphicon glyphicon-home"></i></a></li>
+        <li><a ui-sref="business.overview">Business</a></li>
+        <li>{{$parent.business.name}}</li>
+        <li>Expenses</li>
+      </ul>
+      <h4>Expenses</h4>
+    </div>
+  </div><!-- media -->
+</div><!-- pageheader -->
+
+<div class="contentpanel">
+
+
+
+  <div class="row pay-runs-header">
+    <div class="col-md-12">
+      <h5 class="lg-title mb5">Expenses</h5>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12">
+      <p class="mb20 pull-right"><button class="btn btn-primary btn-sm" data-toggle="modal" data-target=".log-time">New Expense</button></p>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12 text-center" ng-if="!dataFetched">
+      <img alt="" src="images/loaders/loader10.gif">
+    </div>
+    <div class="col-md-12" ng-if="expenses.length === 0 && dataFetched">
+      <div class="alert alert-danger text-center">
+        <p>No Expense available</p>
+      </div>
+    </div>
+    <div class="col-md-12" ng-if="expenses.length > 0 && dataFetched">
+      <div class="table-responsive">
+        <table class="table table-primary mb60 table-hover">
+          <thead>
+          <tr>
+            <th>#</th>
+            <th>From</th>
+            <th>To</th>
+            <th>Expense Type</th>
+            <th>Amount</th>
+            <th>Description</th>
+            <th>Status</th>
+            <th>Approval Status</th>
+            <th>Date Created</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr class="pointer" ng-repeat="expense in expenses">
+            <td>{{$index + 1}}</td>
+            <td>{{expense.from | date:"yyyy-MM-dd"}}</td>
+            <td>{{expense.to | date:"yyyy-MM-dd"}}</td>
+            <td>{{expense.type}}</td>
+            <td>{{expense.amount | currency:""}}</td>
+            <td>{{expense.description}}</td>
+            <td>{{expense.status}}</td>
+            <td>
+              <span ng-if="expense.approved" class="label label-success">Approved</span>
+              <span ng-if="!expense.approved" class="label label-info">Pending</span>
+            </td>
+            <td>{{expense.createdAt | date:"yyyy-MM-dd"}}</td>
+          </tr>
+          </tbody>
+        </table>
+      </div><!-- table-responsive -->
+    </div>
+  </div><!-- row -->
+
+
+</div><!-- contentpanel -->
+
+
+
+
+
+<div class="modal fade log-time" tabindex="-1" role="dialog" data-backdrop="static">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h3 class="panel-title">Log Time Worked</h3>
+        </div>
+        <div class="panel-body">
+
+          <div class="row">
+
+            <div class="col-sm-6">
+              <div class="form-group">
+                <label for="new-expense-from" class="control-label">From</label>
+                <div id="new-expense-from" class="input-group" style="margin-left:10px;margin-top:5px;">
+                  <adm-dtp ng-model="newExpense.from"></adm-dtp>
+                </div>
+              </div><!-- form-group -->
+            </div><!-- col-sm-6 -->
+
+            <div class="col-sm-6">
+              <div class="form-group">
+                <label for="new-expense-to" class="control-label">To</label>
+                <div id="new-expense-to" class="input-group" style="margin-left:10px;margin-top:5px;">
+                  <adm-dtp ng-model="newExpense.to"></adm-dtp>
+                </div>
+              </div><!-- form-group -->
+            </div><!-- col-sm-6 -->
+
+          </div><!-- row -->
+
+          <div class="row">
+
+            <div class="col-sm-6">
+              <div class="form-group">
+                <label for="new-expense-type" class="control-label">Expense Type</label>
+                <input type="text" id="new-expense-type" class="form-control" placeholder="Official Trip" ng-model="newExpense.type" />
+              </div><!-- form-group -->
+            </div><!-- col-sm-6 -->
+
+            <div class="col-sm-6">
+              <div class="form-group">
+                <label for="new-expense-amount" class="control-label">Amount</label>
+                <input type="number" id="new-expense-amount" class="form-control" placeholder="0.00" ng-model="newExpense.amount"/>
+              </div><!-- form-group -->
+            </div><!-- col-sm-6 -->
+
+          </div><!-- row -->
+
+          <div class="row">
+
+            <div class="col-sm-12">
+              <div class="form-group">
+                <label for="new-expense-description" class="control-label">Description</label>
+                <textarea id="new-expense-description" ng-model="newExpense.description" class="form-control" rows="3"></textarea>
+              </div><!-- form-group -->
+            </div><!-- col-sm-12 -->
+
+          </div><!-- row -->
+
+        </div>
+        <div class="panel-footer">
+          <button class="btn btn-primary mr5" ng-click="createExpense()">Create Expense</button>
+          <button type="reset" class="btn btn-danger" id="new-expense-close" data-dismiss="modal">Cancel</button>
+        </div><!-- panel-footer -->
+      </div>
+    </div>
+  </div>
+</div>

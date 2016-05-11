@@ -1,0 +1,172 @@
+<div class="pageheader">
+  <div class="media">
+    <div class="pageicon pull-left">
+      <i class="fa fa-clock-o"></i>
+    </div>
+    <div class="media-body">
+      <ul class="breadcrumb">
+        <li><a href=""><i class="glyphicon glyphicon-home"></i></a></li>
+        <li><a ui-sref="business.overview">Business</a></li>
+        <li>{{$parent.business.name}}</li>
+        <li>Time</li>
+      </ul>
+      <h4>Time Tracking</h4>
+    </div>
+  </div><!-- media -->
+</div><!-- pageheader -->
+
+<div class="contentpanel">
+
+
+
+  <div class="row pay-runs-header">
+    <div class="col-md-12">
+      <h5 class="lg-title mb5">Time Logged</h5>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12">
+      <p class="mb20 pull-right"><button class="btn btn-primary btn-sm" data-toggle="modal" data-target=".log-time">Log Time Worked</button></p>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12 text-center" ng-if="!dataFetched">
+      <img alt="" src="images/loaders/loader10.gif">
+    </div>
+    <div class="col-md-12 employee-filter" ng-show="dataFetched">
+      <div class="row">
+        <div class="col-md-3">
+          <div class="form-group">
+            <label class="control-label" style="margin-top:7px;">From</label>
+            <adm-dtp ng-model="filter.startDate" on-change="alterFilter()"></adm-dtp>
+          </div><!-- form-group -->
+        </div>
+        <div class="col-md-3">
+          <div class="form-group">
+            <label class="control-label" style="margin-top:7px;">To</label>
+            <adm-dtp ng-model="filter.endDate" on-change="alterFilter()"></adm-dtp>
+          </div><!-- form-group -->
+        </div>
+        <div class="col-md-3">
+          <div class="form-group">
+            <label class="control-label">Approval Status</label>
+            <select2 ng-change="alterFilter()" options="filterOptions" ng-model="filter.approvalStatus" s2-options="approvalStatus as approvalStatus for approvalStatus in approvalStatuses" style="width: 100%"></select2>
+          </div><!-- form-group -->
+        </div>
+        <div class="col-md-3">
+          <div class="form-group">
+            <label class="control-label">Status</label>
+            <select2 ng-change="alterFilter()" options="filterOptions" ng-model="filter.status" s2-options="status as status for status in statuses" style="width: 100%"></select2>
+          </div><!-- form-group -->
+        </div>
+      </div>
+    </div>
+    <div class="col-md-12" ng-if="times.length === 0 && dataFetched">
+      <div class="alert alert-danger text-center">
+        <p>No Time Log available</p>
+      </div>
+    </div>
+    <div class="col-md-12" ng-if="times.length > 0 && dataFetched">
+      <div class="table-responsive">
+        <table class="table table-primary mb60 table-hover">
+          <thead>
+          <tr>
+            <th>#</th>
+            <th>Code</th>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Time</th>
+            <th>Date</th>
+            <th>Status</th>
+            <th>Approval Status</th>
+            <th>Approved By</th>
+            <th>Date Created</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr class="pointer" ng-repeat="time in times">
+            <td>{{$index + 1}}</td>
+            <td>{{time.taskCode}}</td>
+            <td>{{getTaskName(time.taskCode)}}</td>
+            <td>{{time.description}}</td>
+            <td>{{time.displayDuration}} hour(s)</td>
+            <td>{{time.date | date:"yyyy-MM-dd"}}</td>
+            <td>{{time.status}}</td>
+            <td>
+              <span class="{{getLabelClass(time.approvalStatus)}}">{{time.approvalStatus}}</span>
+            </td>
+            <td></td>
+            <td>{{time.createdAt | date:"yyyy-MM-dd"}}</td>
+          </tr>
+          </tbody>
+        </table>
+      </div><!-- table-responsive -->
+    </div>
+  </div><!-- row -->
+
+
+</div><!-- contentpanel -->
+
+
+
+
+
+<div class="modal fade log-time" tabindex="-1" role="dialog" data-backdrop="static">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h3 class="panel-title">Log Time Worked</h3>
+        </div>
+        <div class="panel-body">
+
+          <div class="row">
+            <div class="col-md-12 time-modal-sub">Date and duration</div>
+            <div class="col-md-12">
+              <div class="row">
+                <div class="col-md-4">
+                  <div class="row">
+                    <div class="input-group" style="margin-left:10px;margin-top:5px;">
+                      <adm-dtp ng-model="newTask.date"></adm-dtp>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-2">
+                  <input ng-model="newTask.displayDuration" pattern="^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$" ng-blur="analyzeDuration()" type="text" class="form-control"/>
+                </div>
+                <div class="col-md-3 pull-right">
+                  <input ng-model="newTask.labeledDuration" type="text" class="form-control" disabled/>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <hr/>
+
+          <div class="row">
+            <div class="col-md-12 time-modal-sub">Task</div>
+            <div class="col-md-12">
+              <select2 ng-model="newTask.taskCode" options="options" s2-options="task.code as getTaskDisplay(task) for task in tasks" style="width: 100%"></select2>
+            </div>
+          </div>
+
+          <hr/>
+
+          <div class="row">
+            <div class="col-md-12 time-modal-sub">Description</div>
+            <div class="col-md-12">
+              <textarea ng-model="newTask.description" class="form-control" rows="3"></textarea>
+            </div>
+          </div>
+
+        </div>
+        <div class="panel-footer">
+          <button class="btn btn-primary mr5" ng-click="addTimeLog()">Add Log Entry</button>
+          <button type="reset" class="btn btn-danger" id="log-time-close" data-dismiss="modal">Cancel</button>
+        </div><!-- panel-footer -->
+      </div>
+    </div>
+  </div>
+</div>

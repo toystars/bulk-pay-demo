@@ -3,6 +3,9 @@ bulkPay.factory('AuthSvc', ['$http', '$cookies', '$state', 'User', 'toastr', fun
   function AuthService() {
 
     var currentUser = {};
+    var selfServiceEmployeeBusiness = {};
+    var selfServiceEmployee = {};
+
     var safeCb = function (cb) {
       return (angular.isFunction(cb)) ? cb : angular.noop;
     };
@@ -82,14 +85,6 @@ bulkPay.factory('AuthSvc', ['$http', '$cookies', '$state', 'User', 'toastr', fun
     };
 
 
-    /*
-    * Refresh user object after update to dependent documents
-    * */
-    self.refreshUser = function () {
-      getCurrentUser();
-    };
-
-
     /**
      * Gets all available info on a user
      *   (synchronous|asynchronous)
@@ -106,10 +101,24 @@ bulkPay.factory('AuthSvc', ['$http', '$cookies', '$state', 'User', 'toastr', fun
 
 
     /**
+     * Gets all self service data
+     *   (synchronous|asynchronous)
+     *
+     * @return {Object|Promise}
+     * @param callBack
+     */
+    self.getSelfServiceData = function (callBack) {
+      safeCb(callBack)(selfServiceEmployeeBusiness, selfServiceEmployee);
+    };
+
+
+    /**
      * Delete access token and user info
      */
     self.logout = function () {
       $cookies.remove('token');
+      $cookies.remove('selfBusinessId');
+      $cookies.remove('selfEmployeeId');
       currentUser = {};
       $state.go('login');
     };
@@ -117,8 +126,12 @@ bulkPay.factory('AuthSvc', ['$http', '$cookies', '$state', 'User', 'toastr', fun
 
 
     /*
-    * Business management logic
+    * Refresh user objects
     * */
+    self.refreshData = function () {
+      getCurrentUser();
+    };
+
 
     /*
     * Get businesses count
@@ -126,6 +139,7 @@ bulkPay.factory('AuthSvc', ['$http', '$cookies', '$state', 'User', 'toastr', fun
     self.getBusinessesCount = function () {
       return currentUser.businesses.length;
     };
+
 
     /*
     * Get all businesses

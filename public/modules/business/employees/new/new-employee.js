@@ -1,4 +1,4 @@
-bulkPay.controller('BusinessEmployeeCreateCtrl', ['$scope', '$rootScope', '$timeout', 'AuthSvc', 'BusinessDataSvc', '$stateParams', '$cookies', '$http', '$state', 'imageUploader', function ($scope, $rootScope, $timeout, AuthSvc, BusinessDataSvc, $stateParams, $cookies, $http, $state, imageUploader) {
+bulkPay.controller('BusinessEmployeeCreateCtrl', ['$scope', 'User', '$rootScope', '$timeout', 'AuthSvc', 'BusinessDataSvc', '$stateParams', '$cookies', '$http', '$state', 'imageUploader', 'toastr', function ($scope, User, $rootScope, $timeout, AuthSvc, BusinessDataSvc, $stateParams, $cookies, $http, $state, imageUploader, toastr) {
 
   AuthSvc.isLoggedIn(function (status) {
     if (!status) {
@@ -137,6 +137,7 @@ bulkPay.controller('BusinessEmployeeCreateCtrl', ['$scope', '$rootScope', '$time
       currentProfilePicture: '',
       state: '',
       businessUnitId: '',
+      selfService:  'Active',
       divisionId: '',
       departmentId: '',
       positionId: '',
@@ -534,16 +535,30 @@ bulkPay.controller('BusinessEmployeeCreateCtrl', ['$scope', '$rootScope', '$time
 
   var saveEmployee = function () {
     $http.post('/api/employees/', $scope.employee).success(function (data) {
-      console.log(data);
-      resetEmployee();
-      $state.transitionTo($state.current, $stateParams, {
-        reload: true,
-        inherit: false,
-        notify: true
-      });
-      swal('Success', 'Employee successfully created.', 'success');
+      toastr.success('Employee successfully created.');
+      if (data.selfService === 'Active') {
+        toastr.info('Creating employee user account.');
+        User.create({
+          name: data.fullName,
+          username: 'userName',
+          email: data.email,
+          role: 'employee',
+          employeeId: data._id,
+          businessId: data.businessId,
+          password: 'password'
+        }).success(function (employee) {
+          toastr.success('Employee user account successfully created.');
+          $state.go('business.employee', { employeeId: data._id });
+        }).error(function (error) {
+          console.log(error);
+          AuthSvc.handleError(error);
+        });
+      } else {
+        $state.go('business.employee', { employeeId: data._id });
+      }
     }).error(function (error) {
       console.log(error);
+      AuthSvc.handleError(error);
     });
     //getLastCreatedEmployee();
   };

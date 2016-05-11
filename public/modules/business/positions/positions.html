@@ -99,6 +99,7 @@
                         <th>Code</th>
                         <th>Name</th>
                         <th>Number of Employees allowed</th>
+                        <th>Leave Days</th>
                         <th>Status</th>
                     </tr>
                     </thead>
@@ -108,6 +109,7 @@
                         <td>{{position.code}}</td>
                         <td>{{position.name}}</td>
                         <td>{{position.numberOfAllowedEmployees}}</td>
+                        <td>{{position.leaveDays}}</td>
                         <td>
                             <span ng-if="position.status === 'Active'" class="label label-success">{{position.status}}</span>
                             <span ng-if="position.status === 'Inactive'" class="label label-danger">{{position.status}}</span>
@@ -225,28 +227,28 @@
                 </div>
                 <div class="panel-body">
                     <div class="row">
-                        <div class="col-sm-4">
+                        <div class="col-sm-6">
                             <div class="form-group">
                                 <label for="update-position-code" class="control-label">Code</label>
                                 <input ng-model="singlePosition.code" type="text" id="update-position-code" placeholder="Position Code" class="form-control" />
                             </div><!-- form-group -->
-                        </div><!-- col-sm-4 -->
-                        <div class="col-sm-4">
+                        </div><!-- col-sm-6 -->
+                        <div class="col-sm-6">
                             <div class="form-group">
                                 <label for="update-position-name" class="control-label">Name</label>
                                 <input ng-model="singlePosition.name" type="text" id="update-position-name" placeholder="Position Name" class="form-control" />
                             </div><!-- form-group -->
-                        </div><!-- col-sm-4 -->
-                        <div class="col-sm-4">
+                        </div><!-- col-sm-6 -->
+                        <div class="col-sm-6">
                             <div class="form-group">
                                 <label for="update-position-allowed-employees" class="control-label">Number of Allowed Employees</label>
                                 <input ng-model="singlePosition.numberOfAllowedEmployees" type="number" id="update-position-allowed-employees" placeholder="1" class="form-control" />
                             </div><!-- form-group -->
-                        </div><!-- col-sm-4 -->
+                        </div><!-- col-sm-6 -->
                         <div class="col-sm-6">
                             <div class="form-group">
-                                <label class="control-label">Status</label>
-                                <select2 options="options" ng-model="singlePosition.status" s2-options="status as status for status in statuses" style="width: 100%"></select2>
+                                <label for="update-position-leave-days" class="control-label">Leave Days</label>
+                                <input ng-model="singlePosition.leaveDays" type="number" id="update-position-leave-days" placeholder="15" class="form-control" />
                             </div><!-- form-group -->
                         </div><!-- col-sm-6 -->
                         <div class="col-sm-6">
@@ -277,6 +279,12 @@
                             <div class="form-group">
                                 <label class="control-label">Parent Position</label>
                                 <select2 options="options" ng-model="singlePosition.parentPositionId" s2-options="position._id as position.name for position in filteredPositions" style="width: 100%"></select2>
+                            </div><!-- form-group -->
+                        </div><!-- col-sm-6 -->
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label class="control-label">Status</label>
+                                <select2 options="options" ng-model="singlePosition.status" s2-options="status as status for status in statuses" style="width: 100%"></select2>
                             </div><!-- form-group -->
                         </div><!-- col-sm-6 -->
 
@@ -357,8 +365,8 @@
                         </div><!-- col-sm-6 -->
                         <div class="col-sm-6">
                             <div class="form-group">
-                                <label class="control-label">Status</label>
-                                <select2 options="options" ng-model="position.status" s2-options="status as status for status in statuses" style="width: 100%"></select2>
+                                <label for="new-position-leave-days" class="control-label">Leave Days</label>
+                                <input ng-model="position.leaveDays" type="number" id="new-position-leave-days" placeholder="15" class="form-control" />
                             </div><!-- form-group -->
                         </div><!-- col-sm-6 -->
                         <div class="col-sm-6">
@@ -389,6 +397,12 @@
                             <div class="form-group">
                                 <label class="control-label">Parent Position</label>
                                 <select2 options="options" ng-model="position.parentPositionId" s2-options="position._id as position.name for position in positions" style="width: 100%"></select2>
+                            </div><!-- form-group -->
+                        </div><!-- col-sm-6 -->
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label class="control-label">Status</label>
+                                <select2 options="options" ng-model="position.status" s2-options="status as status for status in statuses" style="width: 100%"></select2>
                             </div><!-- form-group -->
                         </div><!-- col-sm-6 -->
 

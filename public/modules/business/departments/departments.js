@@ -68,6 +68,7 @@ bulkPay.controller('BusinessDepartmentsCtrl', ['$scope', '$rootScope', 'AuthSvc'
   $scope.createDepartment = function () {
     if ($scope.department.isParent === 'Yes') {
       delete $scope.department.parent;
+      $scope.department.divisionId = $scope.department.division;
     } else {
       delete $scope.department.division;
     }

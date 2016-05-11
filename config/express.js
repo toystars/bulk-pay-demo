@@ -32,13 +32,12 @@ module.exports = function() {
   }));
 
   app.use(multer({
-      dest: __dirname + '../../public/uploads/',
-      limits: {
-        fileSize: 5000000,
-        files: 1
-      }
-    })
-  );
+    dest: __dirname + './../public/uploads/',
+    limits: {
+      ileSize: 5000000,
+      files: 1
+    }
+  }));
 
   app.use(passport.initialize());
   app.use(passport.session());
@@ -58,19 +57,7 @@ module.exports = function() {
 
   require('./passport')(passport);
   require("../app/routes/index.js")(app, passport);
-
-  // try to insert demo data into app
-  User.find({}, function (error, users) {
-    if (!error) {
-      if (users.length === 0) {
-        // clear database and reinsert data
-
-      }
-    }
-  });
-
-
-
+  
 
   return app;
 };

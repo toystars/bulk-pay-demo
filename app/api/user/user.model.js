@@ -23,6 +23,8 @@ var UserSchema = new Schema({
     type: String,
     default: 'superAdmin'
   },
+  employeeId: String,
+  businessId: String,
   password: String,
   createdAt: {
     type: Date,

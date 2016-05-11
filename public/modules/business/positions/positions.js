@@ -142,7 +142,7 @@ bulkPay.controller('BusinessPositionsCtrl', ['$scope', '$rootScope', 'AuthSvc', 
       var departments = [];
       _.each($scope.departments, function (department) {
         if ($scope.singlePosition.divisionId && $scope.singlePosition.divisionId !== '') {
-          if ($scope.singlePosition.divisionId === department.divisionId || department.divisionsServed[0] === 'All' || _.find(department.divisionsServed, function (id) { return id == $scope.singlePosition.divisionId; })) {
+          if ($scope.singlePosition.divisionId === department.divisionId || _.find(department.divisionsServed, function (id) { return id == $scope.singlePosition.divisionId; })) {
             departments.push(department);
           }
         } else {

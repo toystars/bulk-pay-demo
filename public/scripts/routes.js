@@ -35,6 +35,42 @@ bulkPay.config(['$stateProvider', '$urlRouterProvider', '$locationProvider', 'to
         controller: 'HomeCtrl'
       })
 
+      .state('home.self', {
+        url: 'self',
+        templateUrl: 'modules/self/overview/overview.html',
+        controller: 'SelfOverviewCtrl',
+        data: {
+          pageTitle: 'Self Service | BulkPay'
+        }
+      })
+
+      .state('home.time', {
+        url: 'self/time',
+        templateUrl: 'modules/self/time/time.html',
+        controller: 'EmployeeSelfTimeCtrl',
+        data: {
+          pageTitle: 'Time Tracking | BulkPay'
+        }
+      })
+
+      .state('home.expense', {
+        url: 'self/expense',
+        templateUrl: 'modules/self/expense/expense.html',
+        controller: 'EmployeeSelfExpenseCtrl',
+        data: {
+          pageTitle: 'Expense | BulkPay'
+        }
+      })
+
+      .state('home.leave', {
+        url: 'self/leave',
+        templateUrl: 'modules/self/leave/leave.html',
+        controller: 'EmployeeSelfLeaveCtrl',
+        data: {
+          pageTitle: 'Leaves | BulkPay'
+        }
+      })
+
       .state('home.overview', {
         url: 'home',
         templateUrl: 'modules/main/overview/overview.html',

@@ -9,9 +9,16 @@
 </div><!-- media -->
 
 <h5 class="leftpanel-title">Navigation</h5>
-<ul class="nav nav-pills nav-stacked">
+<ul ng-if="user.role === 'superAdmin'" class="nav nav-pills nav-stacked">
     <li ng-class="{active: inView === 'DashBoard'}" ng-click="toggleActive('DashBoard')"><a ui-sref="home.overview"><i class="fa fa-home"></i> <span>Dashboard</span></a></li>
     <li ng-class="{active: inView === 'New Business'}" ng-click="toggleActive('New Business')"><a ui-sref="home.newbusiness"><i class="fa fa-briefcase"></i> <span>New Business</span></a></li>
+</ul>
+<ul ng-if="user.role === 'employee'" class="nav nav-pills nav-stacked">
+    <li ng-class="{active: inView === 'Self Overview'}" ng-click="toggleActive('Self Overview')"><a ui-sref="home.self"><i class="fa fa-home"></i> <span>Overview</span></a></li>
+    <li ng-class="{active: inView === 'Time Reports'}" ng-click="toggleActive('Time Reports')"><a ui-sref="home.time"><i class="fa fa-clock-o"></i> <span>Time Reports</span></a></li>
+    <li ng-class="{active: inView === 'Expense Reports'}" ng-click="toggleActive('Expense Reports')"><a ui-sref="home.expense"><i class="fa fa-money"></i> <span>Expense Reports</span></a></li>
+    <li ng-class="{active: inView === 'Leave Requests'}" ng-click="toggleActive('Leave Requests')"><a ui-sref="home.leave"><i class="fa fa-calendar"></i> <span>Leave Requests</span></a></li>
+    <li ng-class="{active: inView === 'Payslips'}" ng-click="toggleActive('Payslips')"><a ui-sref="home.self"><i class="fa fa-file-text"></i> <span>Payslips</span></a></li>
 </ul>
 
 <div ng-include="'modules/shared/footerscripts.html'"></div>

@@ -116,3 +116,21 @@ ul {
 }
 
 
+.time-modal-sub {
+    color: #000000;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+
+.time-item {
+    border-radius: 0px 0px 0px 0px;
+    -moz-border-radius: 0px 0px 0px 0px;
+    -webkit-border-radius: 0px 0px 0px 0px;
+    border: 1px solid #e0e0e0;
+}
+
+
+
+
+

@@ -21,6 +21,8 @@ var departmentSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'Division'
   },
+  divisionId: String,
+  parentId: String,
   businessId: String,
   status: {
     type: String,

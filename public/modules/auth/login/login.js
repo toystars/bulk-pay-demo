@@ -19,8 +19,15 @@ bulkPay.controller('loginCtrl', ['$scope', 'AuthSvc', 'toastr', '$cookies', '$st
       if (status) {
         AuthSvc.getCurrentUser(function (user) {
           toastr.success('Login Successful');
-          if (user.role === 'superAdmin') {
-            $state.go('home.overview');
+          switch (user.role) {
+            case 'superAdmin':
+              $state.go('home.overview');
+              break;
+            case 'employee':
+              $cookies.put('selfBusinessId', user.businessId);
+              $cookies.put('selfEmployeeId', user.employeeId);
+              $state.go('home.self');
+              break;
           }
         });
       }
