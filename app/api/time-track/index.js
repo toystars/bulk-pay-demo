@@ -14,6 +14,8 @@ module.exports = function (app) {
   router.get('/business/:businessId', auth.isAuthenticated, auth.isSuperAdmin, controller.businessTime);
   router.get('/:id', auth.isAuthenticated, controller.show);
   router.put('/:id', auth.isAuthenticated, controller.update);
+  router.put('/:id/send', auth.isAuthenticated, controller.send);
+  router.delete('/:id', auth.isAuthenticated, controller.delete);
 
   app.use('/api/timetrack', router);
 

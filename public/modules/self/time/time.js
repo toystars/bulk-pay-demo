@@ -1,4 +1,4 @@
-bulkPay.controller('EmployeeSelfTimeCtrl', ['$scope', 'toastr', '$rootScope', 'AuthSvc', 'BusinessDataSvc', '$stateParams', '$cookies', '$http', '$state', function ($scope, toastr, $rootScope, AuthSvc, BusinessDataSvc, $stateParams, $cookies, $http, $state) {
+bulkPay.controller('EmployeeSelfTimeCtrl', ['$scope', 'toastr', '$rootScope', 'AuthSvc', 'BusinessDataSvc', '$stateParams', '$cookies', '$http', '$state', '$timeout', function ($scope, toastr, $rootScope, AuthSvc, BusinessDataSvc, $stateParams, $cookies, $http, $state, $timeout) {
 
   AuthSvc.isLoggedIn(function (status) {
     if (!status) {
@@ -7,6 +7,7 @@ bulkPay.controller('EmployeeSelfTimeCtrl', ['$scope', 'toastr', '$rootScope', 'A
   });
 
   $scope.dataFetched = false;
+  $scope.isEdit = false;
   $scope.newTask = {};
   $scope.times = [];
   $scope.options = {
@@ -31,6 +32,7 @@ bulkPay.controller('EmployeeSelfTimeCtrl', ['$scope', 'toastr', '$rootScope', 'A
       displayDuration: '0:00',
       labeledDuration: '0 hours',
       taskCode: '',
+      date: moment()._d,
       time: 0,
       description: ''
     };
@@ -88,12 +90,91 @@ bulkPay.controller('EmployeeSelfTimeCtrl', ['$scope', 'toastr', '$rootScope', 'A
     $http.post('/api/timetrack/', $scope.newTask).success(function (time) {
       toastr.success('Time Log created.');
       $scope.times.push(time);
+      resetNewTask();
       jQuery('#log-time-close').click();
+      getEmployeeTimeTracks();
     }).error(function (error) {
       console.log(error);
       toastr.error('Time Log error.');
       AuthSvc.handleError(error);
     });
+  };
+
+
+  $scope.edit = function (time) {
+    $scope.isEdit = true;
+    angular.copy(time, $scope.newTask);
+    jQuery('#log-modal-button').click();
+  };
+
+
+  $scope.update = function () {
+    $http.put('/api/timetrack/' +  $scope.newTask._id, $scope.newTask).success(function (editedTime) {
+      $timeout(function() {
+        resetNewTask();
+        jQuery('#log-time-close').click();
+        swal('Updated!', 'Time record has been updated successfully.', 'success');
+        getEmployeeTimeTracks();
+      });
+    }).error(function (error) {
+      console.log(error);
+      AuthSvc.handleError(error);
+    });
+  };
+
+
+  $scope.send = function (time) {
+    swal({
+      title: 'Confirm and Send?',
+      text: 'Sending time record is irreversible!',
+      type: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Send',
+      closeOnConfirm: false,
+      showLoaderOnConfirm: true
+    }, function () {
+      $http.put('/api/timetrack/' + time._id + '/send').success(function (sentTime) {
+        swal('Sent!', 'Time record has been confirmed and sent.', 'success');
+        getEmployeeTimeTracks();
+      }).error(function (error) {
+        console.log(error);
+        AuthSvc.handleError(error);
+      });
+    });
+  };
+
+
+  $scope.cancel = function () {
+    resetNewTask();
+  };
+
+  $scope.delete = function (time) {
+    swal({
+      title: 'Confirm',
+      text: 'Deleting time record is irreversible!',
+      type: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Delete!',
+      closeOnConfirm: false,
+      showLoaderOnConfirm: true
+    }, function () {
+      $http.delete('/api/timetrack/' + time._id).success(function (deletedTime) {
+        swal('Sent!', 'Time record has been deleted..', 'success');
+        getEmployeeTimeTracks();
+      }).error(function (error) {
+        console.log(error);
+        AuthSvc.handleError(error);
+      });
+    });
+  };
+
+
+  $scope.getModalTitle = function () {
+    return $scope.isEdit ? 'Edit Time Record' : 'Log Time Worked';
   };
 
 

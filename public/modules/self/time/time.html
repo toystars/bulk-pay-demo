@@ -27,7 +27,7 @@
 
   <div class="row">
     <div class="col-md-12">
-      <p class="mb20 pull-right"><button class="btn btn-primary btn-sm" data-toggle="modal" data-target=".log-time">Log Time Worked</button></p>
+      <p class="mb20 pull-right"><button class="btn btn-primary btn-sm" id="log-modal-button" data-toggle="modal" data-target=".log-time">Log Time Worked</button></p>
     </div>
   </div>
 
@@ -83,13 +83,14 @@
             <th>Approval Status</th>
             <th>Approved By</th>
             <th>Date Created</th>
+            <th>Actions</th>
           </tr>
           </thead>
           <tbody>
           <tr class="pointer" ng-repeat="time in times">
             <td>{{$index + 1}}</td>
             <td>{{time.taskCode}}</td>
-            <td>{{getTaskName(time.taskCode)}}</td>
+            <td>{{getTaskName(time.taskCode)}} - {{time.taskCode}}</td>
             <td>{{time.description}}</td>
             <td>{{time.displayDuration}} hour(s)</td>
             <td>{{time.date | date:"yyyy-MM-dd"}}</td>
@@ -99,6 +100,11 @@
             </td>
             <td></td>
             <td>{{time.createdAt | date:"yyyy-MM-dd"}}</td>
+            <td>
+              <i ng-if="time.status === 'Draft'" ng-click="edit(time)" class="fa fa-pencil-square-o action-buttons" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Edit"></i>
+              <i ng-if="time.approvalStatus === 'Pending'" ng-click="delete(time)" class="fa fa-trash action-buttons" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Delete"></i>
+              <i ng-if="time.approvalStatus === 'Pending' && time.status === 'Draft'" ng-click="send(time)" class="fa fa-check action-buttons" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Confirm and Send"></i>
+            </td>
           </tr>
           </tbody>
         </table>
@@ -118,7 +124,7 @@
     <div class="modal-content">
       <div class="panel panel-default">
         <div class="panel-heading">
-          <h3 class="panel-title">Log Time Worked</h3>
+          <h3 class="panel-title">{{getModalTitle()}}</h3>
         </div>
         <div class="panel-body">
 
@@ -163,8 +169,9 @@
 
         </div>
         <div class="panel-footer">
-          <button class="btn btn-primary mr5" ng-click="addTimeLog()">Add Log Entry</button>
-          <button type="reset" class="btn btn-danger" id="log-time-close" data-dismiss="modal">Cancel</button>
+          <button ng-if="!isEdit" class="btn btn-primary mr5" ng-click="addTimeLog()">Add Log Entry</button>
+          <button ng-if="isEdit" class="btn btn-primary mr5" ng-click="update()">Update Time Log</button>
+          <button type="reset" class="btn btn-danger" ng-click="cancel()" id="log-time-close" data-dismiss="modal">Cancel</button>
         </div><!-- panel-footer -->
       </div>
     </div>

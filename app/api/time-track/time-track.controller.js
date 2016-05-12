@@ -36,7 +36,7 @@ exports.index = function (req, res) {
  * Get all positions per business
  */
 exports.businessTime = function (req, res) {
-  TimeTrack.find({ businessId: req.params.businessId }, function (error, times) {
+  TimeTrack.find({ businessId: req.params.businessId }).populate('employee approvedBy').exec(function (error, times) {
     if (error) {
       crudHelper.handleError(res, null, error);
     }
@@ -125,3 +125,53 @@ exports.update = function (req, res) {
     }
   });
 };
+
+
+/*
+* Mark time record as sent
+* */
+exports.send = function (req, res) {
+  TimeTrack.findOne({ _id: req.params.id }, function (error, time) {
+    if (error) {
+      crudHelper.handleError(res, 400, error);
+    } else {
+      time.status = 'Sent';
+      time.save(function (error, newTime) {
+        if (error) {
+          crudHelper.handleError(res, null, error);
+        } else {
+          crudHelper.respondWithResult(res, 200, newTime);
+        }
+      });
+    }
+  });
+};
+
+
+/*
+* Delete a time record
+* */
+exports.delete = function (req, res) {
+  TimeTrack.remove({_id: req.params.id}, function (error, removedTime) {
+    if (error) {
+      crudHelper.handleError(res, 400, error);
+    } else {
+      crudHelper.respondWithResult(res, 200, removedTime);
+    }
+  });
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
