@@ -102,3 +102,53 @@ exports.update = function (req, res) {
     }
   });
 };
+
+
+/*
+ * Mark time record as sent
+ * */
+exports.send = function (req, res) {
+  Expense.findOne({ _id: req.params.id }, function (error, expense) {
+    if (error) {
+      crudHelper.handleError(res, 400, error);
+    } else {
+      expense.status = 'Sent';
+      expense.save(function (error, newExpense) {
+        if (error) {
+          crudHelper.handleError(res, null, error);
+        } else {
+          crudHelper.respondWithResult(res, 200, newExpense);
+        }
+      });
+    }
+  });
+};
+
+
+/*
+ * Get filtered employee expenses
+ * */
+exports.filteredEmployeeExpenses = function (req, res) {
+  Expense.find(req.body).populate('employee approvedBy').exec(function (error, expenses) {
+    if (error) {
+      crudHelper.handleError(res, null, error);
+    }
+    if (expenses) {
+      crudHelper.respondWithResult(res, null, expenses);
+    }
+  });
+};
+
+
+/*
+ * Delete a time record
+ * */
+exports.delete = function (req, res) {
+  Expense.remove({_id: req.params.id}, function (error, removedExpense) {
+    if (error) {
+      crudHelper.handleError(res, 400, error);
+    } else {
+      crudHelper.respondWithResult(res, 200, removedExpense);
+    }
+  });
+};

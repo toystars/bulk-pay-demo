@@ -87,7 +87,7 @@
           </tr>
           </thead>
           <tbody>
-          <tr class="pointer" ng-repeat="time in times">
+          <tr class="pointer" dir-paginate="time in times | itemsPerPage: pageSize" current-page="currentPage">
             <td>{{$index + 1}}</td>
             <td>{{time.taskCode}}</td>
             <td>{{getTaskName(time.taskCode)}} - {{time.taskCode}}</td>
@@ -109,6 +109,9 @@
           </tbody>
         </table>
       </div><!-- table-responsive -->
+      <div class="col-md-12 text-left">
+        <dir-pagination-controls boundary-links="true" on-page-change="pageChangeHandler(newPageNumber)" template-url="bower_components/angularUtils-pagination/dirPagination.tpl.html"></dir-pagination-controls>
+      </div>
     </div>
   </div><!-- row -->
 

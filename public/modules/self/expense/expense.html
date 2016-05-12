@@ -27,13 +27,41 @@
 
   <div class="row">
     <div class="col-md-12">
-      <p class="mb20 pull-right"><button class="btn btn-primary btn-sm" data-toggle="modal" data-target=".log-time">New Expense</button></p>
+      <p class="mb20 pull-right"><button class="btn btn-primary btn-sm" id="new-expense-modal-button" data-toggle="modal" data-target=".log-time">New Expense</button></p>
     </div>
   </div>
 
   <div class="row">
     <div class="col-md-12 text-center" ng-if="!dataFetched">
       <img alt="" src="images/loaders/loader10.gif">
+    </div>
+    <div class="col-md-12 employee-filter" ng-show="dataFetched">
+      <div class="row">
+        <div class="col-md-3">
+          <div class="form-group">
+            <label class="control-label" style="margin-top:7px;">From</label>
+            <adm-dtp ng-model="filter.startDate" on-change="alterFilter()"></adm-dtp>
+          </div><!-- form-group -->
+        </div>
+        <div class="col-md-3">
+          <div class="form-group">
+            <label class="control-label" style="margin-top:7px;">To</label>
+            <adm-dtp ng-model="filter.endDate" on-change="alterFilter()"></adm-dtp>
+          </div><!-- form-group -->
+        </div>
+        <div class="col-md-3">
+          <div class="form-group">
+            <label class="control-label">Approval Status</label>
+            <select2 ng-change="alterFilter()" options="filterOptions" ng-model="filter.approvalStatus" s2-options="approvalStatus as approvalStatus for approvalStatus in approvalStatuses" style="width: 100%"></select2>
+          </div><!-- form-group -->
+        </div>
+        <div class="col-md-3">
+          <div class="form-group">
+            <label class="control-label">Status</label>
+            <select2 ng-change="alterFilter()" options="filterOptions" ng-model="filter.status" s2-options="status as status for status in statuses" style="width: 100%"></select2>
+          </div><!-- form-group -->
+        </div>
+      </div>
     </div>
     <div class="col-md-12" ng-if="expenses.length === 0 && dataFetched">
       <div class="alert alert-danger text-center">
@@ -54,6 +82,7 @@
             <th>Status</th>
             <th>Approval Status</th>
             <th>Date Created</th>
+            <th>Actions</th>
           </tr>
           </thead>
           <tbody>
@@ -66,10 +95,14 @@
             <td>{{expense.description}}</td>
             <td>{{expense.status}}</td>
             <td>
-              <span ng-if="expense.approved" class="label label-success">Approved</span>
-              <span ng-if="!expense.approved" class="label label-info">Pending</span>
+              <span class="{{getLabelClass(expense.approvalStatus)}}">{{expense.approvalStatus}}</span>
             </td>
             <td>{{expense.createdAt | date:"yyyy-MM-dd"}}</td>
+            <td>
+              <i ng-if="expense.status === 'Draft'" ng-click="edit(expense)" class="fa fa-pencil-square-o action-buttons" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Edit"></i>
+              <i ng-if="expense.approvalStatus === 'Pending'" ng-click="delete(expense)" class="fa fa-trash action-buttons" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Delete"></i>
+              <i ng-if="expense.approvalStatus === 'Pending' && expense.status === 'Draft'" ng-click="send(expense)" class="fa fa-check action-buttons" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Confirm and Send"></i>
+            </td>
           </tr>
           </tbody>
         </table>
@@ -89,7 +122,7 @@
     <div class="modal-content">
       <div class="panel panel-default">
         <div class="panel-heading">
-          <h3 class="panel-title">Log Time Worked</h3>
+          <h3 class="panel-title">{{getModalTitle()}}</h3>
         </div>
         <div class="panel-body">
 
@@ -146,8 +179,9 @@
 
         </div>
         <div class="panel-footer">
-          <button class="btn btn-primary mr5" ng-click="createExpense()">Create Expense</button>
-          <button type="reset" class="btn btn-danger" id="new-expense-close" data-dismiss="modal">Cancel</button>
+          <button ng-if="!isEdit" class="btn btn-primary mr5" ng-click="createExpense()">Create Expense</button>
+          <button ng-if="isEdit" class="btn btn-primary mr5" ng-click="update()">Update Expense</button>
+          <button type="reset" class="btn btn-danger" ng-click="cancel()" id="new-expense-close" data-dismiss="modal">Cancel</button>
         </div><!-- panel-footer -->
       </div>
     </div>

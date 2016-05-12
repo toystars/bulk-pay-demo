@@ -6,6 +6,8 @@ bulkPay.controller('EmployeeSelfTimeCtrl', ['$scope', 'toastr', '$rootScope', 'A
     }
   });
 
+  $scope.currentPage = 1;
+  $scope.pageSize = 25;
   $scope.dataFetched = false;
   $scope.isEdit = false;
   $scope.newTask = {};
@@ -88,11 +90,12 @@ bulkPay.controller('EmployeeSelfTimeCtrl', ['$scope', 'toastr', '$rootScope', 'A
     $scope.newTask.employee = employeeId;
     $scope.newTask.businessId = businessId;
     $http.post('/api/timetrack/', $scope.newTask).success(function (time) {
-      toastr.success('Time Log created.');
-      $scope.times.push(time);
-      resetNewTask();
-      jQuery('#log-time-close').click();
-      getEmployeeTimeTracks();
+      $timeout(function() {
+        toastr.success('Time Log created.');
+        resetNewTask();
+        jQuery('#log-time-close').click();
+        getEmployeeTimeTracks();
+      });
     }).error(function (error) {
       console.log(error);
       toastr.error('Time Log error.');
@@ -163,7 +166,7 @@ bulkPay.controller('EmployeeSelfTimeCtrl', ['$scope', 'toastr', '$rootScope', 'A
       showLoaderOnConfirm: true
     }, function () {
       $http.delete('/api/timetrack/' + time._id).success(function (deletedTime) {
-        swal('Sent!', 'Time record has been deleted..', 'success');
+        swal('Deleted!', 'Time record has been deleted..', 'success');
         getEmployeeTimeTracks();
       }).error(function (error) {
         console.log(error);
@@ -256,7 +259,6 @@ bulkPay.controller('EmployeeSelfTimeCtrl', ['$scope', 'toastr', '$rootScope', 'A
   }];
 
   resetNewTask();
-  getEmployeeTimeTracks();
 
 }]);
 

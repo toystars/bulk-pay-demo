@@ -11,9 +11,17 @@ var expenseSchema = new Schema({
   businessId: String,
   employeeId: String,
   amount: Number,
-  approved: {
-    type: Boolean,
-    default: false
+  approvalStatus: {
+    type: String,
+    default: 'Pending'
+  },
+  employee : {
+    type: Schema.Types.ObjectId,
+    ref: 'Employee'
+  },
+  approvedBy: {
+    type: Schema.Types.ObjectId,
+    ref: 'User'
   },
   status: {
     type: String,
