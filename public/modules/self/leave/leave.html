@@ -27,13 +27,46 @@
 
   <div class="row">
     <div class="col-md-12">
-      <p class="mb20 pull-right"><button class="btn btn-primary btn-sm" data-toggle="modal" data-target=".log-time">New Leave Application</button></p>
+      <div>
+        Number of leave days taken: {{$parent.employee.leaveDaysTaken}} <br />
+        Number of leave days left: {{employeePosition.leaveDays - $parent.employee.leaveDaysTaken - getPendingLeaveDays()}} <br />
+        Number of leave days request pending: {{getPendingLeaveDays()}}
+      </div>
+      <p class="mb20 pull-right"><button class="btn btn-primary btn-sm" id="new-leave-modal-button" data-toggle="modal" data-target=".request-leave">New Leave Application</button></p>
     </div>
   </div>
 
   <div class="row">
     <div class="col-md-12 text-center" ng-if="!dataFetched">
       <img alt="" src="images/loaders/loader10.gif">
+    </div>
+    <div class="col-md-12 employee-filter" ng-show="dataFetched">
+      <div class="row">
+        <div class="col-md-3">
+          <div class="form-group">
+            <label class="control-label" style="margin-top:7px;">From</label>
+            <adm-dtp ng-model="filter.startDate" on-change="alterFilter()"></adm-dtp>
+          </div><!-- form-group -->
+        </div>
+        <div class="col-md-3">
+          <div class="form-group">
+            <label class="control-label" style="margin-top:7px;">To</label>
+            <adm-dtp ng-model="filter.endDate" on-change="alterFilter()"></adm-dtp>
+          </div><!-- form-group -->
+        </div>
+        <div class="col-md-3">
+          <div class="form-group">
+            <label class="control-label">Approval Status</label>
+            <select2 ng-change="alterFilter()" options="options" ng-model="filter.approvalStatus" s2-options="approvalStatus as approvalStatus for approvalStatus in approvalStatuses" style="width: 100%"></select2>
+          </div><!-- form-group -->
+        </div>
+        <div class="col-md-3">
+          <div class="form-group">
+            <label class="control-label">Status</label>
+            <select2 ng-change="alterFilter()" options="options" ng-model="filter.status" s2-options="status as status for status in statuses" style="width: 100%"></select2>
+          </div><!-- form-group -->
+        </div>
+      </div>
     </div>
     <div class="col-md-12" ng-if="leaves.length === 0 && dataFetched">
       <div class="alert alert-danger text-center">
@@ -50,26 +83,33 @@
             <th>End Date</th>
             <th>Duration</th>
             <th>Type</th>
+            <th>Description</th>
+            <th>Status</th>
             <th>Approval Status</th>
             <th>Approved By</th>
-            <th>Status</th>
             <th>Date Created</th>
+            <th>Actions</th>
           </tr>
           </thead>
           <tbody>
           <tr class="pointer" ng-repeat="leave in leaves">
             <td>{{$index + 1}}</td>
-            <td>{{leave.from | date:"yyyy-MM-dd"}}</td>
-            <td>{{leave.to | date:"yyyy-MM-dd"}}</td>
+            <td>{{leave.startDate | date:"yyyy-MM-dd"}}</td>
+            <td>{{leave.endDate | date:"yyyy-MM-dd"}}</td>
+            <td>{{leave.duration}}</td>
             <td>{{leave.type}}</td>
-            <td>{{leave.amount | currency:""}}</td>
             <td>{{leave.description}}</td>
             <td>{{leave.status}}</td>
             <td>
-              <span ng-if="leave.approved" class="label label-success">Approved</span>
-              <span ng-if="!leave.approved" class="label label-info">Pending</span>
+              <span class="{{getLabelClass(leave.approvalStatus)}}">{{leave.approvalStatus}}</span>
             </td>
+            <td></td>
             <td>{{leave.createdAt | date:"yyyy-MM-dd"}}</td>
+            <td>
+              <i ng-if="leave.status === 'Draft'" ng-click="edit(leave)" class="fa fa-pencil-square-o action-buttons" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Edit"></i>
+              <i ng-if="leave.approvalStatus === 'Pending'" ng-click="delete(leave)" class="fa fa-trash action-buttons" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Delete"></i>
+              <i ng-if="leave.approvalStatus === 'Pending' && leave.status === 'Draft'" ng-click="send(leave)" class="fa fa-check action-buttons" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Confirm and Send"></i>
+            </td>
           </tr>
           </tbody>
         </table>
@@ -84,52 +124,43 @@
 
 
 
-<div class="modal fade log-time" tabindex="-1" role="dialog" data-backdrop="static">
+<div class="modal fade request-leave" tabindex="-1" role="dialog" data-backdrop="static">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="panel panel-default">
         <div class="panel-heading">
-          <h3 class="panel-title">Log Time Worked</h3>
+          <h3 class="panel-title">{{getModalTitle()}}</h3>
         </div>
         <div class="panel-body">
 
           <div class="row">
 
-            <div class="col-sm-6">
+            <div class="col-sm-5">
               <div class="form-group">
-                <label for="new-expense-from" class="control-label">From</label>
-                <div id="new-expense-from" class="input-group" style="margin-left:10px;margin-top:5px;">
-                  <adm-dtp ng-model="newExpense.from"></adm-dtp>
+                <label for="new-leave-start-date" class="control-label">Start Date</label>
+                <div id="new-leave-start-date" class="input-group" style="margin-top:5px;">
+                  <adm-dtp ng-model="newLeave.startDate" on-change="setDuration()"></adm-dtp>
                 </div>
               </div><!-- form-group -->
-            </div><!-- col-sm-6 -->
+            </div><!-- col-sm-5 -->
 
-            <div class="col-sm-6">
+            <div class="col-sm-5">
               <div class="form-group">
-                <label for="new-expense-to" class="control-label">To</label>
-                <div id="new-expense-to" class="input-group" style="margin-left:10px;margin-top:5px;">
-                  <adm-dtp ng-model="newExpense.to"></adm-dtp>
+                <label for="new-leave-end-date" class="control-label">End Date</label>
+                <div id="new-leave-end-date" class="input-group" style="margin-top:5px;">
+                  <adm-dtp ng-model="newLeave.endDate" on-change="setDuration()"></adm-dtp>
                 </div>
               </div><!-- form-group -->
-            </div><!-- col-sm-6 -->
+            </div><!-- col-sm-5 -->
 
-          </div><!-- row -->
-
-          <div class="row">
-
-            <div class="col-sm-6">
+            <div class="col-sm-2">
               <div class="form-group">
-                <label for="new-expense-type" class="control-label">Expense Type</label>
-                <input type="text" id="new-expense-type" class="form-control" placeholder="Official Trip" ng-model="newExpense.type" />
+                <label class="control-label">Duration</label>
+                <div class="input-group" style="margin-top:5px;">
+                  {{newLeave.duration}} day(s).
+                </div>
               </div><!-- form-group -->
-            </div><!-- col-sm-6 -->
-
-            <div class="col-sm-6">
-              <div class="form-group">
-                <label for="new-expense-amount" class="control-label">Amount</label>
-                <input type="number" id="new-expense-amount" class="form-control" placeholder="0.00" ng-model="newExpense.amount"/>
-              </div><!-- form-group -->
-            </div><!-- col-sm-6 -->
+            </div><!-- col-sm-2 -->
 
           </div><!-- row -->
 
@@ -137,8 +168,19 @@
 
             <div class="col-sm-12">
               <div class="form-group">
-                <label for="new-expense-description" class="control-label">Description</label>
-                <textarea id="new-expense-description" ng-model="newExpense.description" class="form-control" rows="3"></textarea>
+                <label class="control-label">Leave Type</label>
+                <select2 options="options" ng-model="newLeave.type" s2-options="type as type for type in leaveTypes" style="width: 100%"></select2>
+              </div><!-- form-group -->
+            </div><!-- col-sm-12 -->
+
+          </div><!-- row -->
+
+          <div class="row">
+
+            <div class="col-sm-12">
+              <div class="form-group">
+                <label for="new-leave-description" class="control-label">Description</label>
+                <textarea id="new-leave-description" ng-model="newLeave.description" class="form-control" rows="3"></textarea>
               </div><!-- form-group -->
             </div><!-- col-sm-12 -->
 
@@ -146,8 +188,9 @@
 
         </div>
         <div class="panel-footer">
-          <button class="btn btn-primary mr5" ng-click="createExpense()">Create Expense</button>
-          <button type="reset" class="btn btn-danger" id="new-expense-close" data-dismiss="modal">Cancel</button>
+          <button ng-if="!isEdit" ng-disabled="!enableCreateButton() || invalidLeaveDays()" class="btn btn-primary mr5" ng-click="createLeave()">Create Leave</button>
+          <button ng-if="isEdit" class="btn btn-primary mr5" ng-click="update()">Update Leave Request</button>
+          <button type="reset" class="btn btn-danger" ng-click="cancel()" id="new-leave-close" data-dismiss="modal">Cancel</button>
         </div><!-- panel-footer -->
       </div>
     </div>

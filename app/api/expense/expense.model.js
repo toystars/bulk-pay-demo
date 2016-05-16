@@ -15,6 +15,10 @@ var expenseSchema = new Schema({
     type: String,
     default: 'Pending'
   },
+  serviced: {
+    type: Boolean,
+    default: false
+  },
   employee : {
     type: Schema.Types.ObjectId,
     ref: 'Employee'

@@ -31,6 +31,11 @@ var payRollSchema = new Schema({
   pension: Number,
   totalDeduction: Number,
   netPay: Number,
+  payRun: {
+    type: Schema.Types.Mixed,
+    default: {}
+  },
+  expenses: [ { type: Schema.Types.Mixed } ],
   repayments: [ { type: Schema.Types.Mixed } ],
   payTypes: [ { type: Schema.Types.Mixed } ],
   paymentDetails: { type: Schema.Types.Mixed },

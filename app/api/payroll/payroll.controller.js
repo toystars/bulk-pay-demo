@@ -9,8 +9,11 @@
 'use strict';
 
 require('./payroll.model.js');
+require('../payrun/payrun.model.js');
 var mongoose = require('mongoose'),
   PayRoll = mongoose.model('PayRoll'),
+  PayRun = mongoose.model('PayRun'),
+  _ = require('underscore'),
   crudHelper = require('../../helpers/crud.js');
 
 
@@ -94,6 +97,37 @@ exports.show = function (req, res) {
       crudHelper.respondWithResult(res, null, doc);
     } else {
       crudHelper.handleError(res, null, {message: 'Pay roll not found!'});
+    }
+  });
+};
+
+
+/*
+ * Get filtered employee payrolls
+ * */
+exports.filteredEmployeePayRolls = function (req, res) {
+  var employeeId = req.params.employeeId;
+  var payRolls = [];
+  PayRun.find(req.body, function (error, payRuns) {
+    if (error) {
+      crudHelper.handleError(res, null, error);
+    }
+    if (payRuns && payRuns.length > 0) {
+      _.each(payRuns, function (payRun, payRunIndex) {
+        PayRoll.findOne({ employee: employeeId, payRunId: payRun._id }).populate('employee payGroup position pensionManager').exec(function (error, payRoll) {
+          if (error) {
+            crudHelper.handleError(res, null, error);
+          } else {
+            payRoll.payRun = payRun;
+            payRolls.push(payRoll);
+            if (payRunIndex === payRuns.length - 1) {
+              crudHelper.respondWithResult(res, null, payRolls);
+            }
+          }
+        });
+      });
+    } else {
+      crudHelper.respondWithResult(res, null, payRolls);
     }
   });
 };

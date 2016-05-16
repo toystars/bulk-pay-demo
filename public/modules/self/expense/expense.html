@@ -81,6 +81,8 @@
             <th>Description</th>
             <th>Status</th>
             <th>Approval Status</th>
+            <th>Approved By</th>
+            <th>Serviced</th>
             <th>Date Created</th>
             <th>Actions</th>
           </tr>
@@ -97,6 +99,8 @@
             <td>
               <span class="{{getLabelClass(expense.approvalStatus)}}">{{expense.approvalStatus}}</span>
             </td>
+            <td></td>
+            <td>{{getServicedStatus(expense.serviced)}}</td>
             <td>{{expense.createdAt | date:"yyyy-MM-dd"}}</td>
             <td>
               <i ng-if="expense.status === 'Draft'" ng-click="edit(expense)" class="fa fa-pencil-square-o action-buttons" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Edit"></i>

@@ -20,7 +20,7 @@ bulkPay.controller('EmployeeSelfExpenseCtrl', ['$scope', '$timeout', 'toastr', '
     startDate: moment().subtract(1, 'month')._d,
     endDate: moment()._d
   };
-  $scope.approvalStatuses = ['Pending', 'Approved', 'Rejected'];
+  $scope.approvalStatuses = ['Pending', 'Approved', 'Declined'];
   $scope.statuses = ['Draft', 'Sent'];
   $scope.$parent.inView = 'Expense Reports';
   var resetNewExpense = function () {
@@ -66,7 +66,7 @@ bulkPay.controller('EmployeeSelfExpenseCtrl', ['$scope', '$timeout', 'toastr', '
         return 'label label-info';
       case 'Approved':
         return 'label label-success';
-      case 'Rejected':
+      case 'Declined':
         return 'label label-danger';
     }
   };
@@ -155,6 +155,10 @@ bulkPay.controller('EmployeeSelfExpenseCtrl', ['$scope', '$timeout', 'toastr', '
         AuthSvc.handleError(error);
       });
     });
+  };
+  
+  $scope.getServicedStatus = function (servicedStatus) {
+    return servicedStatus ? 'Serviced' : 'Not Serviced';
   };
 
 

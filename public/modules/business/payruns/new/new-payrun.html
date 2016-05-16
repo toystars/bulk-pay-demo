@@ -288,7 +288,7 @@
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <tr ng-repeat="payType in singleEmployee.paymentInformation.payBreakDown.wages.concat(singleEmployee.paymentInformation.payBreakDown.benefits)">
+                                    <tr ng-repeat="payType in singleEmployee.paymentInformation.payBreakDown.wages.concat(singleEmployee.paymentInformation.payBreakDown.benefits, singleEmployee.paymentInformation.payBreakDown.expenses)">
                                         <td>{{payType.title}}</td>
                                         <td>{{payType.value / 12 | currency:""}}</td>
                                     </tr>

@@ -26,7 +26,7 @@ bulkPay.controller('loginCtrl', ['$scope', 'AuthSvc', 'toastr', '$cookies', '$st
             case 'employee':
               $cookies.put('selfBusinessId', user.businessId);
               $cookies.put('selfEmployeeId', user.employeeId);
-              $state.go('home.self');
+              $state.go('home.time');
               break;
           }
         });

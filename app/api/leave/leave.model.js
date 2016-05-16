@@ -15,6 +15,10 @@ var leaveSchema = new Schema({
     type: String,
     default: 'Pending'
   },
+  employee : {
+    type: Schema.Types.ObjectId,
+    ref: 'Employee'
+  },
   approvedBy: {
     type: Schema.Types.ObjectId,
     ref: 'User'

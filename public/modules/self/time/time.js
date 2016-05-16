@@ -24,7 +24,7 @@ bulkPay.controller('EmployeeSelfTimeCtrl', ['$scope', 'toastr', '$rootScope', 'A
     startDate: moment().subtract(1, 'month')._d,
     endDate: moment()._d
   };
-  $scope.approvalStatuses = ['Pending', 'Approved', 'Rejected'];
+  $scope.approvalStatuses = ['Pending', 'Approved', 'Declined'];
   $scope.statuses = ['Draft', 'Sent'];
   var businessId = $cookies.get('selfBusinessId');
   var employeeId = $cookies.get('selfEmployeeId');
@@ -198,7 +198,7 @@ bulkPay.controller('EmployeeSelfTimeCtrl', ['$scope', 'toastr', '$rootScope', 'A
         return 'label label-info';
       case 'Approved':
         return 'label label-success';
-      case 'Rejected':
+      case 'Declined':
         return 'label label-danger';
     }
   };

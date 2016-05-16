@@ -8,6 +8,20 @@ var PayRollCalculation = function (employee, payGradeTypes, employeeTaxRule, emp
   * pay components and employee-exempted components
   * */
 
+  var employeeExpenses = employee.expenses || [];
+  var expenses = [];
+  _.each(employeeExpenses, function (expense) {
+    expenses.push({
+      editablePerEmployee: "No",
+      frequency: "Monthly",
+      isBase: false,
+      taxable: "Yes",
+      title: expense.type,
+      type: "Expense",
+      value: expense.amount * 12,
+      expenseObject: expense
+    });
+  });
   var employeeLoans = employee.loans || [];
   var loans = [];
   _.each(employeeLoans, function (loan) {
@@ -25,7 +39,7 @@ var PayRollCalculation = function (employee, payGradeTypes, employeeTaxRule, emp
   });
 
 
-  var concatenatedPayTypes = payGradeTypes.concat(employee.customPayTypes, loans);
+  var concatenatedPayTypes = payGradeTypes.concat(employee.customPayTypes, loans, expenses);
   var newPayTypes = [];
   _.each(concatenatedPayTypes, function (payType) {
     var type = _.find(employee.editablePayTypes, function (editablePayType) { return editablePayType.code === payType.code });
@@ -100,6 +114,7 @@ var PayRollCalculation = function (employee, payGradeTypes, employeeTaxRule, emp
     var benefits = [];
     var deductions = [];
     var repayments = [];
+    var expenses = [];
     _.each(payTypes, function (type) {
       switch (type.type) {
         case 'Wage':
@@ -117,6 +132,16 @@ var PayRollCalculation = function (employee, payGradeTypes, employeeTaxRule, emp
             code: type.code,
             title: type.title,
             type: type.type,
+            frequency: type.frequency
+          });
+          break;
+        case 'Expense':
+          expenses.push({
+            value: type.value,
+            code: type.code,
+            title: type.title,
+            type: type.type,
+            expense: type.expenseObject,
             frequency: type.frequency
           });
           break;
@@ -158,7 +183,8 @@ var PayRollCalculation = function (employee, payGradeTypes, employeeTaxRule, emp
       wages: wages,
       benefits: benefits,
       deductions: deductions,
-      repayments: repayments
+      repayments: repayments,
+      expenses: expenses
     };
   };
 

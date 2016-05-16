@@ -88,10 +88,11 @@ bulkPay.controller('BusinessNewPayRunCtrl', ['$scope', '$rootScope', '$timeout',
       $scope.employees = data;
       _.each($scope.employees, function (employee) {
         employee.paymentInformation = new PayRollCalculation(employee, employee.payGrade.payTypes, employee.payGrade.tax,
-          employee.payGrade.pension, $scope.employees.loans).calculate();
+          employee.payGrade.pension).calculate();
       });
       $scope.dataFetched = true;
     }).error(function (error) {
+      console.log(error);
       AuthSvc.handleError(error);
     });
   };
@@ -155,9 +156,7 @@ bulkPay.controller('BusinessNewPayRunCtrl', ['$scope', '$rootScope', '$timeout',
       $http.post('/api/payruns/', $scope.payRun).success(function (payRun) {
         var stage = 0;
         var payRolls = [];
-        console.log($scope.payRunEmployees);
         _.each($scope.payRunEmployees, function (employee) {
-          console.log(employee.paymentInformation.payBreakDown.repayments);
           $http.post('/api/payrolls', {
             businessId: businessId,
             payRunId: payRun._id,
@@ -170,13 +169,18 @@ bulkPay.controller('BusinessNewPayRunCtrl', ['$scope', '$rootScope', '$timeout',
             pension: employee.paymentInformation.pension / 12,
             totalDeduction: employee.paymentInformation.totalDeductions / 12,
             netPay: employee.paymentInformation.netPay / 12,
-            payTypes: convertPayTypes(employee.paymentInformation.payBreakDown.wages.concat(employee.paymentInformation.payBreakDown.benefits, employee.paymentInformation.payBreakDown.deductions, employee.paymentInformation.payBreakDown.repayments)),
+            payTypes: convertPayTypes(employee.paymentInformation.payBreakDown.wages.concat(employee.paymentInformation.payBreakDown.benefits,
+              employee.paymentInformation.payBreakDown.deductions,
+              employee.paymentInformation.payBreakDown.repayments,
+              employee.paymentInformation.payBreakDown.expenses)),
             paymentDetails: employee.paymentDetails,
-            repayments: evaluateRepayments(employee.paymentInformation.payBreakDown.repayments)
+            repayments: evaluateRepayments(employee.paymentInformation.payBreakDown.repayments),
+            expenses: employee.paymentInformation.payBreakDown.expenses
           }).success(function (payRoll) {
             console.log(payRoll);
             payRolls.push(payRoll);
             updateLoans(employee.paymentInformation.payBreakDown.repayments);
+            serviceExpenses( employee.paymentInformation.payBreakDown.expenses);
             stage++;
             if (stage === $scope.payRunEmployees.length) {
               $scope.payRolls = payRolls;
@@ -188,6 +192,15 @@ bulkPay.controller('BusinessNewPayRunCtrl', ['$scope', '$rootScope', '$timeout',
           });
         });
       }).error(function (error) {
+        AuthSvc.handleError(error);
+      });
+    });
+  };
+
+  var serviceExpenses = function (expenses) {
+    _.each(expenses, function (expense) {
+      $http.put('/api/expense/' + expense.expense._id + '/service').success(function (response) { }).error(function (error) {
+        console.log(error);
         AuthSvc.handleError(error);
       });
     });

@@ -15,6 +15,7 @@ require('../pay-group/pay-group.model.js');
 require('../tax/tax.model.js');
 require('../pension/pension.model.js');
 require('../loan/loan.model.js');
+require('../expense/expense.model.js');
 var mongoose = require('mongoose'),
   Employee = mongoose.model('Employee'),
   PayGrade = mongoose.model('PayGrade'),
@@ -22,6 +23,7 @@ var mongoose = require('mongoose'),
   Tax = mongoose.model('Tax'),
   Pension = mongoose.model('Pension'),
   Loan = mongoose.model('Loan'),
+  Expense = mongoose.model('Expense'),
   _ = require('underscore'),
   crudHelper = require('../../helpers/crud.js');
 
@@ -79,22 +81,29 @@ exports.getPayRunEmployees = function (req, res) {
     if (error) {
       crudHelper.handleError(res, null, error);
     }
-    if (employees) {
+    if (employees.length > 0) {
       _.each(employees, function (employee, index) {
         PayGrade.findOne({ positionIds: employee.positionId }).populate('tax pension').exec(function (error, payGrade) {
-          if (payGrade) {
+          if (!error) {
             employee.payGrade = payGrade;
           }
           Loan.find({ employee: employee._id, fullyServiced: 'No' }, function (error, loans) {
             if (!error) {
               employee.loans = loans;
             }
-            if (index === employees.length - 1) {
-              crudHelper.respondWithResult(res, null, employees);
-            }
+            Expense.find({ businessId: req.params.businessId, employeeId: employee._id, approvalStatus: 'Approved', serviced: false }, function (error, expenses) {
+              if (!error) {
+                employee.expenses = expenses;
+              }
+              if (index === employees.length - 1) {
+                crudHelper.respondWithResult(res, null, employees);
+              }
+            });
           });
         });
       });
+    } else {
+      crudHelper.respondWithResult(res, null, employees);
     }
   });
 };

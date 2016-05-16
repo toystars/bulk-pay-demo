@@ -1,0 +1,160 @@
+<div class="pageheader">
+  <div class="media">
+    <div class="pageicon pull-left">
+      <i class="fa fa-file"></i>
+    </div>
+    <div class="media-body">
+      <ul class="breadcrumb">
+        <li><a href=""><i class="glyphicon glyphicon-home"></i></a></li>
+        <li><a ui-sref="business.overview">Business</a></li>
+        <li>{{$parent.business.name}}</li>
+        <li>Payslips</li>
+      </ul>
+      <h4>Payslips</h4>
+    </div>
+  </div><!-- media -->
+</div><!-- pageheader -->
+
+<div class="contentpanel">
+
+
+
+  <div class="row pay-runs-header">
+    <div class="col-md-12">
+      <h5 class="lg-title mb5">Payslips</h5>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12 text-center" ng-if="!dataFetched">
+      <img alt="" src="images/loaders/loader10.gif">
+    </div>
+    <div class="col-md-12 employee-filter" ng-show="dataFetched">
+      <div class="row">
+        <div class="col-md-3">
+          <div class="form-group">
+            <label class="control-label" style="margin-top:7px;">From</label>
+            <adm-dtp ng-model="filter.startDate" on-change="alterFilter()"></adm-dtp>
+          </div><!-- form-group -->
+        </div>
+        <div class="col-md-3">
+          <div class="form-group">
+            <label class="control-label" style="margin-top:7px;">To</label>
+            <adm-dtp ng-model="filter.endDate" on-change="alterFilter()"></adm-dtp>
+          </div><!-- form-group -->
+        </div>
+      </div>
+    </div>
+    <div class="col-md-12" ng-if="payRolls.length === 0 && dataFetched">
+      <div class="alert alert-danger text-center">
+        <p>No Payroll available</p>
+      </div>
+    </div>
+    <div class="col-md-12" ng-if="payRolls.length > 0 && dataFetched">
+      <div class="table-responsive">
+        <table class="table table-primary mb60 table-hover">
+          <thead>
+          <tr>
+            <th>#</th>
+            <th>Employee Id</th>
+            <th>Pay Period</th>
+            <th>Pay Group</th>
+            <th>Pension Manager</th>
+            <th>Pension ( ₦ )</th>
+            <th>Tax Pay ( ₦ )</th>
+            <th>Gross Pay ( ₦ )</th>
+            <th>Deductions ( ₦ )</th>
+            <th>Net Pay ( ₦ )</th>
+            <th></th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr class="pointer" dir-paginate="payRoll in payRolls | itemsPerPage: pageSize" current-page="currentPage">
+            <td>{{$index + 1}}</td>
+            <td>{{payRoll.employee.employeeId}}</td>
+            <td>{{getPayPeriod(payRoll.payRun)}}</td>
+            <td>{{payRoll.payRun.payGroup}}</td>
+            <td>{{payRoll.pensionManager.name}}</td>
+            <td>{{payRoll.pension | currency:""}}</td>
+            <td>{{payRoll.tax | currency:""}}</td>
+            <td>{{payRoll.grossPay | currency:""}}</td>
+            <td>{{payRoll.totalDeduction | currency:""}}</td>
+            <td>{{payRoll.netPay | currency:""}}</td>
+            <td><a class="pointer" data-toggle="modal" data-target=".payroll-summary" ng-click="viewPaySlip(payRoll)">View Pay Slip</a></td>
+          </tr>
+          </tbody>
+        </table>
+      </div><!-- table-responsive -->
+    </div>
+  </div><!-- row -->
+
+
+</div><!-- contentpanel -->
+
+
+
+<div class="modal fade payroll-summary" tabindex="-1" role="dialog" data-backdrop="static">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h3 class="panel-title">Summary</h3>
+        </div>
+        <div id="payroll-summary" class="panel-body big-font">
+          <div class="row">
+            <div class="col-md-12">
+              <h5 class="lg-title mb5 text-center">{{business.name}}</h5>
+              <h5 class="mb20 text-center">{{singlePayroll.employee.fullName}}</h5>
+              <h5 class="mb20 text-center">{{singleEmployee.fullName}}</h5>
+              <p class="mb20 text-center">Payroll Summary</p>
+              <div class="table-responsive">
+                <table class="table table-bordered table-primary mb30">
+                  <thead>
+                  <tr>
+                    <th>Pay Components</th>
+                    <th>Amount ( ₦  )</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  <tr ng-repeat="payType in getNonDeductions()">
+                    <td>{{payType.title}}</td>
+                    <td>{{payType.monthlyValue | currency:""}}</td>
+                  </tr>
+                  <tr>
+                    <td><b>Gross Pay: </b></td>
+                    <td><b>{{singlePayroll.grossPay | currency:""}}</b></td>
+                  </tr>
+                  <tr>
+                    <td>...</td>
+                    <td>...</td>
+                  </tr>
+                  <tr ng-repeat="payType in getDeductions()">
+                    <td>{{payType.title}}</td>
+                    <td>{{payType.monthlyValue | currency:""}}</td>
+                  </tr>
+                  <tr>
+                    <td><b>Total Deductions: </b></td>
+                    <td><b>{{singlePayroll.totalDeduction | currency:""}}</b></td>
+                  </tr>
+                  <tr>
+                    <td>...</td>
+                    <td>...</td>
+                  </tr>
+                  <tr>
+                    <td><b>Net Pay: </b></td>
+                    <td><b>{{singlePayroll.netPay | currency:""}}</b></td>
+                  </tr>
+                  </tbody>
+                </table>
+              </div><!-- table-responsive -->
+            </div><!-- col-md-12 -->
+          </div><!-- row -->
+        </div>
+        <div class="panel-footer">
+          <button type="reset" ng-click="resetSummary()" class="btn btn-danger" id="payroll-summary-close" data-dismiss="modal">Close</button>
+          <button type="reset" ng-click="print('payroll-summary')" class="btn btn-info" id="payroll-summary-print">Print</button>
+        </div><!-- panel-footer -->
+      </div>
+    </div>
+  </div>
+</div>

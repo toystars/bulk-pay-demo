@@ -126,6 +126,27 @@ exports.send = function (req, res) {
 
 
 /*
+ * Mark expense as serviced
+ * */
+exports.serviceExpense = function (req, res) {
+  Expense.findOne({ _id: req.params.id }, function (error, expense) {
+    if (error) {
+      crudHelper.handleError(res, 400, error);
+    } else {
+      expense.serviced = true;
+      expense.save(function (error, newExpense) {
+        if (error) {
+          crudHelper.handleError(res, null, error);
+        } else {
+          crudHelper.respondWithResult(res, 200, newExpense);
+        }
+      });
+    }
+  });
+};
+
+
+/*
  * Get filtered employee expenses
  * */
 exports.filteredEmployeeExpenses = function (req, res) {

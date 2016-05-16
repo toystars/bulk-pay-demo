@@ -21,7 +21,11 @@ var employeesSchema = new Schema({
   },
   loans: {
     type: Schema.Types.Mixed,
-    default: {}
+    default: []
+  },
+  expenses: {
+    type: Schema.Types.Mixed,
+    default: []
   },
   city: String,
   confirmationDate: Date,

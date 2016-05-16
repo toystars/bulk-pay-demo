@@ -35,12 +35,12 @@ bulkPay.config(['$stateProvider', '$urlRouterProvider', '$locationProvider', 'to
         controller: 'HomeCtrl'
       })
 
-      .state('home.self', {
-        url: 'self',
-        templateUrl: 'modules/self/overview/overview.html',
-        controller: 'SelfOverviewCtrl',
+      .state('home.payslip', {
+        url: 'self/payslip',
+        templateUrl: 'modules/self/payslip/payslip.html',
+        controller: 'EmployeeSelfPaySlipCtrl',
         data: {
-          pageTitle: 'Self Service | BulkPay'
+          pageTitle: 'Payslip | BulkPay'
         }
       })
 
