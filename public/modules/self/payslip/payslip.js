@@ -46,7 +46,6 @@ bulkPay.controller('EmployeeSelfPaySlipCtrl', ['$scope', '$timeout', 'toastr', '
       $scope.payRolls = payRolls;
       $scope.dataFetched = true;
     }).error(function (error) {
-      console.log(error);
       AuthSvc.handleError(error);
     });
   };
@@ -59,25 +58,60 @@ bulkPay.controller('EmployeeSelfPaySlipCtrl', ['$scope', '$timeout', 'toastr', '
     return payRun.paymentPeriod.month + ', ' + payRun.paymentPeriod.year;
   };
 
-  $scope.getNonDeductions = function () {
-    var types = [];
-    _.each($scope.singlePayroll.payTypes, function (type) {
-      if (type.type !== 'Deduction') {
-        types.push(type);
-      }
-    });
-    return types;
+  $scope.getAllowances = function () {
+    if ($scope.singlePayroll && $scope.singlePayroll.paymentInformation) {
+      return $scope.singlePayroll.paymentInformation.wages.concat($scope.singlePayroll.paymentInformation.benefits);
+    }
+    return [];
+  };
+
+  $scope.getTotalAllowanceValue = function () {
+    var sum  = 0;
+    if ($scope.singlePayroll && $scope.singlePayroll.paymentInformation) {
+      var array = $scope.singlePayroll.paymentInformation.wages.concat($scope.singlePayroll.paymentInformation.benefits);
+      _.each(array, function (payType) {
+        sum += payType.monthlyValue;
+      });
+    }
+    return sum;
   };
 
   $scope.getDeductions = function () {
-    var types = [];
-    _.each($scope.singlePayroll.payTypes, function (type) {
-      if (type.type === 'Deduction') {
-        types.push(type);
-      }
-    });
-    return types;
+    if ($scope.singlePayroll && $scope.singlePayroll.paymentInformation) {
+      return $scope.singlePayroll.paymentInformation.deductions.concat($scope.singlePayroll.paymentInformation.repayments);
+    }
+    return [];
   };
+
+  $scope.getTotalDeductionsValue = function () {
+    var sum  = 0;
+    if ($scope.singlePayroll && $scope.singlePayroll.paymentInformation) {
+      var array = $scope.singlePayroll.paymentInformation.deductions.concat($scope.singlePayroll.paymentInformation.repayments);
+      _.each(array, function (payType) {
+        sum += payType.monthlyValue;
+      });
+    }
+    return sum;
+  };
+
+  $scope.getOtherPayTypes = function () {
+    if ($scope.singlePayroll && $scope.singlePayroll.paymentInformation) {
+      return $scope.singlePayroll.paymentInformation.expenses;
+    }
+    return [];
+  };
+
+  $scope.getTotalOthersValue = function () {
+    var sum  = 0;
+    if ($scope.singlePayroll && $scope.singlePayroll.paymentInformation) {
+      var array = $scope.singlePayroll.paymentInformation.expenses;
+      _.each(array, function (payType) {
+        sum += payType.monthlyValue;
+      });
+    }
+    return sum;
+  };
+
 
   $scope.print = function (elementId) {
     var printContents = document.getElementById(elementId).innerHTML;

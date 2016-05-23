@@ -3,6 +3,14 @@
  * */
 var PayRollCalculation = function (employee, payGradeTypes, employeeTaxRule, employeePensionRule) {
 
+
+  var convertPayTypes = function (payTypes) {
+    _.each(payTypes, function (payType) {
+      payType.monthlyValue = payType.value / 12;
+    });
+    return payTypes;
+  };
+
   /*
   * Clean up parameters and sort employee-modified
   * pay components and employee-exempted components
@@ -213,23 +221,26 @@ var PayRollCalculation = function (employee, payGradeTypes, employeeTaxRule, emp
     return calculatePensionRelief() + calculateTax() + calculateOtherDeductions();
   };
 
+  var currentPayTypes = getPayTypes();
+  convertPayTypes(currentPayTypes.wages.concat(currentPayTypes.benefits, currentPayTypes.deductions, currentPayTypes.repayments, currentPayTypes.expenses))
+
   var calculate = function () {
     return {
-      grossIncome: calculateGrossPay(),
+      grossIncome: calculateGrossPay() / 12,
       percentageGrossIncomeRelief: {
         rate: taxRule.grossIncomeRelief,
         value: calculatePercentageTaxRelief()
       },
       consolidatedRelief: calculateFlatTaxRelief(),
       pensionRelief: calculatePensionRelief(),
-      pension: calculatePensionRelief(),
+      pension: calculatePensionRelief() / 12,
       totalTaxableIncome: calculateTaxableIncome(),
-      tax: calculateTax(),
-      totalDeductions: calculateTotalDeductions(),
-      netPay: calculateGrossPay() - calculateTotalDeductions(),
+      tax: calculateTax() / 12,
+      totalDeductions: calculateTotalDeductions() / 12,
+      netPay: (calculateGrossPay() - calculateTotalDeductions()) / 12,
       otherDeductions: calculateOtherDeductions(),
       nonTaxablePayments: getOtherNonTaxableTypes(),
-      payBreakDown: getPayTypes()
+      payBreakDown: currentPayTypes
     };
   };
 

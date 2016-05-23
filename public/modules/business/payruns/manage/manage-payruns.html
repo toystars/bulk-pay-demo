@@ -65,7 +65,7 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr class="pointer" ui-sref="business.payrun({ payRunId: payRun._id })" dir-paginate="payRun in payRuns | filterPayRuns:filter | itemsPerPage: pageSize" current-page="currentPage">
+                    <tr class="pointer" ui-sref="business.payrun({ payRunId: payRun._id })" dir-paginate="payRun in payRuns | itemsPerPage: pageSize" current-page="currentPage">
                         <td>{{$index + 1}}</td>
                         <td>{{payRun.payGroup}}</td>
                         <td>{{payRun.numberOfEmployees}}</td>

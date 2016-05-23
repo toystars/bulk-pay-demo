@@ -101,12 +101,58 @@ bulkPay.controller('BusinessNewPayRunCtrl', ['$scope', '$rootScope', '$timeout',
     $scope.singleEmployee = employee;
   };
 
-  $scope.getNonDeductions = function () {
-    return $scope.singleEmployee.paymentInformation.payBreakDown.wages.concat($scope.singleEmployee.paymentInformation.payBreakDown.benefits);
+  $scope.getAllowances = function () {
+    if ($scope.singleEmployee && $scope.singleEmployee.paymentInformation.payBreakDown) {
+      return $scope.singleEmployee.paymentInformation.payBreakDown.wages.concat($scope.singleEmployee.paymentInformation.payBreakDown.benefits);
+    }
+    return [];
   };
 
-  $scope.resetSummary = function () {
-    $scope.singleEmployee = {};
+  $scope.getTotalAllowanceValue = function () {
+    var sum  = 0;
+    if ($scope.singleEmployee && $scope.singleEmployee.paymentInformation.payBreakDown) {
+      var array = $scope.singleEmployee.paymentInformation.payBreakDown.wages.concat($scope.singleEmployee.paymentInformation.payBreakDown.benefits);
+      _.each(array, function (payType) {
+        sum += payType.monthlyValue;
+      });
+    }
+    return sum;
+  };
+
+  $scope.getDeductions = function () {
+    if ($scope.singleEmployee && $scope.singleEmployee.paymentInformation.payBreakDown) {
+      return $scope.singleEmployee.paymentInformation.payBreakDown.deductions.concat($scope.singleEmployee.paymentInformation.payBreakDown.repayments);
+    }
+    return [];
+  };
+
+  $scope.getTotalDeductionsValue = function () {
+    var sum  = 0;
+    if ($scope.singleEmployee && $scope.singleEmployee.paymentInformation.payBreakDown) {
+      var array = $scope.singleEmployee.paymentInformation.payBreakDown.deductions.concat($scope.singleEmployee.paymentInformation.payBreakDown.repayments);
+      _.each(array, function (payType) {
+        sum += payType.monthlyValue;
+      });
+    }
+    return sum;
+  };
+
+  $scope.getOtherPayTypes = function () {
+    if ($scope.singleEmployee && $scope.singleEmployee.paymentInformation.payBreakDown) {
+      return $scope.singleEmployee.paymentInformation.payBreakDown.expenses;
+    }
+    return [];
+  };
+
+  $scope.getTotalOthersValue = function () {
+    var sum  = 0;
+    if ($scope.singleEmployee && $scope.singleEmployee.paymentInformation.payBreakDown) {
+      var array = $scope.singleEmployee.paymentInformation.payBreakDown.expenses;
+      _.each(array, function (payType) {
+        sum += payType.monthlyValue;
+      });
+    }
+    return sum;
   };
 
 
@@ -164,16 +210,14 @@ bulkPay.controller('BusinessNewPayRunCtrl', ['$scope', '$rootScope', '$timeout',
             payGroup: employee.payGroupId,
             position: employee.positionId,
             pensionManager: employee.paymentDetails.pensionManager,
-            grossPay: employee.paymentInformation.grossIncome / 12,
-            tax: employee.paymentInformation.tax / 12,
-            pension: employee.paymentInformation.pension / 12,
-            totalDeduction: employee.paymentInformation.totalDeductions / 12,
-            netPay: employee.paymentInformation.netPay / 12,
-            payTypes: convertPayTypes(employee.paymentInformation.payBreakDown.wages.concat(employee.paymentInformation.payBreakDown.benefits,
-              employee.paymentInformation.payBreakDown.deductions,
-              employee.paymentInformation.payBreakDown.repayments,
-              employee.paymentInformation.payBreakDown.expenses)),
+            grossPay: employee.paymentInformation.grossIncome,
+            tax: employee.paymentInformation.tax,
+            pension: employee.paymentInformation.pension,
+            totalDeduction: employee.paymentInformation.totalDeductions,
+            netPay: employee.paymentInformation.netPay,
+            paymentPeriod: payRun.paymentPeriod,
             paymentDetails: employee.paymentDetails,
+            paymentInformation: employee.paymentInformation.payBreakDown,
             repayments: evaluateRepayments(employee.paymentInformation.payBreakDown.repayments),
             expenses: employee.paymentInformation.payBreakDown.expenses
           }).success(function (payRoll) {
@@ -240,14 +284,6 @@ bulkPay.controller('BusinessNewPayRunCtrl', ['$scope', '$rootScope', '$timeout',
     return newRepayments;
   };
 
-  var convertPayTypes = function (payTypes) {
-    var types = payTypes;
-    _.each(types, function (payType) {
-      payType.monthlyValue = payType.value / 12;
-    });
-    return types;
-  };
-
   $scope.back = function () {
     $scope.authorizeView = false;
   };
@@ -261,7 +297,7 @@ bulkPay.controller('BusinessNewPayRunCtrl', ['$scope', '$rootScope', '$timeout',
   $scope.getTotalAmountToBePaid = function () {
     var sum = 0;
     _.each($scope.payRunEmployees, function (employee) {
-      sum += employee.paymentInformation.netPay / 12;
+      sum += employee.paymentInformation.netPay;
     });
     return sum;
   };
@@ -269,7 +305,7 @@ bulkPay.controller('BusinessNewPayRunCtrl', ['$scope', '$rootScope', '$timeout',
   $scope.getTotalTaxToBePaid = function () {
     var tax = 0;
     _.each($scope.payRunEmployees, function (employee) {
-      tax += employee.paymentInformation.tax / 12;
+      tax += employee.paymentInformation.tax;
     });
     return tax;
   };
@@ -277,7 +313,7 @@ bulkPay.controller('BusinessNewPayRunCtrl', ['$scope', '$rootScope', '$timeout',
   $scope.getTotalPensionToBePaid = function () {
     var pension = 0;
     _.each($scope.payRunEmployees, function (employee) {
-      pension += employee.paymentInformation.pension / 12;
+      pension += employee.paymentInformation.pension;
     });
     return pension;
   };

@@ -103,50 +103,81 @@
         <div id="payroll-summary" class="panel-body big-font">
           <div class="row">
             <div class="col-md-12">
-              <h5 class="lg-title mb5 text-center">{{business.name}}</h5>
-              <h5 class="mb20 text-center">{{singlePayroll.employee.fullName}}</h5>
-              <h5 class="mb20 text-center">{{singleEmployee.fullName}}</h5>
-              <p class="mb20 text-center">Payroll Summary</p>
-              <div class="table-responsive">
-                <table class="table table-bordered table-primary mb30">
-                  <thead>
-                  <tr>
-                    <th>Pay Components</th>
-                    <th>Amount ( ₦  )</th>
-                  </tr>
-                  </thead>
+              <div class="row">
+                <div class="col-md-3">Company Name:</div><div class="col-md-9">{{business.name}}</div>
+              </div>
+              <div class="row">
+                <div class="col-md-3">Payslip For:</div><div class="col-md-9">{{singlePayroll.paymentPeriod.month}} {{singlePayroll.paymentPeriod.year}}</div>
+              </div>
+              <div class="row">
+                <div class="col-md-3">Staff Number:</div><div class="col-md-9">{{singlePayroll.employee.employeeId}}</div>
+              </div>
+              <div class="row">
+                <div class="col-md-3">Staff Name:</div><div class="col-md-9">{{singlePayroll.employee.fullName}}</div>
+              </div>
+            </div>
+            <div class="col-md-12">
+              <hr/>
+            </div>
+            <div class="col-md-12">
+              <div class="row">
+                <div class="col-md-6">
+                  <h4 class="lg-title">Allowances</h4>
+                  <table class="table">
+                    <tbody>
+                    <tr ng-repeat="allowance in getAllowances()">
+                      <td>{{allowance.title}}</td>
+                      <td>{{allowance.monthlyValue | currency:""}}</td>
+                    </tr>
+                    <tr>
+                      <td><b>Total Pay: </b></td>
+                      <td><b>{{getTotalAllowanceValue() | currency:""}}</b></td>
+                    </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <div class="col-md-6">
+                  <h4 class="lg-title">Deductions</h4>
+                  <table class="table">
+                    <tbody>
+                    <tr ng-repeat="deduction in getDeductions()">
+                      <td>{{deduction.title}}</td>
+                      <td>{{deduction.monthlyValue | currency:""}}</td>
+                    </tr>
+                    <tr>
+                      <td><b>Total Deductions: </b></td>
+                      <td><b>{{getTotalDeductionsValue() | currency:""}}</b></td>
+                    </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <div class="col-md-12">
+                <hr/>
+              </div>
+              <div class="col-md-6">
+                <h4 class="lg-title">Other Payments</h4>
+                <table class="table">
                   <tbody>
-                  <tr ng-repeat="payType in getNonDeductions()">
+                  <tr ng-repeat="payType in getOtherPayTypes()">
                     <td>{{payType.title}}</td>
                     <td>{{payType.monthlyValue | currency:""}}</td>
                   </tr>
                   <tr>
-                    <td><b>Gross Pay: </b></td>
-                    <td><b>{{singlePayroll.grossPay | currency:""}}</b></td>
-                  </tr>
-                  <tr>
-                    <td>...</td>
-                    <td>...</td>
-                  </tr>
-                  <tr ng-repeat="payType in getDeductions()">
-                    <td>{{payType.title}}</td>
-                    <td>{{payType.monthlyValue | currency:""}}</td>
-                  </tr>
-                  <tr>
-                    <td><b>Total Deductions: </b></td>
-                    <td><b>{{singlePayroll.totalDeduction | currency:""}}</b></td>
-                  </tr>
-                  <tr>
-                    <td>...</td>
-                    <td>...</td>
-                  </tr>
-                  <tr>
-                    <td><b>Net Pay: </b></td>
-                    <td><b>{{singlePayroll.netPay | currency:""}}</b></td>
+                    <td><b>Total Pay: </b></td>
+                    <td><b>{{getTotalOthersValue() | currency:""}}</b></td>
                   </tr>
                   </tbody>
                 </table>
-              </div><!-- table-responsive -->
+              </div>
+              <div class="col-md-12">
+                <hr/>
+              </div>
+              <div class="col-md-6">
+                <h4 class="lg-title">Summary</h4>
+                <span><b>Gross Pay: {{singlePayroll.grossPay | currency:""}}</b></span><br/>
+                <span><b>Net Pay: {{singlePayroll.netPay | currency:""}}</b></span><br/>
+              </div>
             </div><!-- col-md-12 -->
           </div><!-- row -->
         </div>

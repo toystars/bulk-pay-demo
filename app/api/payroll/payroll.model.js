@@ -35,6 +35,8 @@ var payRollSchema = new Schema({
     type: Schema.Types.Mixed,
     default: {}
   },
+  paymentPeriod: { type: Schema.Types.Mixed },
+  paymentInformation: { type: Schema.Types.Mixed },
   expenses: [ { type: Schema.Types.Mixed } ],
   repayments: [ { type: Schema.Types.Mixed } ],
   payTypes: [ { type: Schema.Types.Mixed } ],

@@ -122,11 +122,11 @@
                         <td>{{employee.employeeId}}</td>
                         <td>{{employee.fullName}}</td>
                         <td>{{employee.payGrade.name}}</td>
-                        <td>{{employee.paymentInformation.grossIncome / 12 | currency:""}}</td>
-                        <td>{{employee.paymentInformation.tax / 12 | currency:""}}</td>
-                        <td>{{employee.paymentInformation.pension / 12 | currency:""}}</td>
-                        <td>{{employee.paymentInformation.totalDeductions / 12 | currency:""}}</td>
-                        <td>{{employee.paymentInformation.netPay / 12 | currency:""}}</td>
+                        <td>{{employee.paymentInformation.grossIncome | currency:""}}</td>
+                        <td>{{employee.paymentInformation.tax | currency:""}}</td>
+                        <td>{{employee.paymentInformation.pension | currency:""}}</td>
+                        <td>{{employee.paymentInformation.totalDeductions | currency:""}}</td>
+                        <td>{{employee.paymentInformation.netPay | currency:""}}</td>
                         <td><a href="" data-toggle="modal" data-target=".payroll-summary" ng-click="showPayDetails(employee)">View Pay Details</a></td>
                     </tr>
                     </tbody>
@@ -276,54 +276,86 @@
                 <div class="panel-body big-font">
                     <div class="row">
                         <div class="col-md-12">
-                            <h5 class="lg-title mb5 text-center">{{business.name}}</h5>
-                            <h5 class="mb20 text-center">{{singleEmployee.fullName}}</h5>
-                            <p class="mb20 text-center">Payroll Summary</p>
-                            <div class="table-responsive">
-                                <table class="table table-bordered table-primary mb30">
-                                    <thead>
-                                    <tr>
-                                        <th>Pay Components</th>
-                                        <th>Amount ( ₦  )</th>
-                                    </tr>
-                                    </thead>
+                            <div class="row">
+                                <div class="col-md-3">Company Name:</div><div class="col-md-9">{{business.name}}</div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3">Payslip For:</div><div class="col-md-9">{{paymentPeriod.month}} {{paymentPeriod.year}}</div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3">Staff Number:</div><div class="col-md-9">{{singleEmployee.employeeId}}</div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3">Staff Name:</div><div class="col-md-9">{{singleEmployee.fullName}}</div>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <hr/>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h4 class="lg-title">Allowances</h4>
+                                    <table class="table">
+                                        <tbody>
+                                        <tr ng-repeat="allowance in getAllowances()">
+                                            <td>{{allowance.title}}</td>
+                                            <td>{{allowance.monthlyValue | currency:""}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td><b>Total Pay: </b></td>
+                                            <td><b>{{getTotalAllowanceValue() | currency:""}}</b></td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="col-md-6">
+                                    <h4 class="lg-title">Deductions</h4>
+                                    <table class="table">
+                                        <tbody>
+                                        <tr ng-repeat="deduction in getDeductions()">
+                                            <td>{{deduction.title}}</td>
+                                            <td>{{deduction.monthlyValue | currency:""}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td><b>Total Deductions: </b></td>
+                                            <td><b>{{getTotalDeductionsValue() | currency:""}}</b></td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <hr/>
+                            </div>
+                            <div class="col-md-6">
+                                <h4 class="lg-title">Other Payments</h4>
+                                <table class="table">
                                     <tbody>
-                                    <tr ng-repeat="payType in singleEmployee.paymentInformation.payBreakDown.wages.concat(singleEmployee.paymentInformation.payBreakDown.benefits, singleEmployee.paymentInformation.payBreakDown.expenses)">
+                                    <tr ng-repeat="payType in getOtherPayTypes()">
                                         <td>{{payType.title}}</td>
-                                        <td>{{payType.value / 12 | currency:""}}</td>
+                                        <td>{{payType.monthlyValue | currency:""}}</td>
                                     </tr>
                                     <tr>
-                                        <td><b>Gross Pay: </b></td>
-                                        <td><b>{{singleEmployee.paymentInformation.grossIncome / 12 | currency:""}}</b></td>
-                                    </tr>
-                                    <tr>
-                                        <td>...</td>
-                                        <td>...</td>
-                                    </tr>
-                                    <tr ng-repeat="payType in singleEmployee.paymentInformation.payBreakDown.deductions.concat(singleEmployee.paymentInformation.payBreakDown.repayments)">
-                                        <td>{{payType.title}}</td>
-                                        <td>{{payType.value / 12 | currency:""}}</td>
-                                    </tr>
-                                    <tr>
-                                        <td><b>Total Deductions: </b></td>
-                                        <td><b>{{singleEmployee.paymentInformation.totalDeductions / 12 | currency:""}}</b></td>
-                                    </tr>
-                                    <tr>
-                                        <td>...</td>
-                                        <td>...</td>
-                                    </tr>
-                                    <tr>
-                                        <td><b>Net Pay: </b></td>
-                                        <td><b>{{singleEmployee.paymentInformation.netPay / 12 | currency:""}}</b></td>
+                                        <td><b>Total Pay: </b></td>
+                                        <td><b>{{getTotalOthersValue() | currency:""}}</b></td>
                                     </tr>
                                     </tbody>
                                 </table>
-                            </div><!-- table-responsive -->
+                            </div>
+                            <div class="col-md-12">
+                                <hr/>
+                            </div>
+                            <div class="col-md-6">
+                                <h4 class="lg-title">Summary</h4>
+                                <span><b>Gross Pay: {{singleEmployee.paymentInformation.grossIncome | currency:""}}</b></span><br/>
+                                <span><b>Net Pay: {{singleEmployee.paymentInformation.netPay | currency:""}}</b></span><br/>
+                            </div>
                         </div><!-- col-md-12 -->
                     </div><!-- row -->
                 </div>
                 <div class="panel-footer">
-                    <button type="reset" ng-click="resetSummary()" class="btn btn-danger" id="payroll-summary-close" data-dismiss="modal">Close</button>
+                    <button type="reset" class="btn btn-danger" id="payroll-summary-close" data-dismiss="modal">Close</button>
                 </div><!-- panel-footer -->
             </div>
         </div>
