@@ -31,7 +31,7 @@ exports.index = function (req, res) {
 
 
 /**
- * Get all positions per business
+ * Get all expenses by business
  */
 exports.businessExpenses = function (req, res) {
   Expense.find({ businessId: req.params.businessId }, function (error, expenses) {
@@ -144,6 +144,45 @@ exports.serviceExpense = function (req, res) {
     }
   });
 };
+
+
+/*
+ * Mark expense as approved or declined
+ * */
+exports.approveExpense = function (req, res) {
+  Expense.findOne({ _id: req.params.id }, function (error, expense) {
+    if (error) {
+      crudHelper.handleError(res, 400, error);
+    } else {
+      expense.approvalStatus = req.body.approvalStatus;
+      expense.approvedBy = req.body.approvedBy;
+      expense.save(function (error, newExpense) {
+        if (error) {
+          crudHelper.handleError(res, null, error);
+        } else {
+          crudHelper.respondWithResult(res, 200, newExpense);
+        }
+      });
+    }
+  });
+};
+
+
+
+/*
+ * Get filtered business expenses
+ * */
+exports.filteredBusinessExpenses = function (req, res) {
+  Expense.find(req.body).populate('employee approvedBy').exec(function (error, expenses) {
+    if (error) {
+      crudHelper.handleError(res, null, error);
+    }
+    if (expenses) {
+      crudHelper.respondWithResult(res, null, expenses);
+    }
+  });
+};
+
 
 
 /*

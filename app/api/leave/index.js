@@ -13,6 +13,8 @@ module.exports = function (app) {
   router.get('/business/:businessId', auth.isAuthenticated, auth.isSuperAdmin, controller.businessLeaves);
   router.get('/employee/:employeeId/position', auth.isAuthenticated, controller.getEmployeePosition);
   router.get('/:id', auth.isAuthenticated, controller.show);
+  router.post('/admin/filtered', auth.isAuthenticated, controller.filteredBusinessLeaves);
+  router.post('/:id/approve', auth.isAuthenticated, auth.isSuperAdmin, controller.approveLeave);
   router.put('/:id', auth.isAuthenticated, controller.update);
   router.put('/:id/send', auth.isAuthenticated, controller.send);
   router.delete('/:id', auth.isAuthenticated, controller.delete);

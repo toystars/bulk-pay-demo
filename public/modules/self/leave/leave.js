@@ -15,7 +15,7 @@ bulkPay.controller('EmployeeSelfLeaveCtrl', ['$scope', '$timeout', 'toastr', '$r
   var employeeId = $cookies.get('selfEmployeeId');
   $scope.approvalStatuses = ['Pending', 'Approved', 'Declined'];
   $scope.statuses = ['Draft', 'Sent'];
-  $scope.leaveTypes = ['Sick Leave', 'Vacation', 'Casual Leave', 'Annual Leave', 'Study Leave'];
+  $scope.leaveTypes = [];
   $scope.$parent.inView = 'Leave Requests';
   $scope.options = {
     placeholder: "Choose One",
@@ -48,6 +48,7 @@ bulkPay.controller('EmployeeSelfLeaveCtrl', ['$scope', '$timeout', 'toastr', '$r
   var getEmployeePosition = function () {
     $http.get('/api/leave/employee/' + employeeId + '/position').success(function (position) {
       $scope.employeePosition = position;
+      $scope.leaveTypes = position.leave;
     }).error(function (error) {
       console.log(error);
       AuthSvc.handleError(error);
@@ -174,15 +175,30 @@ bulkPay.controller('EmployeeSelfLeaveCtrl', ['$scope', '$timeout', 'toastr', '$r
     $scope.newLeave.duration = Math.round(workdayCount(moment($scope.newLeave.startDate), moment($scope.newLeave.endDate)));
   };
 
-  $scope.getPendingLeaveDays = function () {
+  $scope.getLeaveDaysPlanned = function (leaveType) {
     var sum = 0;
     _.each($scope.leaves, function (leave) {
-      if (leave.approvalStatus === 'Pending') {
+      if (leave.type === leaveType && leave.approvalStatus === 'Pending') {
         sum += leave.duration;
       }
     });
     return sum;
   };
+
+  $scope.getLeaveDaysTaken = function (leaveType) {
+    var sum = 0;
+    _.each($scope.leaves, function (leave) {
+      if (leave.type === leaveType && leave.approvalStatus === 'Approved') {
+        sum += leave.duration;
+      }
+    });
+    return sum;
+  };
+
+  $scope.getNetLeaveBalance = function (leave) {
+    return leave.numberOfDays - $scope.getLeaveDaysPlanned(leave.type) - $scope.getLeaveDaysTaken(leave.type);
+  };
+
 
   $scope.getLabelClass = function (approvalStatus) {
     switch (approvalStatus) {
@@ -190,7 +206,7 @@ bulkPay.controller('EmployeeSelfLeaveCtrl', ['$scope', '$timeout', 'toastr', '$r
         return 'label label-info';
       case 'Approved':
         return 'label label-success';
-      case 'Declined':
+      case 'Rejected':
         return 'label label-danger';
     }
   };
@@ -202,21 +218,14 @@ bulkPay.controller('EmployeeSelfLeaveCtrl', ['$scope', '$timeout', 'toastr', '$r
   $scope.alterFilter = function () {
     getFilteredEmployeeLeaves();
   };
-  
-  $scope.enableCreateButton = function () {
-    if ($scope.$parent.employee) {
-      return ($scope.employeePosition.leaveDays - $scope.$parent.employee.leaveDaysTaken - $scope.getPendingLeaveDays()) > 0;
-    } else {
-      return true;
-    }
+
+
+  $scope.getStartOfYear = function () {
+    return moment().startOf('year')._d;
   };
 
-  $scope.invalidLeaveDays = function () {
-    if ($scope.$parent.employee) {
-      return $scope.newLeave.duration > ($scope.employeePosition.leaveDays - $scope.$parent.employee.leaveDaysTaken - $scope.getPendingLeaveDays());
-    } else {
-      return true;
-    }
+  $scope.getEndOfYear = function () {
+    return moment().endOf('year')._d;
   };
 
 

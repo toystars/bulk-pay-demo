@@ -79,6 +79,7 @@
             <th>Expense Type</th>
             <th>Amount</th>
             <th>Description</th>
+            <th>Attachments</th>
             <th>Status</th>
             <th>Approval Status</th>
             <th>Approved By</th>
@@ -92,14 +93,18 @@
             <td>{{$index + 1}}</td>
             <td>{{expense.from | date:"yyyy-MM-dd"}}</td>
             <td>{{expense.to | date:"yyyy-MM-dd"}}</td>
-            <td>{{expense.type}}</td>
+            <td>{{getExpenseLabel(expense)}}</td>
             <td>{{expense.amount | currency:""}}</td>
             <td>{{expense.description}}</td>
+            <td>
+              <span ng-if="expense.attachments.length > 0" class="pointer"><a data-toggle="modal" data-target=".attachments" ng-click="viewAttachments(expense.attachments)">Show</a></span>
+              <span ng-if="expense.attachments.length === 0">No attachment.</span>
+            </td>
             <td>{{expense.status}}</td>
             <td>
               <span class="{{getLabelClass(expense.approvalStatus)}}">{{expense.approvalStatus}}</span>
             </td>
-            <td></td>
+            <td>{{expense.approvedBy.name}}</td>
             <td>{{getServicedStatus(expense.serviced)}}</td>
             <td>{{expense.createdAt | date:"yyyy-MM-dd"}}</td>
             <td>
@@ -135,8 +140,8 @@
             <div class="col-sm-6">
               <div class="form-group">
                 <label for="new-expense-from" class="control-label">From</label>
-                <div id="new-expense-from" class="input-group" style="margin-left:10px;margin-top:5px;">
-                  <adm-dtp ng-model="newExpense.from"></adm-dtp>
+                <div id="new-expense-from" class="input-group" style="margin-top:5px;">
+                  <adm-dtp ng-model="newExpense.from" on-change="evaluateExpense()"></adm-dtp>
                 </div>
               </div><!-- form-group -->
             </div><!-- col-sm-6 -->
@@ -144,8 +149,8 @@
             <div class="col-sm-6">
               <div class="form-group">
                 <label for="new-expense-to" class="control-label">To</label>
-                <div id="new-expense-to" class="input-group" style="margin-left:10px;margin-top:5px;">
-                  <adm-dtp ng-model="newExpense.to"></adm-dtp>
+                <div id="new-expense-to" class="input-group" style="margin-top:5px;">
+                  <adm-dtp ng-model="newExpense.to" on-change="evaluateExpense()"></adm-dtp>
                 </div>
               </div><!-- form-group -->
             </div><!-- col-sm-6 -->
@@ -156,15 +161,15 @@
 
             <div class="col-sm-6">
               <div class="form-group">
-                <label for="new-expense-type" class="control-label">Expense Type</label>
-                <input type="text" id="new-expense-type" class="form-control" placeholder="Official Trip" ng-model="newExpense.type" />
+                <label class="control-label">Expense Type</label>
+                <select2 ng-change="evaluateExpense()" options="filterOptions" ng-model="newExpense.type" s2-options="expenseType.id as expenseType.name for expenseType in expenseTypes" style="width: 100%"></select2>
               </div><!-- form-group -->
             </div><!-- col-sm-6 -->
 
             <div class="col-sm-6">
               <div class="form-group">
                 <label for="new-expense-amount" class="control-label">Amount</label>
-                <input type="number" id="new-expense-amount" class="form-control" placeholder="0.00" ng-model="newExpense.amount"/>
+                <input type="number" ng-disabled="getExpenseTypeStatus()" id="new-expense-amount" class="form-control" placeholder="0.00" ng-model="newExpense.amount"/>
               </div><!-- form-group -->
             </div><!-- col-sm-6 -->
 
@@ -179,13 +184,66 @@
               </div><!-- form-group -->
             </div><!-- col-sm-12 -->
 
+            <div class="col-sm-12">
+              <div class="form-group">
+                <label class="control-label">Attachments</label><br />
+                <span class="btn btn-primary btn-file">
+                    Select Files <input id="uploadBtn" class="center-block" type="file" ng-file-select="fileSelected($files)" multiple />
+                </span><br /><br />
+                <div ng-click="removeAttachment($index)" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Remove" class="label label-success pointer" style="margin-top: 10px;margin-right: 3px;" ng-repeat="file in files">
+                  {{file.name }}
+                </div>
+              </div><!-- form-group -->
+            </div>
+
           </div><!-- row -->
 
         </div>
         <div class="panel-footer">
-          <button ng-if="!isEdit" class="btn btn-primary mr5" ng-click="createExpense()">Create Expense</button>
+          <button ng-if="!isEdit" class="btn btn-primary mr5" ng-click="uploadAttachments()">Create Expense</button>
           <button ng-if="isEdit" class="btn btn-primary mr5" ng-click="update()">Update Expense</button>
           <button type="reset" class="btn btn-danger" ng-click="cancel()" id="new-expense-close" data-dismiss="modal">Cancel</button>
+        </div><!-- panel-footer -->
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<div class="modal fade attachments" tabindex="-1" role="dialog" data-backdrop="static">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h3 class="panel-title">Attachments</h3>
+        </div>
+        <div class="panel-body">
+
+          <div class="row">
+
+            <div class="col-md-4">
+              <table class="table table-striped table-bordered mb5">
+                <tbody>
+                <tr ng-repeat="attachment in attachments">
+                  <td>
+                    <a class="pointer" ng-click="viewSingleAttachment(attachment)">{{attachment.originalname}}</a>
+                  </td>
+                </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="col-md-8">
+              <iframe src="{{getSingleAttachmentPath()}}" style="width:400px; height:500px;" frameborder="0"></iframe>
+              <!--<embed src="{{getSingleAttachmentPath()}}" width="300px" height="500px">-->
+            </div>
+
+          </div>
+
+        </div>
+        <div class="panel-footer">
+          <button type="reset" ng-click="resetAttachments()" class="btn btn-info" id="view-attachments" data-dismiss="modal">Close</button>
         </div><!-- panel-footer -->
       </div>
     </div>

@@ -1,0 +1,154 @@
+<div class="pageheader">
+  <div class="media">
+    <div class="pageicon pull-left">
+      <i class="fa fa-money"></i>
+    </div>
+    <div class="media-body">
+      <ul class="breadcrumb">
+        <li><a href=""><i class="glyphicon glyphicon-home"></i></a></li>
+        <li><a ui-sref="business.overview">Business</a></li>
+        <li>{{business.name}}</li>
+        <li>Expenses</li>
+      </ul>
+      <h4>Expenses</h4>
+    </div>
+  </div><!-- media -->
+</div><!-- pageheader -->
+
+<div class="contentpanel">
+
+
+
+  <div class="row pay-runs-header">
+    <div class="col-md-12">
+      <h5 class="lg-title mb5">Expenses</h5>
+    </div>
+  </div>
+
+
+  <div class="row">
+    <div class="col-md-12 text-center" ng-if="!dataFetched">
+      <img alt="" src="images/loaders/loader10.gif">
+    </div>
+    <div class="col-md-12 employee-filter" ng-show="dataFetched">
+      <div class="row">
+        <div class="col-md-4">
+          <div class="form-group">
+            <label class="control-label" style="margin-top:7px;">From</label>
+            <adm-dtp ng-model="filter.startDate" on-change="alterFilter()"></adm-dtp>
+          </div><!-- form-group -->
+        </div>
+        <div class="col-md-4">
+          <div class="form-group">
+            <label class="control-label" style="margin-top:7px;">To</label>
+            <adm-dtp ng-model="filter.endDate" on-change="alterFilter()"></adm-dtp>
+          </div><!-- form-group -->
+        </div>
+        <div class="col-md-4">
+          <div class="form-group">
+            <label class="control-label">Approval Status</label>
+            <select2 ng-change="alterFilter()" options="filterOptions" ng-model="filter.approvalStatus" s2-options="approvalStatus as approvalStatus for approvalStatus in approvalStatuses" style="width: 100%"></select2>
+          </div><!-- form-group -->
+        </div>
+      </div>
+    </div>
+    <div class="col-md-12" ng-if="expenses.length === 0 && dataFetched">
+      <div class="alert alert-danger text-center">
+        <p>No Expense available</p>
+      </div>
+    </div>
+    <div class="col-md-12" ng-if="expenses.length > 0 && dataFetched">
+      <div class="table-responsive">
+        <table class="table table-primary mb60 table-hover">
+          <thead>
+          <tr>
+            <th>#</th>
+            <th>From</th>
+            <th>To</th>
+            <th>Employee</th>
+            <th>Expense Type</th>
+            <th>Amount</th>
+            <th>Description</th>
+            <th>Attachments</th>
+            <th>Approval Status</th>
+            <th>Approved By</th>
+            <th>Serviced</th>
+            <th>Date Created</th>
+            <th>Actions</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr class="pointer" ng-repeat="expense in expenses">
+            <td>{{$index + 1}}</td>
+            <td>{{expense.from | date:"yyyy-MM-dd"}}</td>
+            <td>{{expense.to | date:"yyyy-MM-dd"}}</td>
+            <td>{{expense.employee.employeeId}} - {{expense.employee.fullName}}</td>
+            <td>{{getExpenseLabel(expense)}}</td>
+            <td>{{expense.amount | currency:""}}</td>
+            <td>{{expense.description}}</td>
+            <td>
+              <span ng-if="expense.attachments.length > 0" class="pointer"><a data-toggle="modal" data-target=".attachments" ng-click="viewAttachments(expense.attachments)">Show</a></span>
+              <span ng-if="expense.attachments.length === 0">No attachment.</span>
+            </td>
+            <td>
+              <span class="{{getLabelClass(expense.approvalStatus)}}">{{expense.approvalStatus}}</span>
+            </td>
+            <td>{{expense.approvedBy.name}}</td>
+            <td>{{getServicedStatus(expense.serviced)}}</td>
+            <td>{{expense.createdAt | date:"yyyy-MM-dd"}}</td>
+            <td>
+              <i ng-if="expense.approvalStatus === 'Pending'" ng-click="approve(expense, false)" class="fa fa-times action-buttons" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Reject"></i>
+              <i ng-if="expense.approvalStatus === 'Pending'" ng-click="approve(expense, true)" class="fa fa-check action-buttons" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Approve"></i>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div><!-- table-responsive -->
+    </div>
+  </div><!-- row -->
+
+
+</div><!-- contentpanel -->
+
+
+
+
+
+<div class="modal fade attachments" tabindex="-1" role="dialog" data-backdrop="static">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h3 class="panel-title">Attachments</h3>
+        </div>
+        <div class="panel-body">
+
+          <div class="row">
+
+            <div class="col-md-4">
+              <table class="table table-striped table-bordered mb5">
+                <tbody>
+                <tr ng-repeat="attachment in attachments">
+                  <td>
+                    <a class="pointer" ng-click="viewSingleAttachment(attachment)">{{attachment.originalname}}</a>
+                  </td>
+                </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="col-md-8">
+              <iframe src="{{getSingleAttachmentPath()}}" style="width:400px; height:500px;" frameborder="0"></iframe>
+              <!--<embed src="{{getSingleAttachmentPath()}}" width="300px" height="500px">-->
+            </div>
+
+          </div>
+
+        </div>
+        <div class="panel-footer">
+          <button type="reset" ng-click="resetAttachments()" class="btn btn-info" id="view-attachments" data-dismiss="modal">Close</button>
+        </div><!-- panel-footer -->
+      </div>
+    </div>
+  </div>
+</div>

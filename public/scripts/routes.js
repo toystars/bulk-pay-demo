@@ -240,6 +240,24 @@ bulkPay.config(['$stateProvider', '$urlRouterProvider', '$locationProvider', 'to
         }
       })
 
+      .state('business.employeesexpenses', {
+        url: '/employees/expenses',
+        templateUrl: 'modules/business/employees/expenses/expenses.html',
+        controller: 'BusinessEmployeesExpensesCtrl',
+        data: {
+          pageTitle: 'Expenses | BulkPay'
+        }
+      })
+
+      .state('business.employeesleave', {
+        url: '/employees/leave',
+        templateUrl: 'modules/business/employees/leave/leave.html',
+        controller: 'BusinessEmployeesLeaveCtrl',
+        data: {
+          pageTitle: 'Leave | BulkPay'
+        }
+      })
+
       .state('business.payruns', {
         url: '/payruns',
         templateUrl: 'modules/business/payruns/manage/manage-payruns.html',

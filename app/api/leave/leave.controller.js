@@ -50,6 +50,45 @@ exports.businessLeaves = function (req, res) {
 
 
 /*
+ * Get filtered business leave requests
+ * */
+exports.filteredBusinessLeaves = function (req, res) {
+  Leave.find(req.body).populate('employee approvedBy').exec(function (error, leaves) {
+    if (error) {
+      crudHelper.handleError(res, null, error);
+    }
+    if (leaves) {
+      crudHelper.respondWithResult(res, null, leaves);
+    }
+  });
+};
+
+
+
+/*
+ * Mark leave as approved or declined
+ * */
+exports.approveLeave = function (req, res) {
+  Leave.findOne({ _id: req.params.id }, function (error, leave) {
+    if (error) {
+      crudHelper.handleError(res, 400, error);
+    } else {
+      leave.approvalStatus = req.body.approvalStatus;
+      leave.approvedBy = req.body.approvedBy;
+      leave.save(function (error, newLeave) {
+        if (error) {
+          crudHelper.handleError(res, null, error);
+        } else {
+          crudHelper.respondWithResult(res, 200, newLeave);
+        }
+      });
+    }
+  });
+};
+
+
+
+/*
  * Get all employee leave requests
  * */
 exports.employeeLeaves = function (req, res) {

@@ -15,6 +15,7 @@ var expenseSchema = new Schema({
     type: String,
     default: 'Pending'
   },
+  attachments: [{ type: Schema.Types.Mixed }],
   serviced: {
     type: Boolean,
     default: false

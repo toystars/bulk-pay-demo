@@ -1,4 +1,4 @@
-bulkPay.controller('EmployeeSelfExpenseCtrl', ['$scope', '$timeout', 'toastr', '$rootScope', 'AuthSvc', 'BusinessDataSvc', '$stateParams', '$cookies', '$http', '$state', function ($scope, $timeout, toastr, $rootScope, AuthSvc, BusinessDataSvc, $stateParams, $cookies, $http, $state) {
+bulkPay.controller('EmployeeSelfExpenseCtrl', ['$scope', 'imageUploader', '$timeout', 'toastr', '$rootScope', 'AuthSvc', 'BusinessDataSvc', '$stateParams', '$cookies', '$http', '$state', function ($scope, imageUploader, $timeout, toastr, $rootScope, AuthSvc, BusinessDataSvc, $stateParams, $cookies, $http, $state) {
 
   AuthSvc.isLoggedIn(function (status) {
     if (!status) {
@@ -14,6 +14,22 @@ bulkPay.controller('EmployeeSelfExpenseCtrl', ['$scope', '$timeout', 'toastr', '
     placeholder: "Select One",
     allowClear: true
   };
+  $scope.expenseTypes = [{
+    id: 'PDL',
+    name: 'Per Diem (Local)',
+    fixed: true,
+    amount: 4500
+  }, {
+    id: 'PDI',
+    name: 'Per Diem (International)',
+    fixed: true,
+    amount: 7200
+  }, {
+    id: 'LCP',
+    name: 'Local Transport',
+    fixed: false,
+    amount: 0
+  }];
   var businessId = $cookies.get('selfBusinessId');
   var employeeId = $cookies.get('selfEmployeeId');
   $scope.filter = {
@@ -23,11 +39,24 @@ bulkPay.controller('EmployeeSelfExpenseCtrl', ['$scope', '$timeout', 'toastr', '
   $scope.approvalStatuses = ['Pending', 'Approved', 'Declined'];
   $scope.statuses = ['Draft', 'Sent'];
   $scope.$parent.inView = 'Expense Reports';
+
   var resetNewExpense = function () {
     $scope.newExpense = {
+      attachments: [],
       from: moment()._d,
       to: moment()._d
     };
+  };
+
+  var workdayCount = function (start, end) {
+    var first = start.clone().endOf('week');
+    var last = end.clone().startOf('week');
+    var days = last.diff(first, 'days') * 5 / 7;
+    var wfirst = first.day() - start.day();
+    if (start.day() == 0) --wfirst;
+    var wlast = end.day() - last.day();
+    if (end.day() == 6) --wlast;
+    return wfirst + days + wlast;
   };
 
 
@@ -36,7 +65,10 @@ bulkPay.controller('EmployeeSelfExpenseCtrl', ['$scope', '$timeout', 'toastr', '
     var andArray = [{
       employeeId: employeeId
     }, {
-      createdAt: { '$gte': moment($scope.filter.startDate).startOf('day'), '$lte': moment($scope.filter.endDate).endOf('day') }
+      createdAt: {
+        '$gte': moment($scope.filter.startDate).startOf('day'),
+        '$lte': moment($scope.filter.endDate).endOf('day')
+      }
     }];
     var keys = Object.keys($scope.filter);
     if (keys.length > 0) {
@@ -50,7 +82,7 @@ bulkPay.controller('EmployeeSelfExpenseCtrl', ['$scope', '$timeout', 'toastr', '
         }
       }
     }
-    $http.post('/api/expense/employee/filtered', { $and: andArray }).success(function (expenses) {
+    $http.post('/api/expense/employee/filtered', {$and: andArray}).success(function (expenses) {
       $scope.expenses = expenses;
       $scope.dataFetched = true;
     }).error(function (error) {
@@ -66,7 +98,7 @@ bulkPay.controller('EmployeeSelfExpenseCtrl', ['$scope', '$timeout', 'toastr', '
         return 'label label-info';
       case 'Approved':
         return 'label label-success';
-      case 'Declined':
+      case 'Rejected':
         return 'label label-danger';
     }
   };
@@ -74,12 +106,14 @@ bulkPay.controller('EmployeeSelfExpenseCtrl', ['$scope', '$timeout', 'toastr', '
 
   $scope.createExpense = function () {
     $scope.newExpense.employeeId = employeeId;
+    $scope.newExpense.employee = employeeId;
     $scope.newExpense.businessId = businessId;
     $http.post('/api/expense/', $scope.newExpense).success(function (expense) {
-      $timeout(function() {
+      $timeout(function () {
         toastr.success('Expense created.');
         resetNewExpense();
         jQuery('#new-expense-close').click();
+        $scope.files = [];
         getEmployeeExpenses();
       });
     }).error(function (error) {
@@ -98,8 +132,8 @@ bulkPay.controller('EmployeeSelfExpenseCtrl', ['$scope', '$timeout', 'toastr', '
 
 
   $scope.update = function () {
-    $http.put('/api/expense/' +  $scope.newExpense._id, $scope.newExpense).success(function (editedExpense) {
-      $timeout(function() {
+    $http.put('/api/expense/' + $scope.newExpense._id, $scope.newExpense).success(function (editedExpense) {
+      $timeout(function () {
         resetNewExpense();
         jQuery('#new-expense-close').click();
         swal('Updated!', 'Expense record has been updated successfully.', 'success');
@@ -156,7 +190,7 @@ bulkPay.controller('EmployeeSelfExpenseCtrl', ['$scope', '$timeout', 'toastr', '
       });
     });
   };
-  
+
   $scope.getServicedStatus = function (servicedStatus) {
     return servicedStatus ? 'Serviced' : 'Not Serviced';
   };
@@ -170,11 +204,83 @@ bulkPay.controller('EmployeeSelfExpenseCtrl', ['$scope', '$timeout', 'toastr', '
     resetNewExpense();
   };
 
+  $scope.evaluateExpense = function () {
+    var sum = 0;
+    var days = Math.round(workdayCount(moment($scope.newExpense.from), moment($scope.newExpense.to)));
+    var expenseType = _.find($scope.expenseTypes, function (expenseType) {
+      return expenseType.id === $scope.newExpense.type;
+    });
+    $scope.newExpense.amount = expenseType ? days * expenseType.amount : sum;
+  };
+
+  $scope.getExpenseTypeStatus = function () {
+    var expenseType = _.find($scope.expenseTypes, function (expenseType) {
+      return expenseType.id === $scope.newExpense.type;
+    });
+    return expenseType ? expenseType.fixed : false;
+  };
+
+
+  $scope.uploadAttachments = function () {
+    if ($scope.files) {
+      _.each($scope.files, function (file, index) {
+        imageUploader.imageUpload(file).progress(function (evt) {
+          $scope.cloudinaryRequest = true;
+        }).success(function (data) {
+          $scope.newExpense.attachments.push(data);
+          if (index === $scope.files.length - 1) {
+            toastr.success('Attachments uploaded successfully.');
+            $scope.createExpense();
+          }
+        });
+      });
+    } else {
+      $scope.createExpense();
+    }
+  };
+
+  $scope.fileSelected = function (files) {
+    if (files && files.length) {
+      $scope.files = files;
+    }
+  };
+
+  $scope.removeAttachment = function (index) {
+    $scope.files.splice(index, 1);
+  };
+
+
+  $scope.viewAttachments = function (attachments) {
+    $scope.attachments = attachments;
+    $scope.singleAttachment = $scope.attachments[0];
+  };
+
+  $scope.resetAttachments = function () {
+    $scope.attachments = [];
+  };
+
+  $scope.viewSingleAttachment = function (attachment) {
+    $scope.singleAttachment = attachment;
+  };
+
+  $scope.getSingleAttachmentPath = function () {
+    if ($scope.singleAttachment) {
+      return 'uploads/' + $scope.singleAttachment.name;
+    }
+  };
+
+
+  $scope.getExpenseLabel = function (expense) {
+    var expenseType = _.find($scope.expenseTypes, function (expenseType) {
+      return expenseType.id === expense.type;
+    });
+    return expenseType.id + ' - ' + expenseType.name;
+  };
+
 
   $scope.alterFilter = function () {
     getEmployeeExpenses();
   };
-
 
 
   resetNewExpense();

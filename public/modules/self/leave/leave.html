@@ -21,17 +21,47 @@
 
   <div class="row pay-runs-header">
     <div class="col-md-12">
-      <h5 class="lg-title mb5">Leaves</h5>
+      <h5 class="lg-title mb5">Leave Info</h5>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-6" ng-if="dataFetched">
+      <div>
+        <div class="table-responsive">
+          <table class="table mb60">
+            <thead>
+            <tr>
+              <th>Leave Type</th>
+              <th>Valid From</th>
+              <th>Valid Until</th>
+              <th>Total</th>
+              <th>Taken</th>
+              <th>Balance</th>
+              <th>Planned</th>
+              <th>Net Balance</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="leave in employeePosition.leave">
+              <td>{{leave.type}}</td>
+              <td>{{getStartOfYear() | date:"yyyy-MM-dd"}}</td>
+              <td>{{getEndOfYear() | date:"yyyy-MM-dd"}}</td>
+              <td>{{leave.numberOfDays + ' days'}}</td>
+              <td>{{getLeaveDaysTaken(leave.type) + ' days'}}</td>
+              <td>{{leave.numberOfDays - getLeaveDaysTaken(leave.type) + ' days'}}</td>
+              <td>{{getLeaveDaysPlanned(leave.type) + ' days'}}</td>
+              <td>{{getNetLeaveBalance(leave) + ' days'}}</td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
   </div>
 
   <div class="row">
     <div class="col-md-12">
-      <div>
-        Number of leave days taken: {{$parent.employee.leaveDaysTaken}} <br />
-        Number of leave days left: {{employeePosition.leaveDays - $parent.employee.leaveDaysTaken - getPendingLeaveDays()}} <br />
-        Number of leave days request pending: {{getPendingLeaveDays()}}
-      </div>
       <p class="mb20 pull-right"><button class="btn btn-primary btn-sm" id="new-leave-modal-button" data-toggle="modal" data-target=".request-leave">New Leave Application</button></p>
     </div>
   </div>
@@ -70,7 +100,7 @@
     </div>
     <div class="col-md-12" ng-if="leaves.length === 0 && dataFetched">
       <div class="alert alert-danger text-center">
-        <p>No Leaves available</p>
+        <p>No Leave available</p>
       </div>
     </div>
     <div class="col-md-12" ng-if="leaves.length > 0 && dataFetched">
@@ -103,7 +133,7 @@
             <td>
               <span class="{{getLabelClass(leave.approvalStatus)}}">{{leave.approvalStatus}}</span>
             </td>
-            <td></td>
+            <td>{{leave.approvedBy.name}}</td>
             <td>{{leave.createdAt | date:"yyyy-MM-dd"}}</td>
             <td>
               <i ng-if="leave.status === 'Draft'" ng-click="edit(leave)" class="fa fa-pencil-square-o action-buttons" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Edit"></i>
@@ -169,7 +199,7 @@
             <div class="col-sm-12">
               <div class="form-group">
                 <label class="control-label">Leave Type</label>
-                <select2 options="options" ng-model="newLeave.type" s2-options="type as type for type in leaveTypes" style="width: 100%"></select2>
+                <select2 options="options" ng-model="newLeave.type" s2-options="leaveType.type as leaveType.type for leaveType in leaveTypes" style="width: 100%"></select2>
               </div><!-- form-group -->
             </div><!-- col-sm-12 -->
 
@@ -188,7 +218,7 @@
 
         </div>
         <div class="panel-footer">
-          <button ng-if="!isEdit" ng-disabled="!enableCreateButton() || invalidLeaveDays()" class="btn btn-primary mr5" ng-click="createLeave()">Create Leave</button>
+          <button ng-if="!isEdit" class="btn btn-primary mr5" ng-click="createLeave()">Create Leave</button>
           <button ng-if="isEdit" class="btn btn-primary mr5" ng-click="update()">Update Leave Request</button>
           <button type="reset" class="btn btn-danger" ng-click="cancel()" id="new-leave-close" data-dismiss="modal">Cancel</button>
         </div><!-- panel-footer -->
