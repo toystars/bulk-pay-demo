@@ -11,6 +11,8 @@ module.exports = function (app) {
   router.post('/', auth.isAuthenticated, controller.create);
   router.get('/employee/:employeeId', auth.isAuthenticated, controller.employeeTime);
   router.post('/employee/filtered', auth.isAuthenticated, controller.filteredEmployeeTimes);
+  router.post('/admin/filtered', auth.isAuthenticated, controller.filteredBusinessTime);
+  router.post('/:id/approve', auth.isAuthenticated, auth.isSuperAdmin, controller.approveTime);
   router.get('/business/:businessId', auth.isAuthenticated, auth.isSuperAdmin, controller.businessTime);
   router.get('/:id', auth.isAuthenticated, controller.show);
   router.put('/:id', auth.isAuthenticated, controller.update);

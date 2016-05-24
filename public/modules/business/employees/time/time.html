@@ -8,9 +8,9 @@
         <li><a href=""><i class="glyphicon glyphicon-home"></i></a></li>
         <li><a ui-sref="business.overview">Business</a></li>
         <li>{{business.name}}</li>
-        <li>Expenses</li>
+        <li>Time</li>
       </ul>
-      <h4>Leave</h4>
+      <h4>Time Records</h4>
     </div>
   </div><!-- media -->
 </div><!-- pageheader -->
@@ -21,7 +21,7 @@
 
   <div class="row pay-runs-header">
     <div class="col-md-12">
-      <h5 class="lg-title mb5">Leave Requests</h5>
+      <h5 class="lg-title mb5">Time Records</h5>
     </div>
   </div>
 
@@ -52,23 +52,23 @@
         </div>
       </div>
     </div>
-    <div class="col-md-12" ng-if="leaves.length === 0 && dataFetched">
+    <div class="col-md-12" ng-if="times.length === 0 && dataFetched">
       <div class="alert alert-danger text-center">
         <p>No Expense available</p>
       </div>
     </div>
-    <div class="col-md-12" ng-if="leaves.length > 0 && dataFetched">
+    <div class="col-md-12" ng-if="times.length > 0 && dataFetched">
       <div class="table-responsive">
         <table class="table table-primary mb60 table-hover">
           <thead>
           <tr>
             <th>#</th>
-            <th>Start Date</th>
-            <th>End Date</th>
-            <th>Employee</th>
-            <th>Duration</th>
-            <th>Type</th>
+            <th>Project</th>
+            <th>Activity</th>
             <th>Description</th>
+            <th>Employee</th>
+            <th>Time Logged</th>
+            <th>Date</th>
             <th>Status</th>
             <th>Approval Status</th>
             <th>Approved By</th>
@@ -77,27 +77,24 @@
           </tr>
           </thead>
           <tbody>
-          <tr class="pointer" ng-repeat="leave in leaves">
-
-
+          <tr class="pointer" ng-repeat="time in times">
             <td>{{$index + 1}}</td>
-            <td>{{leave.startDate | date:"yyyy-MM-dd"}}</td>
-            <td>{{leave.endDate | date:"yyyy-MM-dd"}}</td>
-            <td>{{leave.employee.employeeId}} - {{leave.employee.fullName}}</td>
-            <td>{{leave.duration}}</td>
-            <td>{{leave.type}}</td>
-            <td>{{leave.description}}</td>
-            <td>{{leave.status}}</td>
+            <td>{{getProjectDisplayById(time.projectId)}}</td>
+            <td>{{getActivityDisplayById(time.activityId)}}</td>
+            <td>{{time.description}}</td>
+            <td>{{time.employee.employeeId}} - {{time.employee.fullName}}</td>
+            <td>{{time.duration}} hour(s)</td>
+            <td>{{time.date | date:"yyyy-MM-dd"}}</td>
+            <td>{{time.status}}</td>
             <td>
-              <span class="{{getLabelClass(leave.approvalStatus)}}">{{leave.approvalStatus}}</span>
+              <span class="{{getLabelClass(time.approvalStatus)}}">{{time.approvalStatus}}</span>
             </td>
-            <td>{{leave.approvedBy.name}}</td>
-            <td>{{leave.createdAt | date:"yyyy-MM-dd"}}</td>
+            <td>{{time.approvedBy.name}}</td>
+            <td>{{time.createdAt | date:"yyyy-MM-dd"}}</td>
             <td>
-              <i ng-if="leave.approvalStatus === 'Pending'" ng-click="approve(leave, false)" class="fa fa-times action-buttons" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Reject"></i>
-              <i ng-if="leave.approvalStatus === 'Pending'" ng-click="approve(leave, true)" class="fa fa-check action-buttons" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Approve"></i>
+              <i ng-if="time.approvalStatus === 'Pending'" ng-click="approve(time, false)" class="fa fa-times action-buttons" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Reject"></i>
+              <i ng-if="time.approvalStatus === 'Pending'" ng-click="approve(time, true)" class="fa fa-check action-buttons" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Approve"></i>
             </td>
-
           </tr>
           </tbody>
         </table>

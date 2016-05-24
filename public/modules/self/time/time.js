@@ -6,6 +6,7 @@ bulkPay.controller('EmployeeSelfTimeCtrl', ['$scope', 'toastr', '$rootScope', 'A
     }
   });
 
+  $scope.projectActivities = [];
   $scope.currentPage = 1;
   $scope.pageSize = 25;
   $scope.dataFetched = false;
@@ -31,11 +32,7 @@ bulkPay.controller('EmployeeSelfTimeCtrl', ['$scope', 'toastr', '$rootScope', 'A
 
   var resetNewTask = function () {
     $scope.newTask = {
-      displayDuration: '0:00',
-      labeledDuration: '0 hours',
-      taskCode: '',
       date: moment()._d,
-      time: 0,
       description: ''
     };
   };
@@ -181,11 +178,6 @@ bulkPay.controller('EmployeeSelfTimeCtrl', ['$scope', 'toastr', '$rootScope', 'A
   };
 
 
-  $scope.getTaskDisplay = function (task) {
-    return task.name + ' - ' + task.code;
-  };
-
-
   $scope.getTaskName = function (code) {
     return _.find($scope.tasks, function (task) {
       return task.code === code;
@@ -207,58 +199,120 @@ bulkPay.controller('EmployeeSelfTimeCtrl', ['$scope', 'toastr', '$rootScope', 'A
     getEmployeeTimeTracks();
   };
 
+
+  $scope.getProjectDisplay = function (project) {
+    return project.id + ' - ' + project.project;
+  };
+
+  $scope.getActivityDisplay = function (activity) {
+    return activity.id + ' - ' + activity.activity;
+  };
+
+  $scope.populateTasks = function () {
+    $scope.projectActivities = [];
+    _.each($scope.activities, function (activity) {
+      if (activity.projectId === $scope.newTask.projectId) {
+        $scope.projectActivities.push(activity);
+      }
+    });
+  };
+
+  $scope.getProjectDisplayById = function (projectId) {
+    var project = _.find($scope.projects, function (project) {
+      return project.id === projectId;
+    });
+    return project.id + ' - ' + project.project;
+  };
+
+  $scope.getActivityDisplayById = function (activityId) {
+    var activity = _.find($scope.activities, function (actvity) {
+      return actvity.id === activityId;
+    });
+    return activity.id + ' - ' + activity.activity;
+  };
+
+  $scope.setProject = function (project) {
+    $scope.newTask.projectId = project.id;
+    $scope.populateTasks();
+    jQuery('#log-modal-button').click();
+  };
   
   /*
   * Data
   * */
-  $scope.tasks = [{
-    code: 'TDC',
-    name: 'TradeDepot',
-    phase: 'Main',
-    parentCode: ''
+  $scope.projects = [{
+    project: 'Mobilization',
+    id: '1.1'
   }, {
-    code: 'TDC-DSG',
-    name: 'TradeDepot Design',
-    phase: 'Design',
-    parentCode: 'TDC'
+    project: 'Final Preparation',
+    id: '1.4'
+  }];
+
+  $scope.activities = [{
+    id: '1.1.1',
+    activity: 'Set-up and Confirm Project Resource Availability',
+    projectId: '1.1'
   }, {
-    code: 'TDC-OPS',
-    name: 'TradeDepot Dev Ops',
-    phase: 'Dev Ops',
-    parentCode: 'TDC'
+    id: '1.1.2',
+    activity: 'Project Kick-off meeting',
+    projectId: '1.1'
   }, {
-    code: 'TDC-TST',
-    name: 'TradeDepot Testing',
-    phase: 'Testing',
-    parentCode: 'TDC'
+    id: '1.1.3',
+    activity: 'Sensitize Stakeholders on project approach and objectives',
+    projectId: '1.1'
   }, {
-    code: 'TDC-UTST',
-    name: 'TradeDepot Testing (Unit)',
-    phase: 'Unit Testing',
-    parentCode: 'TDC-TST'
+    id: '1.1.4',
+    activity: 'Update Project Workplan',
+    projectId: '1.1'
   }, {
-    code: 'BLP',
-    name: 'BulkPay',
-    phase: 'Main',
-    parentCode: ''
+    id: '1.4.1',
+    activity: 'Prepare Impact Mapping Document for new Processes',
+    projectId: '1.4'
   }, {
-    code: 'BLP-FRT',
-    name: 'BulkPay Frontend',
-    phase: 'Design',
-    parentCode: 'BLP'
+    id: '1.4.2',
+    activity: 'Perform User Acceptance Testing',
+    projectId: '1.4'
   }, {
-    code: 'ADM',
-    name: 'Administration',
-    phase: 'Front Desk',
-    parentCode: ''
+    id: '1.4.3',
+    activity: 'Sign off User Acceptance Testing',
+    projectId: '1.4'
   }, {
-    code: 'ENG',
-    name: 'Engineering (Server)',
-    phase: 'Maintenance',
-    parentCode: ''
+    id: '1.1.4',
+    activity: 'Perform Project Accountant Training',
+    projectId: '1.4'
+  }, {
+    id: '1.1.5',
+    activity: 'Sign off Project Accountant Training',
+    projectId: '1.4'
+  }, {
+    id: '1.1.6',
+    activity: 'Validation of new reports',
+    projectId: '1.4'
+  }, {
+    id: '1.1.7',
+    activity: 'Replication of Configuration Updates on Production client',
+    projectId: '1.4'
+  }, {
+    id: '1.1.8',
+    activity: 'Replication of Data updates on Production client',
+    projectId: '1.4'
+  }, {
+    id: '1.1.9',
+    activity: 'Cutover to Billing',
+    projectId: '1.4'
+  }, {
+    id: '1.1.10',
+    activity: 'Pilot Project Sign-off',
+    projectId: '1.4'
+  }, {
+    id: '1.1.11',
+    activity: 'Share Pilot project report with BAFC, Beth, Senior Management etc',
+    projectId: '1.4'
   }];
 
   resetNewTask();
+
+
 
 }]);
 

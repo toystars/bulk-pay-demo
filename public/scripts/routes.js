@@ -258,6 +258,15 @@ bulkPay.config(['$stateProvider', '$urlRouterProvider', '$locationProvider', 'to
         }
       })
 
+      .state('business.employeestime', {
+        url: '/employees/time',
+        templateUrl: 'modules/business/employees/time/time.html',
+        controller: 'BusinessEmployeesTimeCtrl',
+        data: {
+          pageTitle: 'Time | BulkPay'
+        }
+      })
+
       .state('business.payruns', {
         url: '/payruns',
         templateUrl: 'modules/business/payruns/manage/manage-payruns.html',

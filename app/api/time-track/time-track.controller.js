@@ -162,9 +162,41 @@ exports.delete = function (req, res) {
 };
 
 
+/*
+ * Mark time record as approved or declined
+ * */
+exports.approveTime = function (req, res) {
+  TimeTrack.findOne({ _id: req.params.id }, function (error, time) {
+    if (error) {
+      crudHelper.handleError(res, 400, error);
+    } else {
+      time.approvalStatus = req.body.approvalStatus;
+      time.approvedBy = req.body.approvedBy;
+      time.save(function (error, newTimr) {
+        if (error) {
+          crudHelper.handleError(res, null, error);
+        } else {
+          crudHelper.respondWithResult(res, 200, newTimr);
+        }
+      });
+    }
+  });
+};
 
 
-
+/*
+ * Get filtered business time records
+ * */
+exports.filteredBusinessTime = function (req, res) {
+  TimeTrack.find(req.body).populate('employee approvedBy').exec(function (error, times) {
+    if (error) {
+      crudHelper.handleError(res, null, error);
+    }
+    if (times) {
+      crudHelper.respondWithResult(res, null, times);
+    }
+  });
+};
 
 
 
