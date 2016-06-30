@@ -14,6 +14,10 @@ var positionSchema = new Schema({
   headingSection: String,
   headingSectionId: String,
   leave: [{ type: Schema.Types.Mixed }],
+  leaveDays: {
+    type: Number,
+    default: 35
+  },
   numberOfAllowedEmployees: {
     type: Number,
     default: 1

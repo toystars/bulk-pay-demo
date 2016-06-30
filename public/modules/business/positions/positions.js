@@ -103,6 +103,15 @@ bulkPay.controller('BusinessPositionsCtrl', ['$scope', '$rootScope', 'AuthSvc', 
         $scope.position.headingSectionId = '';
         break;
     }
+    $scope.position.leave = [];
+    $scope.position.leave.push({
+      numberOfDays: 25,
+      type:'Vacation'
+    }, {
+      numberOfDays: 10,
+      type:'Sick Leave'
+    });
+    $scope.leaveDays = $scope.position.leave[0].numberOfDays + $scope.position.leave[1].numberOfDays;
     $http.post('/api/positions/', $scope.position).success(function (data) {
       $scope.positions.push(data);
       jQuery('#new-position-close').click();

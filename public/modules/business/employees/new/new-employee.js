@@ -540,12 +540,12 @@ bulkPay.controller('BusinessEmployeeCreateCtrl', ['$scope', 'User', '$rootScope'
         toastr.info('Creating employee user account.');
         User.create({
           name: data.fullName,
-          username: data.lastName + '-' + data.employeeId,
+          username: data.firstName + data.employeeId,
           email: data.email,
           role: 'employee',
           employeeId: data._id,
           businessId: data.businessId,
-          password: 'password'
+          password: data.lastName
         }).success(function (employee) {
           toastr.success('Employee user account successfully created.');
           $state.go('business.employee', { employeeId: data._id });
