@@ -339,13 +339,13 @@ bulkPay.controller('BusinessPayGradesCtrl', ['$scope', '$rootScope', '$timeout',
   /*
    * jQuery
    * */
-  jQuery.ig.loader({
+ /* jQuery.ig.loader({
     scriptPath: 'scripts/helpers/igniteui/',
     resources: 'modules/infragistics.util.js,' + 'modules/infragistics.documents.core.js,' + 'modules/infragistics.excel.js'
-  });
+  });*/
 
   var calculate = function () {
-    var workbook = new $.ig.excel.Workbook($.ig.excel.WorkbookFormat.excel2007);
+    var workbook = new jQuery.ig.excel.Workbook($.ig.excel.WorkbookFormat.excel2007);
     var sheet = workbook.worksheets().add('Sheet1');
     sheet.columns(0).setWidth(180, $.ig.excel.WorksheetColumnWidthUnit.pixel);
     sheet.columns(1).setWidth(116, $.ig.excel.WorksheetColumnWidthUnit.pixel);
