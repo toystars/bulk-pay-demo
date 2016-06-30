@@ -340,7 +340,7 @@ bulkPay.controller('BusinessPayGradesCtrl', ['$scope', '$rootScope', '$timeout',
    * jQuery
    * */
   jQuery.ig.loader({
-    scriptPath: "http://cdn-na.infragistics.com/igniteui/latest/js/",
+    scriptPath: 'scripts/helpers/igniteui/',
     resources: 'modules/infragistics.util.js,' + 'modules/infragistics.documents.core.js,' + 'modules/infragistics.excel.js'
   });
 
