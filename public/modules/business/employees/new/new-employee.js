@@ -541,6 +541,7 @@ bulkPay.controller('BusinessEmployeeCreateCtrl', ['$scope', 'User', '$rootScope'
         User.create({
           name: data.fullName,
           username: data.firstName + data.employeeId,
+          avatar: 'uploads/' + data.currentProfilePicture,
           email: data.email,
           role: 'employee',
           employeeId: data._id,
