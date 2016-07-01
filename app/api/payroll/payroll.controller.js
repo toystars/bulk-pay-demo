@@ -118,8 +118,10 @@ exports.filteredEmployeePayRolls = function (req, res) {
           if (error) {
             crudHelper.handleError(res, null, error);
           } else {
-            payRoll.payRun = payRun;
-            payRolls.push(payRoll);
+            if (payRoll) {
+              payRoll.payRun = payRun;
+              payRolls.push(payRoll);
+            }
             if (payRunIndex === payRuns.length - 1) {
               crudHelper.respondWithResult(res, null, payRolls);
             }
