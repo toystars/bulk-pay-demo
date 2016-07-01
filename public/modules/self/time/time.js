@@ -190,7 +190,7 @@ bulkPay.controller('EmployeeSelfTimeCtrl', ['$scope', 'toastr', '$rootScope', 'A
         return 'label label-info';
       case 'Approved':
         return 'label label-success';
-      case 'Declined':
+      case 'Rejected':
         return 'label label-danger';
     }
   };
