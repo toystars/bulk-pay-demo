@@ -41,6 +41,7 @@ bulkPay.controller('EmployeeSelfExpenseCtrl', ['$scope', 'imageUploader', '$time
   $scope.$parent.inView = 'Expense Reports';
 
   var resetNewExpense = function () {
+    $scope.isEdit = false;
     $scope.newExpense = {
       attachments: [],
       from: moment()._d,
