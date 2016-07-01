@@ -31,6 +31,7 @@ bulkPay.controller('EmployeeSelfTimeCtrl', ['$scope', 'toastr', '$rootScope', 'A
   var employeeId = $cookies.get('selfEmployeeId');
 
   var resetNewTask = function () {
+    $scope.isEdit = false;
     $scope.newTask = {
       date: moment()._d,
       description: ''

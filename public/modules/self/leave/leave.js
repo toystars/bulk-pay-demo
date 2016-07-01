@@ -38,6 +38,7 @@ bulkPay.controller('EmployeeSelfLeaveCtrl', ['$scope', '$timeout', 'toastr', '$r
   };
 
   var resetNewLeave = function () {
+    $scope.isEdit = false;
     $scope.newLeave = {
       duration: 0,
       endDate: moment().add(1, 'week')._d,
